@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Canvas Blog</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Blue Theme Colors */
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #0ea5e9;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --hover-bg: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Background variables */
+            --bg-color: #f0f9ff;
+            --gradient-1: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+        }
+
+        .dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --accent-color: #60a5fa;
+            --text-color: #f8fafc;
+            --text-light: #cbd5e1;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+            --border-color: #475569;
+            --bg-color: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        /* NAVIGATION BAR */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dark-mode nav {
+            background-color: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+        .logo-img{
+            height: 50px;
+            width: 60px;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* ANIMATED BACKGROUND */
+        .pinterest-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
+        }
+
+        .dark-mode .pinterest-bg {
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary-color) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent-color) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* MAIN CONTENT */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.7); 
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            margin: auto;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            animation-name: animatetop;
+            animation-duration: 0.4s;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes animatetop {
+            from {top: -300px; opacity: 0}
+            to {top: 0; opacity: 1}
+        }
+        .close-button {
+            color: var(--text-light);
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--gradient-1);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Reading time indicator */
+        .reading-time {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 10px;
+        }
+
+        .like-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        
+        .like-btn:hover, .like-btn.liked {
+            color: #ef4444;
+        }
+
+        .share-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        
+        .share-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* Newsletter section */
+        .newsletter {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        footer {
+            background: var(--hover-bg);
+            color: var(--text-color);
+            padding: 3rem 0 2rem;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background with Animation -->
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="subtle-grid"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img class="logo-img" src="logo3.png">
+                <div class="logo-text">Career Canvas</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+                <a href="blog.html" class="nav-link active">Blog</a>
+                <a href="profile.html" class="nav-link">Dashboard</a>
+                
+                <!-- Toggle Button -->
+                <div class="toggle-container">
+                    <span class="toggle-label">Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-5xl font-extrabold text-center mb-4 leading-tight">
+            Our Insights on <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Career Growth</span>
+        </h1>
+        <p class="text-xl text-center text-gray-600 dark:text-black-300 mb-12 max-w-3xl mx-auto">
+            Discover expert advice, industry trends, and actionable tips to advance your career journey.
+        </p>
+
+        <div class="flex justify-center mb-8">
+            <div class="relative w-full max-w-lg">
+                <input type="text" id="search-input" placeholder="Search blog posts..." class="w-full py-3 pl-5 pr-12 rounded-lg border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:outline-none shadow-md text-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                <button id="search-button" class="absolute right-0 top-0 h-full px-5 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition duration-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All Posts</button>
+            <button class="filter-btn" data-filter="career-planning">Career Planning</button>
+            <button class="filter-btn" data-filter="interview">Interview Tips</button>
+            <button class="filter-btn" data-filter="skills">Skill Development</button>
+            <button class="filter-btn" data-filter="networking">Networking</button>
+            <button class="filter-btn" data-filter="work-life">Work-Life Balance</button>
+            <button class="filter-btn" data-filter="leadership">Leadership</button>
+        </div>
+
+        <div id="blog-posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Blog Post Cards will be dynamically loaded here by JavaScript -->
+        </div>
+        <div class="newsletter">
+            <h2 class="text-2xl font-bold mb-4">Stay Updated with Career Insights</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-6">Subscribe to our newsletter and get the latest career advice and industry trends delivered to your inbox.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <input type="email" id="newsletter-email" placeholder="Your email address" class="px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white flex-grow max-w-md">
+                <button id="subscribe-btn" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 font-medium">Subscribe</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="blog-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" class="text-3xl font-extrabold mb-4"></h2>
+            <div class="text-gray-600 dark:text-gray-300 text-sm mb-6 flex flex-wrap gap-4">
+                <span id="modal-author" class="font-semibold"></span>
+                <span id="modal-date"></span>
+                <span id="modal-reading-time" class="reading-time"></span>
+                <div class="flex gap-2">
+                    <button id="modal-like-btn" class="like-btn">
+                        <i class="far fa-heart"></i> <span id="modal-likes-count">0</span>
+                    </button>
+                    <button id="modal-share-btn" class="share-btn">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                </div>
+            </div>
+            <div id="modal-content" class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg prose max-w-none"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Career Canvas</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Career guide</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 5 and 15px
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration between 10 and 20s
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles
+        createParticles();
+
+        // Dark mode toggle functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or respect OS preference
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Toggle dark mode
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Blog data with additional properties
+        const blogPosts = [
+            {
+                id: 1,
+                title: "5 Essential Steps to Plan Your Career Path",
+                snippet: "Discover the roadmap to a successful career. From self-assessment to continuous learning, these steps will guide you.",
+                author: "Priya Sharma",
+                date: "June 1, 2025",
+                category: "career-planning",
+                image: "https://placehold.co/600x400/93c5fd/1e3a8a?text=Career+Path",
+                readingTime: "5 min read",
+                likes: 42,
+                fullContent: `
+                    <p class="mb-4">Embarking on a career journey without a clear path can be daunting. A well-defined career plan acts as your compass, guiding you through various stages of your professional life. Here are five essential steps to help you chart a course for success.</p>
+
+                    <h3 class="text-xl font-bold mb-2">1. Self-Assessment: Know Thyself</h3>
+                    <p class="mb-4">Before you can decide where you want to go, you need to understand where you are. Take time to reflect on your strengths, weaknesses, interests, values, and skills. What are you passionate about? What tasks energize you? What kind of work environment do you thrive in? Tools like personality assessments (e.g., Myers-Briggs, StrengthsFinder) or simply journaling can provide valuable insights.</p>
+
+                    <h3 class="text-xl font-bold mb-2">2. Explore Career Options: Research and Learn</h3>
+                    <p class="mb-4">Once you have a better understanding of yourself, start exploring career options that align with your profile. Research different industries, job roles, and companies. Look into typical responsibilities, required qualifications, and growth opportunities. Informational interviews with professionals in fields that interest you can offer real-world perspectives and networking opportunities.</p>
+
+                    <h3 class="text-xl font-bold mb-2">3. Set SMART Goals: Define Your Destination</h3>
+                    <p class="mb-4">With a clearer picture of potential paths, it's time to set Specific, Measurable, Achievable, Relevant, and Time-bound (SMART) goals. Break down your long-term career aspirations into smaller, actionable short-term goals. For example, instead of "get a better job," set a goal like "complete a certification in digital marketing within six months to apply for marketing specialist roles."</p>
+
+                    <h3 class="text-xl font-bold mb-2">4. Develop an Action Plan: Create Your Roadmap</h3>
+                    <p class="mb-4">Now, create a detailed action plan outlining the steps you need to take to achieve your goals. This might include pursuing further education, gaining specific certifications, building a portfolio, networking strategically, or even changing roles within your current company. Prioritize your actions and set realistic deadlines.</p>
+
+                    <h3 class="text-xl font-bold mb-2">5. Monitor and Adapt: Stay Flexible</h3>
+                    <p class="mb-4">The professional landscape is constantly evolving, so your career plan shouldn't be set in stone. Regularly review your progress, reassess your goals, and be prepared to adapt your plan as circumstances change or new opportunities arise. Continuous learning and flexibility are crucial for long-term career success.</p>
+                `
+            },
+            {
+                id: 2,
+                title: "Mastering the Art of the Job Interview",
+                snippet: "Unlock the secrets to acing your next job interview. Preparation is key to confidence.",
+                author: "Ananya Singh",
+                date: "May 20, 2025",
+                category: "interview",
+                image: "https://placehold.co/600x400/a78bfa/4c0519?text=Interview+Tips",
+                readingTime: "6 min read",
+                likes: 38,
+                fullContent: `
+                    <p class="mb-4">The job interview is often the final hurdle between you and your dream job. While it can be nerve-wracking, mastering the art of the interview can significantly increase your chances of success. Here's a comprehensive guide to help you shine.</p>
+
+                    <h3 class="text-xl font-bold mb-2">1. Thorough Research is Non-Negotiable</h3>
+                    <p class="mb-4">Before stepping into any interview, thoroughly research the company and the role. Understand their mission, values, recent news, and the challenges they face. For the role, analyze the job description to identify key skills and responsibilities. This knowledge will help you tailor your answers and ask insightful questions.</p>
+
+                    <h3 class="text-xl font-bold mb-2">2. Practice Common Interview Questions</h3>
+                    <p class="mb-4">Anticipate common interview questions like "Tell me about yourself," "Why do you want to work here?", "What are your strengths and weaknesses?", and "Where do you see yourself in five years?". Practice your answers using the STAR method (Situation, Task, Action, Result) to provide structured and impactful responses, especially for behavioral questions.</p>
+
+                    <h3 class="text-xl font-bold mb-2">3. Prepare Thoughtful Questions for the Interviewer</h3>
+                    <p class="mb-4">An interview is a two-way street. Prepare a list of thoughtful questions to ask the interviewer. This demonstrates your genuine interest and helps you assess if the role and company culture are a good fit for you. Avoid asking questions whose answers are easily found on the company website.</p>
+
+                    <h3 class="text-xl font-bold mb-2">4. Dress for Success and Be Punctual</h3>
+                    <p class="mb-4">Your appearance and punctuality make a strong first impression. Dress professionally, even for virtual interviews. Arrive or log in a few minutes early to compose yourself and ensure everything is technically ready. This shows respect for the interviewer's time and your commitment.</p>
+
+                    <h3 class="text-xl font-bold mb-2">5. Follow-Up Thoughtfully</h3>
+                    <p class="mb-4">Always send a thank-you note or email within 24 hours of your interview. Reiterate your interest in the position, thank them for their time, and briefly mention something specific you discussed to remind them of your conversation. This reinforces your professionalism and keeps you top of mind.</p>
+                `
+            },
+            {
+                id: 3,
+                title: "Upskilling in a Changing Job Market",
+                snippet: "Stay competitive by continuously learning new skills. This guide helps you identify in-demand skills.",
+                author: "Rahul Gupta",
+                date: "May 10, 2025",
+                category: "skills",
+                image: "https://placehold.co/600x400/fca5a5/7f1d1d?text=Skill+Development",
+                readingTime: "7 min read",
+                likes: 51,
+                fullContent: `
+                    <p class="mb-4">The modern job market is characterized by rapid technological advancements and evolving industry demands. To remain competitive and relevant, continuous upskilling is no longer an option but a necessity. Here's how you can effectively upskill.</p>
+
+                    <h3 class="text-xl font-bold mb-2">1. Identify In-Demand Skills</h3>
+                    <p class="mb-4">Start by researching which skills are currently highly sought after in your industry or the industry you aspire to enter. Look at job descriptions for roles you're interested in, consult industry reports, and follow thought leaders. Common areas include data analysis, digital marketing, AI/machine learning, cloud computing, and cybersecurity.</p>
+
+                    <h3 class="text-xl font-bold mb-2">2. Choose the Right Learning Platforms</h3>
+                    <p class="mb-4">Once you know what to learn, find the best way to learn it. Online courses (Coursera, edX, Udemy), specialized bootcamps, workshops, industry certifications, and even self-study through books and online tutorials are all viable options. Consider your learning style and time commitment when making your choice.</p>
+
+                    <h3 class="text-xl font-bold mb-2">3. Apply What You Learn</h3>
+                    <p class="mb-4">Learning a skill is only half the battle; applying it is crucial for mastery. Look for opportunities to implement your new skills in personal projects, volunteer work, or even within your current role. Building a portfolio of projects can demonstrate your capabilities to potential employers.</p>
+
+                    <h3 class="text-xl font-bold mb-2">4. Network and Seek Feedback</h3>
+                    <p class="mb-4">Connect with professionals who are already proficient in the skills you're acquiring. Join online communities, attend webinars, and participate in industry events. Networking can provide insights, mentorship, and even job opportunities. Don't shy away from asking for feedback on your progress.</p>
+
+                    <h3 class="text-xl font-bold mb-2">5. Cultivate a Growth Mindset</h3>
+                    <p class="mb-4">Upskilling is an ongoing journey. Embrace a growth mindset, believing that your abilities can be developed through dedication and hard work. Stay curious, be open to new challenges, and view continuous learning as an exciting part of your career progression.</p>
+                `
+            },
+            {
+                id: 4,
+                title: "The Power of Professional Networking",
+                snippet: "Build meaningful connections that can propel your career forward. Tips for effective networking.",
+                author: "Meera Das",
+                date: "April 28, 2025",
+                category: "networking",
+                image: "https://placehold.co/600x400/99f6e4/042f2e?text=Networking",
+                readingTime: "5 min read",
+                likes: 29,
+                fullContent: `
+                    <p class="mb-4">Networking is often misunderstood as merely collecting business cards. In reality, it's about building genuine relationships with people who can support your career, offer advice, and open doors to new opportunities. Here's why professional networking is invaluable and how to do it effectively.</p>
+
+                    <h3 class="text-xl font-bold mb-2">1. Expand Your Knowledge and Perspectives</h3>
+                    <p class="mb-4">Engaging with professionals from diverse backgrounds exposes you to new ideas, industry trends, and different ways of thinking. This expanded perspective can help you make more informed career decisions and identify emerging opportunities.</p>
+
+                    <h3 class="text-xl font-bold mb-2">2. Uncover Hidden Job Opportunities</h3>
+                    <p class="mb-4">Many job openings are never advertised publicly. Networking can connect you to the "hidden job market," where you learn about roles through referrals and internal recommendations. People are often more willing to hire someone referred by a trusted contact.</p>
+
+                    <h3 class="text-xl font-bold mb-2">3. Gain Mentorship and Support</h3>
+                    <p class="mb-4">A strong network can lead to mentorship opportunities. Experienced professionals can offer guidance, share their insights, and help you navigate challenges. Having a support system of peers and mentors is crucial for career resilience and growth.</p>
+
+                    <h3 class="text-xl font-bold mb-2">4. Enhance Your Professional Reputation</h3>
+                    <p class="mb-4">Active and positive engagement within your professional community builds your reputation as a knowledgeable and reliable individual. This can lead to speaking engagements, collaborations, and increased visibility in your field.</p>
+
+                    <h3 class="text-xl font-bold mb-2">5. Tips for Effective Networking</h3>
+                    <ul class="list-disc list-inside mb-4">
+                        <li class="mb-1"><strong>Be Genuine:</strong> Focus on building authentic relationships, not just on what others can do for you.</li>
+                        <li class="mb-1"><strong>Listen More Than You Talk:</strong> Show genuine interest in others' experiences and challenges.</li>
+                        <li class="mb-1"><strong>Offer Value:</strong> Think about how you can help others in your network, even in small ways.</li>
+                        <li class="mb-1"><strong>Follow Up:</strong> Send a personalized message after a connection, referencing something specific you discussed.</li>
+                        <li class="mb-1"><strong>Leverage Online Platforms:</strong> LinkedIn is an excellent tool for professional networking, but also consider industry-specific forums and groups.</li>
+                    </ul>
+                `
+            },
+            {
+                id: 5,
+                title: "Achieving Work-Life Balance in a Demanding World",
+                snippet: "Strategies to maintain a healthy balance between your professional and personal life.",
+                author: "Aryan Kapoor",
+                date: "April 15, 2025",
+                category: "work-life",
+                image: "https://placehold.co/600x400/d8b4fe/581c87?text=Work-Life+Balance",
+                readingTime: "6 min read",
+                likes: 47,
+                fullContent: `
+                    <p class="mb-4">In today's fast-paced world, the lines between work and personal life often blur, leading to stress and burnout. Achieving a healthy work-life balance is crucial not only for your well-being but also for your productivity and long-term career sustainability. Here are some effective strategies.</p>
+
+                    <h3 class="text-xl font-bold mb-2">1. Set Clear Boundaries</h3>
+                    <p class="mb-4">Define when your workday begins and ends. Stick to these hours as much as possible. Avoid checking work emails or taking calls outside of these times unless absolutely necessary. Communicate your boundaries to colleagues and clients to manage expectations.</p>
+
+                    <h3 class="text-xl font-bold mb-2">2. Prioritize and Delegate</h3>
+                    <p class="mb-4">Learn to differentiate between urgent and important tasks. Prioritize your workload and don't be afraid to delegate tasks when appropriate. Effective time management techniques, such as the Pomodoro Technique or the Eisenhower Matrix, can help you stay focused and efficient during work hours.</p>
+
+                    <h3 class="text-xl font-bold mb-2">3. Schedule Personal Time</h3>
+                    <p class="mb-4">Just as you schedule meetings and work tasks, intentionally schedule time for personal activities, hobbies, exercise, and spending time with loved ones. Treat these appointments with the same importance as work commitments. This dedicated personal time is essential for rejuvenation.</p>
+
+                    <h3 class="text-xl font-bold mb-2">4. Embrace Disconnectivity</h3>
+                    <p class="mb-4">Regularly unplug from work. This means taking breaks throughout the day, using your lunch hour to step away from your desk, and fully disconnecting during weekends and vacations. Constant connectivity can lead to mental fatigue and diminished creativity.</p>
+
+                    <h3 class="text-xl font-bold mb-2">5. Self-Care is Not Selfish</h3>
+                    <p class="mb-4">Make self-care a priority. This includes adequate sleep, a healthy diet, regular physical activity, and mindfulness practices. When you take care of your physical and mental health, you're better equipped to handle work demands and enjoy your personal life.</p>
+                `
+            },
+            {
+                id: 6,
+                title: "Developing Strong Leadership Qualities",
+                snippet: "Cultivate the traits that make a great leader and inspire your team.",
+                author: "Deepika Reddy",
+                date: "March 30, 2025",
+                category: "leadership",
+                image: "https://placehold.co/600x400/bef264/3f6212?text=Leadership",
+                readingTime: "7 min read",
+                likes: 33,
+                fullContent: `
+                    <p class="mb-4">Leadership isn't just about a title; it's about influence, inspiration, and guiding others towards a common goal. Whether you're aspiring to a management position or looking to enhance your impact in your current role, developing strong leadership qualities is crucial. Here's how.</p>
+
+                    <h3 class="text-xl font-bold mb-2">1. Practice Active Listening and Empathy</h3>
+                    <p class="mb-4">Great leaders genuinely listen to their team members. They understand different perspectives, concerns, and aspirations. Empathy allows you to connect with your team on a deeper level, building trust and fostering a supportive environment.</p>
+
+                    <h3 class="text-xl font-bold mb-2">2. Communicate Effectively and Transparently</h3>
+                    <p class="mb-4">Clear and consistent communication is the cornerstone of effective leadership. Leaders must be able to articulate vision, expectations, and feedback concisely. Transparency builds trust and ensures everyone is on the same page.</p>
+
+                    <h3 class="text-xl font-bold mb-2">3. Foster a Culture of Accountability and Empowerment</h3>
+                    <p class="mb-4">Empower your team by giving them autonomy and ownership over their work. Encourage them to take initiative and learn from mistakes. Simultaneously, hold yourself and your team accountable for results, creating a culture of responsibility.</p>
+
+                    <h3 class="text-xl font-bold mb-2">4. Lead by Example and Be Adaptable</h3>
+                    <p class="mb-4">Your actions speak louder than words. Demonstrate the values and work ethic you expect from your team. In a rapidly changing environment, a good leader is also adaptable, open to new ideas, and willing to pivot when necessary.</p>
+
+                    <h3 class="text-xl font-bold mb-2">5. Prioritize Continuous Learning and Development</h3>
+                    <p class="mb-4">The best leaders are perpetual learners. Seek opportunities to grow, read widely, attend workshops, and solicit feedback. Investing in your own development sets a positive example and equips you to better guide your team.</p>
+                `
+            }
+        ];
+
+        // Ensure all DOM content is loaded before running scripts
+        document.addEventListener('DOMContentLoaded', () => {
+            const blogPostsContainer = document.getElementById('blog-posts-container');
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const blogModal = document.getElementById('blog-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalAuthor = document.getElementById('modal-author');
+            const modalDate = document.getElementById('modal-date');
+            const modalContent = document.getElementById('modal-content');
+            const modalReadingTime = document.getElementById('modal-reading-time');
+            const modalLikeBtn = document.getElementById('modal-like-btn');
+            const modalLikesCount = document.getElementById('modal-likes-count');
+            const modalShareBtn = document.getElementById('modal-share-btn');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const newsletterEmail = document.getElementById('newsletter-email');
+            const subscribeBtn = document.getElementById('subscribe-btn');
+
+            let currentFilter = 'all';
+            let currentPostId = null;
+
+            // Function to render blog posts
+            function renderBlogPosts(postsToRender) {
+                blogPostsContainer.innerHTML = ''; // Clear existing posts
+                if (postsToRender.length === 0) {
+                    blogPostsContainer.innerHTML = '<p class="text-center text-gray-600 dark:text-gray-300 col-span-full py-12">No blog posts found matching your search.</p>';
+                    return;
+                }
+                
+                postsToRender.forEach(post => {
+                    const articleElement = document.createElement('article');
+                    articleElement.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-xl';
+                    articleElement.innerHTML = `
+                        <img src="${post.image}" alt="${post.title}" class="w-full h-52 object-cover rounded-t-xl">
+                        <div class="p-6">
+                            <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full mb-3 ${getCategoryColor(post.category)}">${formatCategory(post.category)}</span>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">${post.title}</h2>
+                            <p class="text-gray-600 dark:text-gray-300 text-base leading-relaxed mb-4">${post.snippet}</p>
+                            <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                <span><strong class="text-gray-700 dark:text-gray-300">Author:</strong> ${post.author}</span>
+                                <span><strong class="text-gray-700 dark:text-gray-300">Date:</strong> ${post.date}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="reading-time">
+                                    <i class="far fa-clock"></i> ${post.readingTime}
+                                </span>
+                                <button onclick="openModal(${post.id})" class="inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:-translate-y-1 shadow-md">Read More</button>
+                            </div>
+                        </div>
+                    `;
+                    blogPostsContainer.appendChild(articleElement);
+                });
+            }
+
+            // Function to get category color
+            function getCategoryColor(category) {
+                const colors = {
+                    'career-planning': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                    'interview': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                    'skills': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                    'networking': 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+                    'work-life': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+                    'leadership': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                };
+                return colors[category] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+            }
+
+            // Function to format category for display
+            function formatCategory(category) {
+                return category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            }
+
+            // Function to filter blog posts
+            function filterBlogPosts() {
+                let filteredPosts = blogPosts;
+                
+                // Apply category filter
+                if (currentFilter !== 'all') {
+                    filteredPosts = filteredPosts.filter(post => post.category === currentFilter);
+                }
+                
+                // Apply search filter
+                const searchTerm = searchInput.value.toLowerCase();
+                if (searchTerm) {
+                    filteredPosts = filteredPosts.filter(post =>
+                        post.title.toLowerCase().includes(searchTerm) ||
+                        post.snippet.toLowerCase().includes(searchTerm) ||
+                        post.author.toLowerCase().includes(searchTerm) ||
+                        post.fullContent.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                renderBlogPosts(filteredPosts);
+            }
+
+            // Initial render of all blog posts
+            filterBlogPosts();
+
+            // Function to open the modal with specific blog post content
+            function openModal(id) {
+                const post = blogPosts.find(p => p.id === id);
+                if (post) {
+                    currentPostId = id;
+                    modalTitle.textContent = post.title;
+                    modalAuthor.textContent = `Author: ${post.author}`;
+                    modalDate.textContent = `Date: ${post.date}`;
+                    modalReadingTime.innerHTML = `<i class="far fa-clock"></i> ${post.readingTime}`;
+                    modalLikesCount.textContent = post.likes;
+                    modalContent.innerHTML = post.fullContent;
+                    
+                    // Check if post is liked
+                    const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+                    if (likedPosts.includes(id)) {
+                        modalLikeBtn.classList.add('liked');
+                        modalLikeBtn.innerHTML = `<i class="fas fa-heart"></i> <span id="modal-likes-count">${post.likes}</span>`;
+                    } else {
+                        modalLikeBtn.classList.remove('liked');
+                        modalLikeBtn.innerHTML = `<i class="far fa-heart"></i> <span id="modal-likes-count">${post.likes}</span>`;
+                    }
+                    
+                    blogModal.style.display = 'flex';
+                }
+            }
+
+            // Function to close the modal
+            function closeModal() {
+                blogModal.style.display = 'none';
+            }
+
+            // Like button functionality
+            modalLikeBtn.addEventListener('click', () => {
+                if (!currentPostId) return;
+                
+                const post = blogPosts.find(p => p.id === currentPostId);
+                const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '[]');
+                
+                if (likedPosts.includes(currentPostId)) {
+                    // Unlike
+                    const index = likedPosts.indexOf(currentPostId);
+                    likedPosts.splice(index, 1);
+                    post.likes--;
+                    modalLikeBtn.classList.remove('liked');
+                    modalLikeBtn.innerHTML = `<i class="far fa-heart"></i> <span id="modal-likes-count">${post.likes}</span>`;
+                } else {
+                    // Like
+                    likedPosts.push(currentPostId);
+                    post.likes++;
+                    modalLikeBtn.classList.add('liked');
+                    modalLikeBtn.innerHTML = `<i class="fas fa-heart"></i> <span id="modal-likes-count">${post.likes}</span>`;
+                }
+                
+                localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
+                modalLikesCount.textContent = post.likes;
+                
+                // Update the post in the main array
+                const postIndex = blogPosts.findIndex(p => p.id === currentPostId);
+                if (postIndex !== -1) {
+                    blogPosts[postIndex] = post;
+                }
+            });
+
+            // Share button functionality
+            modalShareBtn.addEventListener('click', () => {
+                if (!currentPostId) return;
+                
+                const post = blogPosts.find(p => p.id === currentPostId);
+                const shareText = `Check out this article: ${post.title} by ${post.author}`;
+                const shareUrl = window.location.href;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: post.title,
+                        text: shareText,
+                        url: shareUrl,
+                    })
+                    .catch(error => console.log('Error sharing:', error));
+                } else {
+                    // Fallback for browsers that don't support Web Share API
+                    navigator.clipboard.writeText(`${shareText} - ${shareUrl}`)
+                        .then(() => alert('Link copied to clipboard!'))
+                        .catch(err => console.error('Failed to copy: ', err));
+                }
+            });
+
+            // Close the modal if the user clicks anywhere outside of the modal content
+            window.onclick = function(event) {
+                if (event.target == blogModal) {
+                    closeModal();
+                }
+            }
+
+            // Search functionality
+            function performSearch() {
+                filterBlogPosts();
+            }
+
+            // Event listeners for search
+            if (searchButton) {
+                searchButton.addEventListener('click', performSearch);
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('keyup', (event) => {
+                    if (event.key === 'Enter') {
+                        performSearch();
+                    } else {
+                        // Live search as user types
+                        performSearch();
+                    }
+                });
+            }
+
+            // Filter buttons functionality
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    // Update current filter
+                    currentFilter = button.dataset.filter;
+                    // Apply filter
+                    filterBlogPosts();
+                });
+            });
+
+            // Newsletter subscription
+            subscribeBtn.addEventListener('click', () => {
+                const email = newsletterEmail.value.trim();
+                if (email && validateEmail(email)) {
+                    // In a real application, you would send this to your backend
+                    alert(`Thank you for subscribing with ${email}! You'll receive our latest career insights soon.`);
+                    newsletterEmail.value = '';
+                } else {
+                    alert('Please enter a valid email address.');
+                }
+            });
+
+            // Email validation helper
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // Make openModal and closeModal globally accessible for inline onclick
+            window.openModal = openModal;
+            window.closeModal = closeModal;
+        }); // End DOMContentLoaded
+    </script>
+</body>
+</html>
