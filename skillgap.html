@@ -5,6 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skill Gap Analysis Tool</title>
     <style>
+        :root {
+            /* Blue Theme Colors */
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #0ea5e9;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --hover-bg: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Background variables */
+            --bg-color: #f0f9ff;
+            --gradient-1: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+        }
+
+        .dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --accent-color: #60a5fa;
+            --text-color: #f8fafc;
+            --text-light: #cbd5e1;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+            --border-color: #475569;
+            --bg-color: #0f172a;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,67 +51,233 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(100deg, #141E30 , #243B55 ); /* Dark gradient */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 20px;
-            color: #e0e0e0; /* Default light text color */
-            overflow-x: hidden; /* Prevent horizontal scroll from icons if any edge cases */
+            overflow-x: hidden;
+            position: relative;
+            transition: var(--transition);
         }
 
-        .animated-background-icons {
+        /* ANIMATED BACKGROUND */
+        .pinterest-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: -1;
             overflow: hidden;
-            z-index: 0; /* Behind the main container */
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
         }
 
-        .animated-icon {
+        .dark-mode .pinterest-bg {
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .particles-container {
             position: absolute;
-            color: rgba(180, 190, 220, 0.12); /* Increased brightness/opacity */
-            opacity: 0;
-            user-select: none;
-            animation-name: floatAndDrift;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
-        @keyframes floatAndDrift {
+        .particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
             0% {
-                transform: translateY(100vh) translateX(var(--startX, 0px)) rotate(0deg);
-                opacity: 0;
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
             }
-            10%, 90% { /* Fade in and out duration */
-                opacity: 1; 
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.5;
             }
-             50% {
-                transform: translateY(50vh) translateX(calc(var(--startX, 0px) + var(--driftX, 0px) / 2)) rotate(calc(var(--rotateEnd, 0deg) / 2));
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
             }
             100% {
-                transform: translateY(-150px) translateX(calc(var(--startX, 0px) + var(--driftX, 0px))) rotate(var(--rotateEnd, 0deg));
-                opacity: 0;
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
             }
         }
 
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary-color) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent-color) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* MAIN CONTAINER */
         .container {
             max-width: 1000px;
-            margin: 0 auto;
-           background: rgba(40, 44, 52, 0.5);
-           /*  background: white;*/
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); /* Adjusted shadow for dark theme */
+            margin: 30px auto;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
             overflow: hidden;
-            position: relative; /* To ensure it's above the animated background */
-            z-index: 1;       /* To ensure it's above the animated background */
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--border-color);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9, #06b6d4);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: -200% 0; }
+            50% { background-position: 200% 0; }
         }
 
         .header {
-          /*  background: linear-gradient(135deg, #2a52b8 0%, #2d4ac1 100%); */ /* Vibrant dark gradient - Blue */
-         background: linear-gradient(135deg, #1e3c72, #2a5298);
-
+            background: var(--gradient-1);
             color: white;
             padding: 30px;
             text-align: center;
@@ -81,101 +286,118 @@
         .header h1 {
             font-size: 2.7rem;
             margin-bottom: 10px;
-            font-weight: 300;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: 700;
         }
 
         .header p {
             font-size: 1.2rem;
             opacity: 0.9;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
 
         .main-content {
             padding: 40px;
         }
 
-      .back-button {
-            /*background: linear-gradient(135deg, #2a52b8 0%, #2d4ac1 100%); *//* Blue gradient */
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
+        /* Tool Buttons */
+        .tool-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 0 40px;
+        }
+
+        .back-button, .Btn1, .Btn2 {
+            background: transparent;
+            position: relative;
+            padding: 12px 24px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
             font-weight: 600;
+            text-decoration: none;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(21, 63, 143, 0.4); /* Shadow matching blue gradient */
-            margin-top: 40px;
-            margin-left: 68px;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            border: 2px solid var(--primary-color);
+            border-radius: 25px;
+            outline: none;
+            overflow: hidden;
+            color: var(--primary-color);
+            transition: var(--transition);
+            gap: 8px;
         }
 
-        .back-button:hover {
+        .back-button:hover, .Btn1:hover, .Btn2:hover {
+            color: white;
+            background-color: var(--primary-color);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(7, 122, 209, 0.6); /* Brighter blue shadow on hover */
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
         }
 
-        .back-button:disabled {
+        .back-button:disabled, .Btn1:disabled, .Btn2:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
-        .Btn1 {
-            /*background: linear-gradient(135deg, #2a52b8 0%, #2d4ac1 100%); *//* Blue gradient */
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.3rem;
-            font-weight: 600;
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 0 40px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(21, 63, 143, 0.4); /* Shadow matching blue gradient */
-            margin-top: 40px;
-            margin-left: 30px;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
         }
 
-        .Btn1:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(7, 122, 209, 0.6); /* Brighter blue shadow on hover */
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
         }
 
-        .Btn1:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .Btn2 {
-            /*background: linear-gradient(135deg, #2a52b8 0%, #2d4ac1 100%); *//* Blue gradient */
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(21, 63, 143, 0.4); /* Shadow matching blue gradient */
-            margin-top: 40px;
-            margin-left: 30px;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
         }
 
-        .Btn2:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(7, 122, 209, 0.6); /* Brighter blue shadow on hover */
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
         }
 
-        .Btn2:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
         .form-section {
             margin-bottom: 30px;
         }
@@ -188,39 +410,38 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #c5c8c6; /* Lighter text for labels */
+            color: var(--text-color);
             font-size: 1.1rem;
         }
 
         select, .multi-select-container {
             width: 100%;
             padding: 12px;
-            border: 2px solid #4a4e69; /* Darker border */
+            border: 2px solid var(--border-color);
             border-radius: 10px;
             font-size: 1rem;
-            transition: all 0.3s ease;
-           /* background-color: #2c313a;*/ /* Dark background for select/inputs */
-           background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9));
-            color: white; /* Light text for select/inputs */
-            
+            transition: var(--transition);
+            background: var(--card-bg);
+            color: var(--text-color);
+            box-shadow: var(--shadow-sm);
         }
         
         select option {
-            background-color: #2c313a;
-            color: white;
+            background-color: var(--card-bg);
+            color: var(--text-color);
         }
 
         select:focus {
             outline: none;
-            border-color: #61afef; /* Brighter blue for focus */
-            box-shadow: 0 0 0 3px rgba(97, 175, 239, 0.25); /* Adjusted glow */
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .multi-select-container {
             min-height: 150px;
             max-height: 200px;
             overflow-y: auto;
-             background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9)); /* Dark background for multi-select */
+            background: var(--card-bg);
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
@@ -229,57 +450,57 @@
         }
 
         .skill-tag {
-            background: #4c566a; 
-            color: #d8dee9;     
+            background: var(--hover-bg);
+            color: var(--text-color);
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid #4c566a; 
+            transition: var(--transition);
+            border: 2px solid var(--border-color);
             user-select: none;
         }
 
         .skill-tag:hover {
-            background: #4c566a; 
+            background: var(--primary-color);
+            color: white;
             transform: translateY(-2px);
-            border-color: #5e81ac; 
+            border-color: var(--primary-color);
         }
 
         .skill-tag.required-skill {
-            background: #4c566a; 
-            color: #ebcb8b;     
-            border: 2px solid #5e5473;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
         }
 
         .skill-tag.required-skill:hover {
-            background: #5e5473;
-            border-color: #b48ead; 
+            background: var(--primary-color);
+            color: white;
         }
 
         .skill-tag.required-skill.selected {
-            background: #ebcb8b; 
-            color: #2e3440;     
-            border-color: #d08770; 
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--secondary-color);
         }
 
         .skill-tag.optional-skill {
-            background: #3b596a; 
-            color: #88c0d0;     
-            border: 2px solid #4c7080;
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--info-color);
+            border: 2px solid var(--info-color);
         }
 
         .skill-tag.optional-skill:hover {
-            background: #4c7080;
-            border-color: #81a1c1; 
+            background: var(--info-color);
+            color: white;
         }
 
         .skill-tag.optional-skill.selected {
-            background: #88c0d0; 
-            color: #2e3440;     
-            border-color: #5e81ac; 
+            background: var(--info-color);
+            color: white;
+            border-color: var(--secondary-color);
         }
-
 
         .skill-type {
             margin-left: 5px;
@@ -287,8 +508,7 @@
         }
 
         .analyze-btn {
-            /*background: linear-gradient(135deg, #2a52b8 0%, #2d4ac1 100%); *//* Blue gradient */
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background: var(--gradient-1);
             color: white;
             padding: 15px 40px;
             border: none;
@@ -296,13 +516,15 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(21, 63, 143, 0.4); /* Shadow matching blue gradient */
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
         }
 
         .analyze-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(7, 122, 209, 0.6); /* Brighter blue shadow on hover */
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
         }
 
         .analyze-btn:disabled {
@@ -311,18 +533,33 @@
             transform: none;
         }
 
+        .analyze-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .analyze-btn:hover::before {
+            left: 100%;
+        }
+
         .progress-section {
             margin-top: 40px;
             display: none;
         }
 
         .progress-container {
-           /* background: white; */
-           background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9));
- 
+            background: var(--card-bg);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
         }
 
         .progress-header {
@@ -335,20 +572,19 @@
         .progress-title {
             font-size: 1.2rem;
             font-weight: 600;
-            color: #c5c8c6; 
+            color: var(--text-color);
         }
 
         .progress-percentage {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #61afef; 
+            color: var(--primary-color);
         }
 
         .progress-bar {
             width: 100%;
             height: 15px;
-          /*  background: #3a3f44; */
-          background: lightslategray;
+            background: var(--hover-bg);
             border-radius: 10px;
             overflow: hidden;
             position: relative;
@@ -360,6 +596,7 @@
             transition: width 1.5s ease-in-out;
             position: relative;
             overflow: hidden;
+            background: var(--gradient-1);
         }
 
         .progress-fill::before {
@@ -391,17 +628,16 @@
         }
 
         .result-card {
-          /*  background: #282c34; */
-        background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9));
-
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); 
-            border-left: 5px solid #61afef; 
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid var(--primary-color);
+            border: 1px solid var(--border-color);
         }
 
         .result-card h3 {
-            color: #eceff4; 
+            color: var(--text-color);
             margin-bottom: 15px;
             font-size: 1.3rem;
         }
@@ -412,11 +648,11 @@
 
         .skill-list li {
             padding: 8px 0;
-            border-bottom: 1px solid #3a3f4c; 
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #d8dee9; 
+            color: var(--text-color);
         }
 
         .skill-list li:last-child {
@@ -431,42 +667,41 @@
         }
 
         .priority-high {
-            background: #5c2b29; 
-            color: #e06c75; 
+            background: rgba(220, 38, 38, 0.1);
+            color: #dc2626;
         }
 
         .priority-medium {
-            background: #6a5028; 
-            color: #d19a66; 
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
         }
 
         .priority-low {
-            background: #2a4d36; 
-            color: #98c379; 
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
         }
         
         .learning-path {
-           /* background: linear-gradient(135deg, #5f2c82 0%, #49a09d 100%); */
-           background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9));
-
-            color: white;
+            background: var(--card-bg);
+            color: var(--text-color);
             border-radius: 15px;
             padding: 25px;
             margin-top: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
         }
 
         .learning-path h3 {
             margin-bottom: 15px;
             font-size: 1.3rem;
-            color: #eceff4;
+            color: var(--text-color);
         }
 
         .path-step {
-            background: rgba(255, 255, 255, 0.05); 
+            background: var(--hover-bg);
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 10px;
-            backdrop-filter: blur(5px); 
             display: flex; 
             align-items: flex-start; 
         }
@@ -477,7 +712,7 @@
 
         .step-number {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.08); 
+            background: var(--primary-color);
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -485,7 +720,7 @@
             line-height: 30px;
             margin-right: 15px; 
             font-weight: 600;
-            color: #e5e9f0;
+            color: white;
             flex-shrink: 0; 
         }
 
@@ -496,25 +731,26 @@
 
         /* ML Features Styling */
         .ml-recommendations {
-            background: linear-gradient(135deg, rgba(30, 60, 114, 0.9), rgba(42, 82, 152, 0.9));
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 25px;
             margin-top: 20px;
-            border-left: 5px solid #88c0d0;
+            border-left: 5px solid var(--info-color);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
         }
 
         .ml-recommendations h3 {
-            color: #eceff4;
+            color: var(--text-color);
             margin-bottom: 15px;
             font-size: 1.3rem;
         }
 
         .ml-suggestion-item {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--hover-bg);
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 10px;
-            backdrop-filter: blur(5px);
         }
 
         .ml-confidence {
@@ -526,20 +762,22 @@
             margin-left: 10px;
         }
 
-        .confidence-high { background: #2a4d36; color: #98c379; }
-        .confidence-medium { background: #6a5028; color: #d19a66; }
-        .confidence-low { background: #5c2b29; color: #e06c75; }
+        .confidence-high { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .confidence-medium { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+        .confidence-low { background: rgba(220, 38, 38, 0.1); color: #dc2626; }
 
         .ml-insights {
-            background: linear-gradient(135deg, rgba(36, 59, 85, 0.9), rgba(20, 30, 48, 0.9));
+            background: var(--card-bg);
             border-radius: 15px;
             padding: 25px;
             margin-top: 20px;
-            border-left: 5px solid #ebcb8b;
+            border-left: 5px solid var(--warning-color);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
         }
 
         .ml-insights h3 {
-            color: #eceff4;
+            color: var(--text-color);
             margin-bottom: 15px;
             font-size: 1.3rem;
         }
@@ -547,7 +785,7 @@
         .insight-item {
             margin-bottom: 10px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--hover-bg);
             border-radius: 8px;
         }
 
@@ -563,30 +801,52 @@
             .main-content {
                 padding: 20px;
             }
-            body {
-                padding: 10px;
+            
+            .tool-buttons {
+                flex-direction: column;
+                padding: 0 20px;
+            }
+            
+            .toggle-container {
+                padding: 0 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="animated-background-icons">
-        <!-- Icons will be populated by JavaScript -->
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements"></div>
+        <div class="subtle-grid"></div>
     </div>
+    
+    <div class="toggle-container">
+        <span class="toggle-label">Dark Mode</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="toggle-slider"></span>
+        </label>
+    </div>
+    
     <div class="container">
         <div class="header">
             <h1>🎯 Career Skill Bridge Analyzer</h1>
             <p>Empowering You to Discover, Understand, and Overcome Your Skill Gaps for a Brighter Career</p>
         </div>
-        <button class="back-button" onclick="window.location.href='profile.html'">← Back to Profile</button>
-        <button class="Btn1" onclick="window.location.href='careerpath.html'">
-   <span class="logoIcon">📈</span>
-   <span class="tooltip">Career Path</span>
-</button>
-<button class="Btn2" onclick="window.location.href='mentor.html'">
-   <span class="logoIcon">👤</span>
-   <span class="tooltip">Mentor Mapper</span>
-</button>
+        
+        <div class="tool-buttons">
+            <button class="back-button" onclick="window.location.href='profile.html'">← Back to Profile</button>
+            <button class="Btn1" onclick="window.location.href='careerpath.html'">
+                <span class="logoIcon">📈</span>
+                <span class="tooltip">Career Path</span>
+            </button>
+            <button class="Btn2" onclick="window.location.href='mentor.html'">
+                <span class="logoIcon">👤</span>
+                <span class="tooltip">Mentor Mapper</span>
+            </button>
+        </div>
+        
         <div class="main-content">
             <div class="form-section">
                 <div class="form-group">
@@ -623,8 +883,7 @@
                         <span class="progress-percentage" id="progressPercentage">0%</span>
                     </div>
                     <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill" 
-                             style="width: 0%; background: linear-gradient(90deg, #5e81ac 0%, #88c0d0 100%);"></div> 
+                        <div class="progress-fill" id="progressFill" style="width: 0%;"></div> 
                     </div>
                 </div>
             </div>
@@ -636,6 +895,58 @@
     </div>
 
     <script>
+        // Create particles for background
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 3px and 8px
+                const size = Math.random() * 5 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation delay
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Create floating elements
+        function createFloatingElements() {
+            const container = document.querySelector('.floating-elements');
+            const elementCount = 4; // Already defined in CSS, but we can add more if needed
+            
+            // The floating elements are already defined in CSS, so we don't need to create them here
+            // This function is kept for potential future use
+        }
+        
+        // Dark mode toggle
+        document.getElementById('darkModeToggle').addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode', this.checked);
+            // Save preference to localStorage
+            localStorage.setItem('darkMode', this.checked);
+        });
+        
+        // Check for saved dark mode preference
+        window.addEventListener('DOMContentLoaded', () => {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            document.getElementById('darkModeToggle').checked = darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            
+            createParticles();
+            createFloatingElements();
+            initializeApp();
+        });
+
         // ML Algorithms Implementation for Skill Gap Analysis
         class SkillML {
             constructor() {
@@ -1093,35 +1404,8 @@
         learningGraph.addEdge('Network Security', 'SIEM Tools'); learningGraph.addEdge('AWS', 'Cloud Security');
         allSkills.forEach(skill => learningGraph.addVertex(skill));
 
-        function createBackgroundAnimation() {
-            const iconContainer = document.querySelector('.animated-background-icons');
-            if (!iconContainer) return;
-
-            const icons = ['💻', '📈', '⚙️', '💾', '🎨', '🚀', '☁️', '📊', '🧠', '🛡️', '🔑', '🔗', '⚡️', '🎯', '📡', '🔧', '🧪', '📱', '🤖', '💼', '🌟', '🛰️', '🔌', '✨', '🧬', '🌍', '🛠️', '🧭', '🏗️', '💡', '🧑‍💻', '🧑‍🔬', '🧑‍🚀', '🧑‍🔧', '🧱', '📈', '📊']; // Expanded icon list
-            const numIcons = 30; 
-
-            for (let i = 0; i < numIcons; i++) {
-                const iconEl = document.createElement('span');
-                iconEl.className = 'animated-icon';
-                iconEl.textContent = icons[Math.floor(Math.random() * icons.length)];
-                
-                const startX = Math.random() * 100; 
-                iconEl.style.left = `${startX}vw`;
-                iconEl.style.fontSize = `${0.5 + Math.random() * 2.5}rem`; // Larger: 2.0rem to 4.5rem
-                iconEl.style.animationDelay = `${Math.random() * 15}s`; 
-                iconEl.style.animationDuration = `${15 + Math.random() * 10}s`; 
-                
-                iconEl.style.setProperty('--startX', `${(Math.random() - 0.5) * 50}px`); 
-                iconEl.style.setProperty('--driftX', `${(Math.random() - 0.5) * 200}px`); 
-                iconEl.style.setProperty('--rotateEnd', `${(Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 180)}deg`); 
-                
-                iconContainer.appendChild(iconEl);
-            }
-        }
-
         function initializeApp() {
             populateSkills();
-            createBackgroundAnimation(); 
             document.getElementById('goalSelect').addEventListener('change', populateSkills);
         }
 
@@ -1133,7 +1417,7 @@
             
             if (!selectedGoal) { // This condition is crucial and correct
                 const placeholder = document.createElement('div');
-                placeholder.style.cssText = 'color: #a0a0a0; font-style: italic; padding: 20px; text-align: center;';
+                placeholder.style.cssText = 'color: var(--text-light); font-style: italic; padding: 20px; text-align: center;';
                 placeholder.textContent = 'Please select a career goal first to see relevant skills';
                 container.appendChild(placeholder);
                 return;
@@ -1163,7 +1447,7 @@
             
             if (relevantSkills.length > 0) {
                 const legend = document.createElement('div');
-                legend.style.cssText = 'width: 100%; margin-top: 15px; font-size: 0.9rem; color: #a0a0a0; text-align: center; padding-bottom: 5px;';
+                legend.style.cssText = 'width: 100%; margin-top: 15px; font-size: 0.9rem; color: var(--text-light); text-align: center; padding-bottom: 5px;';
                 legend.innerHTML = '⭐ Required Skills     💡 Optional Skills';
                 container.appendChild(legend);
             }
@@ -1292,17 +1576,17 @@
                         <span class="progress-percentage">${analysis.completionPercentage}%</span>
                     </div>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${analysis.completionPercentage}%; background: linear-gradient(90deg, #5e81ac 0%, #88c0d0 100%);"></div>
+                        <div class="progress-fill" style="width: ${analysis.completionPercentage}%;"></div>
                     </div>
                 </div>
                 <div class="results-grid">
                     <div class="result-card">
                         <h3>✅ Skills You Have (${analysis.knownSkills.length})</h3>
-                        ${analysis.knownSkills.length > 0 ? `<ul class="skill-list">${analysis.knownSkills.map(skill => `<li>${skill}</li>`).join('')}</ul>` : '<p style="color: #a0a0a0;">No relevant skills selected for this goal.</p>'}
+                        ${analysis.knownSkills.length > 0 ? `<ul class="skill-list">${analysis.knownSkills.map(skill => `<li>${skill}</li>`).join('')}</ul>` : '<p style="color: var(--text-light);">No relevant skills selected for this goal.</p>'}
                     </div>
                     <div class="result-card">
                         <h3>📚 Skills to Learn (${analysis.missingRequired.length + analysis.missingOptional.length})</h3>
-                        ${(analysis.missingRequired.length + analysis.missingOptional.length) > 0 ? `<ul class="skill-list">${analysis.prioritizedSkills.map(item => `<li>${item.skill}<span class="skill-priority priority-${item.priority === 3 ? 'high' : 'low'}">${item.priority === 3 ? 'Required' : 'Optional'}</span></li>`).join('')}</ul>` : '<p style="color: #a0a0a0;">You have all the skills for this goal!</p>'}
+                        ${(analysis.missingRequired.length + analysis.missingOptional.length) > 0 ? `<ul class="skill-list">${analysis.prioritizedSkills.map(item => `<li>${item.skill}<span class="skill-priority priority-${item.priority === 3 ? 'high' : 'low'}">${item.priority === 3 ? 'Required' : 'Optional'}</span></li>`).join('')}</ul>` : '<p style="color: var(--text-light);">You have all the skills for this goal!</p>'}
                     </div>
                 </div>
                 ${mlInsights}
@@ -1381,8 +1665,6 @@
             
             return `Focus on mastering ${skill} as it's ${isRequired ? 'an essential required skill' : 'a valuable optional skill'} for your goal${trendText}.`;
         }
-
-        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
