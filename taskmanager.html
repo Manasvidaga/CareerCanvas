@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI-Powered Task Manager (with TF.js)</title>
+
+<!-- TensorFlow.js -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js"></script>
+
+<style>
+/* ====== UI (keeps your theme) ====== */
+:root{
+  --bg-gradient-start:#0f2027; --bg-gradient-end:#203a43;
+  --card-bg: rgba(255,255,255,0.08); --card-border: rgba(255,255,255,0.2);
+  --text-primary:#fff; --text-secondary:#b8c6db;
+  --accent-blue:#4A90E2; --accent-hover:#357ABD;
+  --success-green:#27AE60; --danger-red:#E74C3C;
+  --warning-orange:#f39c12; --reminder-yellow:#FFD166;
+  --shadow: 0 8px 32px rgba(0,0,0,0.35);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg,var(--bg-gradient-start),var(--bg-gradient-end));
+  color:var(--text-primary); padding:20px; min-height:100vh;
+}
+.container{max-width:920px;margin:0 auto;padding:28px;background:var(--card-bg);border-radius:18px;border:1px solid var(--card-border);backdrop-filter: blur(8px);box-shadow:var(--shadow)}
+.header{text-align:center;margin-bottom:26px}
+.header h1{font-size:2.6rem;background:linear-gradient(45deg,var(--accent-blue),var(--success-green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{color:var(--text-secondary);margin-top:8px}
+
+/* form */
+.task-form{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.input-row{display:flex;gap:12px;flex-wrap:wrap}
+.input-row label{min-width:70px;color:var(--text-secondary);align-self:center}
+.input-row input,input[type="date"],input[type="time"],select{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--text-primary);font-size:0.95rem;flex:1}
+#taskInput{flex:1 1 100%}
+#addTaskBtn{align-self:flex-end;padding:10px 18px;border-radius:10px;border:none;background:linear-gradient(45deg,var(--accent-blue),var(--accent-hover));color:white;font-weight:600;cursor:pointer}
+#addTaskBtn:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+
+/* actions & badges */
+ul{list-style:none;padding:0;margin-top:10px}
+.task-item{display:flex;align-items:center;justify-content:space-between;padding:14px;border-radius:12px;background:rgba(255,255,255,0.04);margin-bottom:12px;border-left:5px solid var(--accent-blue);position:relative;gap:12px}
+.task-item .left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.task-text{font-size:1rem;word-break:break-word;display:flex;flex-direction:column;gap:6px}
+.task-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.badge{padding:4px 8px;border-radius:8px;font-weight:700;font-size:0.78rem}
+.badge.due{background:rgba(255,255,255,0.06);color:var(--text-secondary)}
+.badge.reminder{background:var(--reminder-yellow);color:#000}
+.badge.risk-high{background:rgba(231,76,60,0.12);color:var(--danger-red)}
+.badge.risk-low{background:rgba(39,174,96,0.12);color:var(--success-green)}
+.priority-pill{padding:4px 8px;border-radius:8px;font-weight:700;font-size:0.78rem}
+
+/* priority pill colors */
+.priority-low{background:rgba(74,144,226,0.12);color:var(--accent-blue)}
+.priority-medium{background:rgba(243,156,18,0.12);color:var(--warning-orange)}
+.priority-high{background:rgba(231,76,60,0.12);color:var(--danger-red)}
+
+/* action buttons */
+.task-actions{display:flex;gap:8px;flex-shrink:0}
+.task-actions button{padding:8px 12px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
+.complete-btn{background:linear-gradient(45deg,var(--success-green),#229954);color:white}
+.delete-btn{background:linear-gradient(45deg,var(--danger-red),#C0392B);color:white}
+.btn-edit{background:rgba(255,255,255,0.06);color:var(--text-secondary)}
+
+/* filter and sort */
+.filter-tabs{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.filter-tab{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:none;color:var(--text-secondary);cursor:pointer}
+.filter-tab.active{background:var(--accent-blue);color:white}
+.sort-options{display:flex;justify-content:flex-end;align-items:center;margin-bottom:6px;gap:8px}
+
+/* empty */
+.empty-state{text-align:center;color:var(--text-secondary);padding:30px}
+
+/* responsive */
+@media (max-width:760px){
+  .task-item{flex-direction:column;align-items:flex-start}
+  .task-actions{width:100%;justify-content:flex-start}
+  .sort-options{justify-content:flex-start}
+
+  
+}
+/* ==========================
+   FIX FOR SELECT DROPDOWNS
+========================== */
+select {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.15);  /* <-- ensure background is always visible */
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  background: rgba(255,255,255,0.25); /* brighter when focused */
+}
+
+/* Ensure dropdown options are always visible */
+select option {
+  background: #2c3e50;   /* dark background for dropdown */
+  color: #ffffff;        /* white text */
+  padding: 10px;
+}
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>AI Task Manager</h1>
+      <p>Priority prediction & overdue-risk (trained client-side)</p>
+    </div>
+
+    <div class="task-form">
+      <div class="input-row">
+        <label for="taskInput">Task</label>
+        <input id="taskInput" placeholder="What needs to be done?" maxlength="200" />
+      </div>
+
+      <div class="input-row">
+        <label for="taskDueDate">Due</label>
+        <input id="taskDueDate" type="date" />
+
+        <label for="taskPriority">Priority</label>
+        <select id="taskPriority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <label for="taskReminder">Remind</label>
+        <input id="taskReminder" type="time" />
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button id="addTaskBtn">Add Task</button>
+        <div id="mlStatus" style="color:var(--text-secondary);font-size:0.92rem">ML: waiting for data...</div>
+      </div>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="pending">Pending</button>
+      <button class="filter-tab" data-filter="completed">Completed</button>
+      <button class="filter-tab" data-filter="priority-high">High</button>
+      <button class="filter-tab" data-filter="priority-medium">Medium</button>
+      <button class="filter-tab" data-filter="priority-low">Low</button>
+    </div>
+
+    <div class="sort-options">
+      <label style="color:var(--text-secondary);margin-right:8px">Sort:</label>
+      <select id="sortTasks">
+        <option value="addedDesc">Recently Added</option>
+        <option value="dueDateAsc">Due Soon</option>
+        <option value="priorityDesc">Priority</option>
+      </select>
+    </div>
+
+    <ul id="taskList"></ul>
+  </div>
+
+<script>
+/*
+  AI/ML-enabled Task Manager
+  - Uses TF.js to train small models client-side
+  - Priority classifier: multiclass (0 low,1 medium,2 high)
+  - Overdue-risk classifier: binary (0 low risk,1 high risk)
+  - Vocabulary-based simple text features + metadata (due proximity, length, urgency words)
+  - Trains when enough labeled examples exist in localStorage
+*/
+
+// ------- Utilities & storage -------
+const LS_KEY = 'ai_tasks_v1';
+let tasks = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+
+const taskInput = document.getElementById('taskInput');
+const taskDueDate = document.getElementById('taskDueDate');
+const taskPriority = document.getElementById('taskPriority');
+const taskReminder = document.getElementById('taskReminder');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const taskList = document.getElementById('taskList');
+const filterTabs = document.querySelectorAll('.filter-tab');
+const sortTasks = document.getElementById('sortTasks');
+const mlStatus = document.getElementById('mlStatus');
+
+const priorityMap = {low:0, medium:1, high:2};
+const reversePriority = ['low','medium','high'];
+const urgencyWords = ['urgent','asap','important','immediately','now','critical','priority'];
+
+// Save tasks & metadata
+function saveTasks(){
+  localStorage.setItem(LS_KEY, JSON.stringify(tasks));
+  updateMLModelsDebounced();
+}
+
+// Record completedAt when marking complete
+function markCompleted(task, completed){
+  task.completed = completed;
+  task.completedAt = completed ? new Date().toISOString() : null;
+  saveTasks();
+}
+
+// ------- Simple text processing / feature generator -------
+
+// Build vocabulary from existing tasks (top N words)
+function buildVocab(maxWords=60){
+  const freq = {};
+  tasks.forEach(t=>{
+    const words = (t.text||'').toLowerCase().match(/\b[a-z0-9]+\b/g) || [];
+    words.forEach(w => { freq[w] = (freq[w]||0)+1 });
+  });
+  // sort words by frequency, exclude numbers-only & very common stop words
+  const stop = new Set(['the','a','an','to','for','on','in','at','by','and','or','of','is','this','that','with','from','you','your']);
+  const wordsSorted = Object.entries(freq).filter(([w])=>!stop.has(w)).sort((a,b)=>b[1]-a[1]).slice(0,maxWords).map(([w])=>w);
+  return wordsSorted;
+}
+
+// turn text + metadata into numeric feature vector
+function textToFeatures(text, dueDate){
+  const words = (text||'').toLowerCase().match(/\b[a-z0-9]+\b/g) || [];
+  const lengthFeature = Math.min((text||'').length / 200, 1); // normalized length
+  let urgencyScore = 0;
+  words.forEach(w=> { if(urgencyWords.includes(w)) urgencyScore++; });
+  // days until due (if provided)
+  let daysUntilDue = 30; // large default
+  if(dueDate){
+    const due = new Date(dueDate);
+    const now = new Date();
+    const diff = Math.ceil((due.setHours(0,0,0,0) - (new Date()).setHours(0,0,0,0)) / (1000*60*60*24));
+    daysUntilDue = Math.max(Math.min(diff,30), -30); // clamp
+  }
+  // bag-of-words counts (using current vocab)
+  const vec = [];
+  for(const w of vocab){ vec.push(words.filter(x=>x===w).length); }
+  // normalize word counts by text length
+  const norm = (vec.reduce((s,v)=>s+v,0) || 1);
+  const normVec = vec.map(v => v / norm);
+  // features: normalized bag-of-words + length + urgency + due proximity scaled
+  const dueFeature = (30 - daysUntilDue) / 60; // maps to ~ [-0.5,0.5] (more recent -> larger)
+  return [...normVec, lengthFeature, urgencyScore/5, dueFeature];
+}
+
+// ------- Model definitions (small models for responsiveness) -------
+let vocab = buildVocab(50); // initial vocab (may be empty)
+let priorityModel = null;
+let riskModel = null;
+let priorityTrained = false;
+let riskTrained = false;
+
+function makePriorityModel(inputDim){
+  const model = tf.sequential();
+  model.add(tf.layers.dense({inputShape:[inputDim], units: 32, activation: 'relu'}));
+  model.add(tf.layers.dropout({rate:0.2}));
+  model.add(tf.layers.dense({units: 16, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 3, activation: 'softmax'}));
+  model.compile({optimizer: tf.train.adam(0.01), loss: 'sparseCategoricalCrossentropy', metrics:['accuracy']});
+  return model;
+}
+function makeRiskModel(inputDim){
+  const model = tf.sequential();
+  model.add(tf.layers.dense({inputShape:[inputDim], units: 24, activation: 'relu'}));
+  model.add(tf.layers.dropout({rate:0.2}));
+  model.add(tf.layers.dense({units: 12, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 2, activation: 'softmax'}));
+  model.compile({optimizer: tf.train.adam(0.01), loss: 'sparseCategoricalCrossentropy', metrics:['accuracy']});
+  return model;
+}
+
+// prepare training tensors from saved tasks
+function prepareTrainingDataForPriority(){
+  const X = [];
+  const y = [];
+  tasks.forEach(t=>{
+    if(t.priority && t.text){
+      X.push(textToFeatures(t.text, t.due));
+      y.push(priorityMap[t.priority] ?? 0);
+    }
+  });
+  if(X.length===0) return null;
+  return { X: tf.tensor2d(X), y: tf.tensor1d(y,'int32') };
+}
+function prepareTrainingDataForRisk(){
+  // label: 1 if task was completed after due date OR if it was frequently late; only use tasks with due and completedAt
+  const X = [];
+  const y = [];
+  tasks.forEach(t=>{
+    if(t.due && t.completedAt){
+      const due = new Date(t.due);
+      const completed = new Date(t.completedAt);
+      const overdue = completed > due ? 1 : 0;
+      X.push(textToFeatures(t.text, t.due));
+      y.push(overdue);
+    }
+  });
+  if(X.length===0) return null;
+  return { X: tf.tensor2d(X), y: tf.tensor1d(y,'int32') };
+}
+
+// Train both models when enough data
+async function trainModelsIfReady(){
+  // rebuild vocab from tasks (so model sees latest words)
+  vocab = buildVocab(50);
+  const inputDim = vocab.length + 3; // bag + length + urgency + dueFeature
+
+  // priority model: require at least 10 labeled tasks (with priority)
+  const priorityData = prepareTrainingDataForPriority();
+  if(priorityData && priorityData.X.shape[0] >= 10){
+    mlStatus.textContent = 'ML: training priority model...';
+    if(priorityModel) priorityModel.dispose();
+    priorityModel = makePriorityModel(inputDim);
+    await priorityModel.fit(priorityData.X, priorityData.y, {epochs: 30, batchSize: 8, verbose:0});
+    priorityTrained = true;
+    priorityData.X.dispose(); priorityData.y.dispose();
+    mlStatus.textContent = 'ML: priority model trained';
+  } else {
+    priorityTrained = false;
+    mlStatus.textContent = 'ML: not enough data for priority model (need 10+)';
+  }
+
+  // overdue risk model: require at least 15 labeled examples (due & completed)
+  const riskData = prepareTrainingDataForRisk();
+  if(riskData && riskData.X.shape[0] >= 15){
+    mlStatus.textContent = 'ML: training overdue-risk model...';
+    if(riskModel) riskModel.dispose();
+    riskModel = makeRiskModel(inputDim);
+    await riskModel.fit(riskData.X, riskData.y, {epochs: 30, batchSize: 8, verbose:0});
+    riskTrained = true;
+    riskData.X.dispose(); riskData.y.dispose();
+    mlStatus.textContent = 'ML: overdue-risk model trained';
+  } else {
+    riskTrained = false;
+    // don't overwrite priority status line if priority trained
+    if(!priorityTrained) mlStatus.textContent = 'ML: not enough data for overdue-risk model (need 15+)';
+  }
+}
+
+// small debounce to avoid retraining too often
+let trainTimeout = null;
+function updateMLModelsDebounced(delay=1500){
+  if(trainTimeout) clearTimeout(trainTimeout);
+  trainTimeout = setTimeout(()=>{ trainModelsIfReady().catch(e=>{ console.warn(e); mlStatus.textContent='ML: training error'; }); }, delay);
+}
+
+// Predict priority for a text (returns 'low'|'medium'|'high' or null)
+async function predictPriority(text, due){
+  if(!priorityTrained || !priorityModel) return null;
+  const f = textToFeatures(text, due);
+  const t = tf.tensor2d([f]);
+  const pred = priorityModel.predict(t);
+  const arr = await pred.array();
+  t.dispose(); pred.dispose();
+  const idx = arr[0].indexOf(Math.max(...arr[0]));
+  return reversePriority[idx];
+}
+
+// Predict overdue risk: returns 'high' or 'low' or null
+async function predictRisk(text, due){
+  if(!riskTrained || !riskModel) return null;
+  const f = textToFeatures(text, due);
+  const t = tf.tensor2d([f]);
+  const pred = riskModel.predict(t);
+  const arr = await pred.array();
+  t.dispose(); pred.dispose();
+  // arr[0][1] is probability of class 1 (overdue)
+  return arr[0][1] > 0.5 ? 'high' : 'low';
+}
+
+// ------- UI: render tasks, schedule reminders, hooks -------
+
+function formatDue(d){
+  if(!d) return '';
+  try{
+    const dt = new Date(d);
+    // local date string YYYY-MM-DD
+    return dt.toLocaleDateString();
+  }catch(e){return d}
+}
+
+function renderTasks(filter='all'){
+  taskList.innerHTML = '';
+  let filtered = tasks.slice();
+
+  // filter
+  if(filter !== 'all'){
+    if(filter === 'pending') filtered = filtered.filter(t => !t.completed);
+    else if(filter === 'completed') filtered = filtered.filter(t => t.completed);
+    else filtered = filtered.filter(t => t.priority === filter.split('-')[1]);
+  }
+
+  // sort
+  const sortVal = sortTasks.value;
+  if(sortVal === 'dueDateAsc') filtered.sort((a,b)=>{
+    const da = a.due ? new Date(a.due) : new Date(8640000000000000);
+    const db = b.due ? new Date(b.due) : new Date(8640000000000000);
+    return da - db;
+  });
+  else if(sortVal === 'priorityDesc') filtered.sort((a,b)=> priorityMap[b.priority]-priorityMap[a.priority]);
+  else filtered.sort((a,b)=> b.id - a.id);
+
+  if(filtered.length===0){
+    taskList.innerHTML = '<li class="empty-state">No tasks found.</li>';
+    return;
+  }
+
+  filtered.forEach(task=>{
+    const li = document.createElement('li');
+    li.className = `task-item priority-${task.priority}${task.completed?' completed':''}`;
+
+    // left block: text + meta
+    const left = document.createElement('div');
+    left.className = 'left';
+
+    const textWrap = document.createElement('div');
+    textWrap.className = 'task-text';
+
+    const titleLine = document.createElement('div');
+    titleLine.style.display='flex';
+    titleLine.style.gap='10px';
+    titleLine.style.alignItems='center';
+
+    const title = document.createElement('div');
+    title.textContent = task.text;
+    title.style.fontWeight = '600';
+    title.style.minWidth = '0';
+    title.style.overflow = 'hidden';
+    title.style.textOverflow = 'ellipsis';
+    title.style.whiteSpace = 'nowrap';
+
+    // priority pill
+    const pr = document.createElement('div');
+    pr.className = `priority-pill priority-${task.priority}`;
+    pr.textContent = task.priority.toUpperCase();
+
+    titleLine.appendChild(title);
+    titleLine.appendChild(pr);
+
+    // meta line: due / reminder / risk / createdAt
+    const meta = document.createElement('div');
+    meta.className = 'task-meta';
+
+    if(task.due){
+      const dueB = document.createElement('span');
+      dueB.className = 'badge due';
+      dueB.textContent = 'Due: ' + formatDue(task.due);
+      meta.appendChild(dueB);
+    }
+    if(task.reminder){
+      const remB = document.createElement('span');
+      remB.className = 'badge reminder';
+      remB.textContent = task.reminder;
+      meta.appendChild(remB);
+    }
+
+    // risk prediction badge (predict synchronously if we have model)
+    const riskSpan = document.createElement('span');
+    riskSpan.style.display='inline-block';
+    if(riskTrained){
+      // asynchronous prediction: show placeholder then replace
+      riskSpan.className = 'badge';
+      riskSpan.textContent = 'Risk: ...';
+      predictRisk(task.text, task.due).then(r=>{
+        if(r==='high'){ riskSpan.className='badge risk-high'; riskSpan.textContent='High risk'; }
+        else { riskSpan.className='badge risk-low'; riskSpan.textContent='Low risk'; }
+      }).catch(()=>{ riskSpan.style.display='none'; });
+      meta.appendChild(riskSpan);
+    }
+
+    // optional created/updated small stamp
+    const small = document.createElement('div');
+    small.style.fontSize='0.78rem';
+    small.style.color='var(--text-secondary)';
+    small.textContent = task.createdAt ? new Date(task.createdAt).toLocaleString() : '';
+    small.style.marginLeft = '6px';
+    meta.appendChild(small);
+
+    textWrap.appendChild(titleLine);
+    textWrap.appendChild(meta);
+
+    left.appendChild(textWrap);
+
+    // right: actions
+    const actions = document.createElement('div');
+    actions.className = 'task-actions';
+
+    const completeBtn = document.createElement('button');
+    completeBtn.className = 'complete-btn';
+    completeBtn.textContent = task.completed ? 'Undo' : 'Done';
+    completeBtn.addEventListener('click', ()=>{
+      if(!task.completed){
+        task.completed = true;
+        task.completedAt = new Date().toISOString();
+      } else {
+        task.completed = false;
+        task.completedAt = null;
+      }
+      saveTasks();
+      renderTasks(getActiveFilter());
+    });
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn-edit';
+    editBtn.textContent = 'Edit';
+    editBtn.addEventListener('click', ()=> openEditDialog(task));
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'delete-btn';
+    delBtn.textContent = 'Delete';
+    delBtn.addEventListener('click', ()=>{
+      if(confirm('Delete this task?')){
+        tasks = tasks.filter(t=>t.id !== task.id);
+        saveTasks();
+        renderTasks(getActiveFilter());
+      }
+    });
+
+    actions.appendChild(completeBtn);
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+
+    li.appendChild(left);
+    li.appendChild(actions);
+
+    taskList.appendChild(li);
+  });
+}
+
+// open quick edit (inline-ish) - simple prompt-based to keep code small
+function openEditDialog(task){
+  const newText = prompt('Edit task text', task.text);
+  if(newText === null) return;
+  task.text = newText.trim() || task.text;
+  const newDue = prompt('Edit due date (YYYY-MM-DD) or blank', task.due || '');
+  if(newDue !== null) task.due = newDue.trim() || null;
+  const newReminder = prompt('Edit reminder time (HH:MM) or blank', task.reminder || '');
+  if(newReminder !== null) task.reminder = newReminder.trim() || null;
+  const newPriority = prompt('Edit priority (low/medium/high)', task.priority);
+  if(newPriority !== null && ['low','medium','high'].includes(newPriority.toLowerCase())) task.priority = newPriority.toLowerCase();
+
+  saveTasks();
+  renderTasks(getActiveFilter());
+}
+
+// get active filter
+function getActiveFilter(){
+  const active = document.querySelector('.filter-tab.active');
+  return active ? active.dataset.filter : 'all';
+}
+
+// schedule reminders: we'll run a periodic check that triggers Notification or alert
+function checkAndNotify(){
+  const now = new Date();
+  tasks.forEach(t=>{
+    if(!t.reminder || t.completed || t._notified) return;
+    // compute today's reminder datetime (uses local today with reminder time)
+    const [hh,mm] = t.reminder.split(':').map(Number);
+    if(isNaN(hh) || isNaN(mm)) return;
+    const reminderDt = new Date();
+    reminderDt.setHours(hh, mm, 0, 0);
+    // only notify if within the past minute and not previously notified
+    const diff = reminderDt - now;
+    if(diff <= 0 && diff > -60 * 1000 * 60){ // within the last hour tolerant window
+      // mark notified so we don't repeat
+      t._notified = true;
+      // show notification
+      if("Notification" in window && Notification.permission === "granted"){
+        new Notification('Task Reminder', { body: t.text });
+      } else {
+        alert(`Reminder: ${t.text}`);
+      }
+    }
+  });
+  // save the _notified flags to persist across reloads
+  saveTasks();
+}
+
+// request permission
+if("Notification" in window && Notification.permission !== "granted") {
+  Notification.requestPermission();
+}
+
+// periodic checker every 30 seconds
+setInterval(checkAndNotify, 30 * 1000);
+
+// ------- event handlers -------
+addTaskBtn.addEventListener('click', async ()=>{
+  const text = taskInput.value.trim();
+  if(!text){ alert('Task cannot be empty'); return; }
+
+  const due = taskDueDate.value || null;
+  let priority = taskPriority.value;
+  const reminder = taskReminder.value || null;
+
+  // baseline heuristic (small): if contains urgency word set high
+  if(urgencyWords.some(w=> new RegExp('\\b'+w+'\\b','i').test(text))) priority = 'high';
+
+  const task = {
+    id: Date.now(),
+    text,
+    due,
+    reminder,
+    priority,
+    completed: false,
+    createdAt: new Date().toISOString(),
+    completedAt: null,
+    _notified: false
+  };
+  tasks.unshift(task);
+  saveTasks();
+  renderTasks(getActiveFilter());
+
+  // attempt to auto-suggest priority using model if available (predict and override select for user)
+  if(priorityTrained){
+    const predicted = await predictPriority(text, due);
+    if(predicted) {
+      taskPriority.value = predicted;
+      // if user wants, we can auto-set — currently we set select for visibility but keep stored priority as original
+      task.priority = predicted;
+      saveTasks();
+      renderTasks(getActiveFilter());
+    }
+  }
+
+  // clear inputs
+  taskInput.value=''; taskDueDate.value=''; taskReminder.value=''; taskPriority.value='low';
+});
+
+// update priority suggestions while typing
+let suggestionTimeout = null;
+taskInput.addEventListener('input', ()=>{
+  if(suggestionTimeout) clearTimeout(suggestionTimeout);
+  suggestionTimeout = setTimeout(async ()=>{
+    const text = taskInput.value.trim();
+    if(!text) return;
+    if(priorityTrained){
+      const predicted = await predictPriority(text, taskDueDate.value || null);
+      if(predicted) taskPriority.value = predicted;
+    }
+  },400);
+});
+
+// filter tabs
+filterTabs.forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    filterTabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    renderTasks(tab.dataset.filter);
+  });
+});
+
+// sort change
+sortTasks.addEventListener('change', ()=> renderTasks(getActiveFilter()));
+
+// initial render and training
+renderTasks();
+updateMLModelsDebounced();
+
+// also attempt to train on load if data exists
+trainModelsIfReady().catch(e=> console.warn(e));
+
+// Keep models updated when tasks change extensively: use a mutation hook to retrain periodically
+// (we already call updateMLModelsDebounced() inside saveTasks)
+
+// small visual helper when loading/saving
+window.addEventListener('beforeunload', ()=>{ /* models not persisted across reloads */ });
+
+// expose tasks for debugging (dev only)
+window._aiTasks = tasks;
+
+</script>
+</body>
+</html>
