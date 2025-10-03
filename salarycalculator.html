@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Calculator - Career Canvas</title>
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.5.1"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #0ea5e9;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --hover-bg: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Background variables */
+            --bg-color: #f0f9ff;
+            --gradient-1: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+        }
+
+        .dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --accent-color: #60a5fa;
+            --text-color: #f8fafc;
+            --text-light: #cbd5e1;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+            --border-color: #475569;
+            --bg-color: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        /* NAVIGATION BAR */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dark-mode nav {
+            background-color: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-img{
+            height: 50px;
+            width: 60px;
+        }
+
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* ANIMATED BACKGROUND */
+        .pinterest-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
+        }
+
+        .dark-mode .pinterest-bg {
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary-color) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent-color) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
+            padding: 48px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient-1);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: -200% 0; }
+            50% { background-position: 200% 0; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-color);
+            margin-bottom: 16px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 12px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--card-bg);
+            color: var(--text-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]:hover,
+        input[type="number"]:hover,
+        select:hover {
+            border-color: var(--primary-color);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .output-area {
+            margin-top: 30px;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--primary-color);
+            animation: fadeIn 0.5s ease-out;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .salary-result {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--success-color);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .salary-details {
+            font-size: 1rem;
+            color: var(--text-color);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 16px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            text-align: center;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            margin-top: 24px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .ml-prediction {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 5px solid var(--success-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+
+        .ml-prediction h3 {
+            color: var(--success-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .ml-prediction p {
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .confidence-meter {
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--success-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--hover-bg);
+            color: var(--text-color);
+            padding: 3rem 0 2rem;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 32px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background with Animation -->
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="subtle-grid"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img class="logo-img" src="logo3.png">
+                <div class="logo-text">Career Canvas</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="profile.html" class="nav-link">Dashboard</a>
+                <a href="salary.html" class="nav-link active">Salary Calculator</a>
+                
+                <!-- Toggle Button -->
+                <div class="toggle-container">
+                    <span class="toggle-label">Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="header">
+                <h1>💰 Salary Calculator</h1>
+                <p class="subtitle">Get accurate salary estimates powered by AI/ML algorithms</p>
+            </div>
+
+            <form id="salaryForm">
+                <div class="form-group">
+                    <label class="form-label" for="jobTitleInput">Job Title</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="jobTitleInput" placeholder="e.g., Software Engineer, Data Scientist" required>
+                        <span class="input-icon">💼</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="locationInput">Location</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="locationInput" placeholder="e.g., San Francisco, CA" required>
+                        <span class="input-icon">📍</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="experienceInput">Years of Experience</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="experienceInput" placeholder="e.g., 3" min="0" max="50" required>
+                        <span class="input-icon">⭐</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="industrySelect">Industry</label>
+                    <div class="input-wrapper">
+                        <select id="industrySelect" required>
+                            <option value="">Select Industry</option>
+                            <option value="technology">Technology</option>
+                            <option value="finance">Finance</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="education">Education</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="retail">Retail</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <span class="input-icon">🏢</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="getSalaryBtn">
+                    Calculate Salary Range
+                </button>
+            </form>
+
+            <div id="salaryLoadingSpinner" class="loading-spinner"></div>
+
+            <div id="salaryErrorMessage" class="error-message hidden"></div>
+
+            <div id="salaryOutputArea" class="output-area hidden">
+                <div class="salary-result" id="salaryResult"></div>
+                <div class="salary-details" id="salaryDetails"></div>
+                
+                <div id="mlPrediction" class="ml-prediction hidden">
+                    <h3>AI/ML Prediction</h3>
+                    <p id="mlSalaryRange"></p>
+                    <p id="mlConfidence"></p>
+                    <div class="confidence-meter">
+                        <div class="confidence-fill" id="confidenceFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Career Canvas</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="advicepage.html">Career Guides</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="profile.html">Tools</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Toggle dark mode
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        const jobTitleInput = document.getElementById('jobTitleInput');
+        const locationInput = document.getElementById('locationInput');
+        const experienceInput = document.getElementById('experienceInput');
+        const industrySelect = document.getElementById('industrySelect');
+        const getSalaryBtn = document.getElementById('getSalaryBtn');
+        const salaryLoadingSpinner = document.getElementById('salaryLoadingSpinner');
+        const salaryErrorMessage = document.getElementById('salaryErrorMessage');
+        const salaryOutputArea = document.getElementById('salaryOutputArea');
+        const salaryResult = document.getElementById('salaryResult');
+        const salaryDetails = document.getElementById('salaryDetails');
+        const mlPrediction = document.getElementById('mlPrediction');
+        const mlSalaryRange = document.getElementById('mlSalaryRange');
+        const mlConfidence = document.getElementById('mlConfidence');
+        const confidenceFill = document.getElementById('confidenceFill');
+        const salaryForm = document.getElementById('salaryForm');
+
+        // Function to show/hide elements
+        const show = (element) => element.classList.remove('hidden');
+        const hide = (element) => element.classList.add('hidden');
+
+        // Currency mapping
+        const currencyMap = {
+            "usa": { symbol: "$", code: "USD" },
+            "united states": { symbol: "$", code: "USD" },
+            "new york": { symbol: "$", code: "USD" },
+            "san francisco": { symbol: "$", code: "USD" },
+            "london": { symbol: "£", code: "GBP" },
+            "uk": { symbol: "£", code: "GBP" },
+            "united kingdom": { symbol: "£", code: "GBP" },
+            "berlin": { symbol: "€", code: "EUR" },
+            "germany": { symbol: "€", code: "EUR" },
+            "paris": { symbol: "€", code: "EUR" },
+            "france": { symbol: "€", code: "EUR" },
+            "tokyo": { symbol: "¥", code: "JPY" },
+            "japan": { symbol: "¥", code: "JPY" },
+            "sydney": { symbol: "$", code: "AUD" },
+            "australia": { symbol: "$", code: "AUD" },
+            "toronto": { symbol: "$", code: "CAD" },
+            "canada": { symbol: "$", code: "CAD" },
+            "bangalore": { symbol: "₹", code: "INR" },
+            "india": { symbol: "₹", code: "INR" },
+            "mumbai": { symbol: "₹", code: "INR" },
+            "new delhi": { symbol: "₹", code: "INR" },
+        };
+
+        const getCurrencyForLocation = (location) => {
+            const normalizedLocation = location.toLowerCase();
+            for (const key in currencyMap) {
+                if (normalizedLocation.includes(key)) {
+                    return currencyMap[key];
+                }
+            }
+            return { symbol: "$", code: "USD" }; // Default to USD
+        };
+
+        // Industry multipliers for ML model
+        const industryMultipliers = {
+            "technology": 1.2,
+            "finance": 1.3,
+            "healthcare": 1.1,
+            "education": 0.9,
+            "manufacturing": 1.0,
+            "retail": 0.8,
+            "other": 1.0
+        };
+
+        // Location cost of living multipliers
+        const locationMultipliers = {
+            "san francisco": 1.5,
+            "new york": 1.4,
+            "london": 1.3,
+            "boston": 1.2,
+            "seattle": 1.2,
+            "los angeles": 1.3,
+            "chicago": 1.1,
+            "austin": 1.0,
+            "denver": 1.0,
+            "atlanta": 0.9,
+            "dallas": 0.9,
+            "houston": 0.8,
+            "phoenix": 0.8,
+            "philadelphia": 0.9,
+            "detroit": 0.7,
+            "miami": 0.9,
+            "minneapolis": 0.9,
+            "portland": 1.0,
+            "san diego": 1.1,
+            "washington dc": 1.2
+        };
+
+        const jobComplexityScores = {
+            'software engineer': { base: 85000, complexity: 1.2 },
+            'data scientist': { base: 95000, complexity: 1.3 },
+            'product manager': { base: 105000, complexity: 1.4 },
+            'ux designer': { base: 80000, complexity: 1.1 },
+            'marketing manager': { base: 75000, complexity: 1.0 },
+            'sales representative': { base: 65000, complexity: 0.9 },
+            'customer support': { base: 45000, complexity: 0.8 },
+            'administrative assistant': { base: 40000, complexity: 0.7 },
+            'default': { base: 60000, complexity: 1.0 }
+        };
+
+        const experienceMultipliers = {
+            0: 0.7,
+            1: 0.8,
+            2: 0.9,
+            3: 1.0,
+            4: 1.1,
+            5: 1.2,
+            6: 1.3,
+            7: 1.4,
+            8: 1.5,
+            9: 1.6,
+            10: 1.7,
+            15: 1.9,
+            20: 2.0
+        };
+
+        function predictSalaryML(jobTitle, location, experience, industry) {
+            try {
+                const normalizedJobTitle = jobTitle.toLowerCase();
+                const normalizedLocation = location.toLowerCase();
+                const expYears = parseInt(experience);
+                let jobData = jobComplexityScores.default;
+                for (const [key, value] of Object.entries(jobComplexityScores)) {
+                    if (normalizedJobTitle.includes(key)) {
+                        jobData = value;
+                        break;
+                    }
+                }
+                
+                let locationMultiplier = 1.0;
+                for (const [key, value] of Object.entries(locationMultipliers)) {
+                    if (normalizedLocation.includes(key)) {
+                        locationMultiplier = value;
+                        break;
+                    }
+                }
+                
+                const industryMultiplier = industryMultipliers[industry] || 1.0;
+                
+                let expMultiplier = 1.0;
+                for (const [years, multiplier] of Object.entries(experienceMultipliers)) {
+                    if (expYears >= parseInt(years)) {
+                        expMultiplier = multiplier;
+                    } else {
+                        break;
+                    }
+                }
+                
+                let baseSalary = jobData.base;
+                
+                let adjustedSalary = baseSalary * expMultiplier * locationMultiplier * industryMultiplier;
+                
+                // Add some randomness to simulate ML prediction
+                const randomFactor = 0.9 + (Math.random() * 0.2); // 0.9 to 1.1
+                adjustedSalary = adjustedSalary * randomFactor;
+                let confidence = 0.7; // Base confidence
+                
+                if (jobData !== jobComplexityScores.default) confidence += 0.1;
+                if (locationMultiplier !== 1.0) confidence += 0.1;
+                if (industryMultiplier !== 1.0) confidence += 0.1;
+                
+                confidence = Math.min(confidence, 0.95);
+                
+                return {
+                    salary: adjustedSalary,
+                    confidence: confidence
+                };
+            } catch (error) {
+                console.error("Error in ML prediction:", error);
+                return {
+                    salary: 60000,
+                    confidence: 0.5
+                };
+            }
+        }
+
+        salaryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const jobTitle = jobTitleInput.value.trim();
+            const location = locationInput.value.trim();
+            const experience = experienceInput.value.trim();
+            const industry = industrySelect.value;
+            
+            if (!jobTitle || !location || !experience || !industry) {
+                show(salaryErrorMessage);
+                salaryErrorMessage.textContent = "Please fill in all fields to calculate your salary estimate.";
+                return;
+            }
+
+            hide(salaryOutputArea);
+            hide(salaryErrorMessage);
+            hide(mlPrediction);
+            salaryResult.textContent = '';
+            salaryDetails.textContent = '';
+
+            // Show loading spinner
+            show(salaryLoadingSpinner);
+            getSalaryBtn.disabled = true;
+            getSalaryBtn.textContent = 'Calculating...';
+
+            try {
+                const currency = getCurrencyForLocation(location);
+                
+                const mlPredictionData = predictSalaryML(jobTitle, location, experience, industry);
+                
+                const salaryPrompt = `Provide a realistic salary range for a "${jobTitle}" in "${location}" with ${experience} years of experience in the ${industry} industry.
+                Format: ${currency.symbol}X,000 - ${currency.symbol}Y,000 ${currency.code} annually.
+                Also provide a brief context about the role and market conditions in 1-2 sentences.
+                Separate the salary range and context with a | symbol.`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: salaryPrompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = "AIzaSyDk_jTVeFlX8d7uo3guo6-tFpuQjGMrl2Y"; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    const [salaryRange, context] = text.split('|').map(s => s.trim());
+                    
+                    salaryResult.textContent = salaryRange || text;
+                    if (context) {
+                        salaryDetails.textContent = context;
+                    } else {
+                        salaryDetails.textContent = `Based on current market data for ${location} in the ${industry} industry`;
+                    }
+                    
+                    show(mlPrediction);
+                    const mlSalaryFormatted = `${currency.symbol}${Math.round(mlPredictionData.salary / 1000)}K - ${currency.symbol}${Math.round(mlPredictionData.salary * 1.2 / 1000)}K ${currency.code}`;
+                    mlSalaryRange.textContent = `ML Prediction: ${mlSalaryFormatted}`;
+                    mlConfidence.textContent = `Model Confidence: ${Math.round(mlPredictionData.confidence * 100)}%`;
+                    confidenceFill.style.width = `${mlPredictionData.confidence * 100}%`;
+                    
+                    show(salaryOutputArea);
+                } else {
+                    throw new Error("No valid salary estimate received from the AI model.");
+                }
+            } catch (error) {
+                console.error("Failed to fetch salary estimate:", error);
+                show(salaryErrorMessage);
+                salaryErrorMessage.textContent = `Unable to calculate salary: ${error.message}. Please try again.`;
+            } finally {
+                hide(salaryLoadingSpinner);
+                getSalaryBtn.disabled = false;
+                getSalaryBtn.textContent = 'Calculate Salary Range';
+            }
+        });
+
+        [jobTitleInput, locationInput, experienceInput, industrySelect].forEach(input => {
+            input.addEventListener('input', () => {
+                hide(salaryErrorMessage);
+            });
+        });
+    </script>
+</body>
+</html>
