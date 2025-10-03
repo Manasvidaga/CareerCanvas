@@ -1,679 +1,1508 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AI-Powered Task Manager (with TF.js)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalised Task Manager</title>
+    <style>
+        :root {
+            --background-gradient-start: #141E30;
+            --background-gradient-end: #243B55;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #b8c6db;
+            --accent-blue: #4A90E2;
+            --accent-hover: #357ABD;
+            --success-green: #27AE60;
+            --danger-red: #E74C3C;
+            --warning-orange: #f39c12; /* New color for warning/priority */
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
 
-<!-- TensorFlow.js -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js"></script>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-/* ====== UI (keeps your theme) ====== */
-:root{
-  --bg-gradient-start:#0f2027; --bg-gradient-end:#203a43;
-  --card-bg: rgba(255,255,255,0.08); --card-border: rgba(255,255,255,0.2);
-  --text-primary:#fff; --text-secondary:#b8c6db;
-  --accent-blue:#4A90E2; --accent-hover:#357ABD;
-  --success-green:#27AE60; --danger-red:#E74C3C;
-  --warning-orange:#f39c12; --reminder-yellow:#FFD166;
-  --shadow: 0 8px 32px rgba(0,0,0,0.35);
-  --shadow-hover: 0 12px 40px rgba(0,0,0,0.45);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--background-gradient-start) 0%, var(--background-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(39, 174, 96, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .animated-bg span.icon-float {
+            position: absolute;
+            bottom: -100px;
+            color: var(--animated-icon-color);
+            font-size: 20px;
+            opacity: 0;
+            animation: floatUpCareer 15s linear infinite;
+            user-select: none;
+        }
+
+        .icon-float.icon-lightbulb::before { content: "💡"; }
+        .icon-float.icon-gear::before { content: "⚙️"; }
+        .icon-float.icon-briefcase::before { content: "💼"; }
+        .icon-float.icon-arrow::before { content: "📈"; }
+        .icon-float.icon-cap::before { content: "🎓"; }
+        .icon-float.icon-speech::before { content: "💬"; }
+        .icon-float.icon-star::before { content: "⭐"; }
+        .icon-float.icon-network::before { content: "🌐"; }
+        .icon-float.icon-puzzle::before { content: "🧩"; }
+        .icon-float.icon-target::before { content: "🎯"; }
+        .icon-float.icon-pencil::before { content: "✏️"; }
+        .icon-float.icon-rocket::before { content: "🚀"; }
+
+
+        @keyframes floatUpCareer {
+            0% {
+                transform: translateY(0vh) translateX(0vw);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 0.2;
+            }
+
+            100% {
+                transform: translateY(-110vh) translateX(calc(var(--drift-x, 0) * 2vw));
+                opacity: 0;
+            }
+        }
+
+        .animated-bg span:nth-child(1) { left: 8%; animation-delay: 0s; font-size: 38px; --drift-x: -1.2; color: rgba(255,255,255,0.22);}
+        .animated-bg span:nth-child(2) { left: 18%; animation-delay: 2.5s; font-size: 30px; --drift-x: 1; animation-duration: 18s; }
+        .animated-bg span:nth-child(3) { left: 22%; animation-delay: 4s; font-size: 42px; --drift-x: -1.5; color: rgba(255,255,255,0.25);}
+        .animated-bg span:nth-child(4) { left: 12%; animation-delay: 1s; font-size: 32px; --drift-x: 0.5; animation-duration: 13s; }
+        .animated-bg span:nth-child(5) { left: 18%; animation-delay: 5s; font-size: 40px; --drift-x: -0.8; animation-duration: 20s; color: rgba(255,255,255,0.15);}
+        .animated-bg span:nth-child(6) { left: 8%; animation-delay: 3s; font-size: 30px; --drift-x: 1.2; animation-duration: 16s; }
+        .animated-bg span:nth-child(7) { left: 3%; animation-delay: 0.8s; font-size: 45px; --drift-x: -0.8; color: rgba(255,255,255,0.28);}
+        .animated-bg span:nth-child(8) { left: 90%; animation-delay: 4.5s; font-size: 28px; --drift-x: 0.8; animation-duration: 14s; }
+        .animated-bg span:nth-child(9) { left: 88%; animation-delay: 1.5s; font-size: 36px; --drift-x: -1.2; animation-duration: 19s; color: rgba(255,255,255,0.24);}
+        .animated-bg span:nth-child(10) { left: 3%; animation-delay: 3.5s; font-size: 35px; --drift-x: 1.1; animation-duration: 17s; }
+        .animated-bg span:nth-child(11) { left: 13%; animation-delay: 6s; font-size: 28px; --drift-x: -0.7; color: rgba(255,255,255,0.20);}
+        .animated-bg span:nth-child(12) { left: 83%; animation-delay: 2s; font-size: 38px; --drift-x: 0.7; animation-duration: 15s; }
+        .animated-bg span:nth-child(13) { left: 23%; animation-delay: 0.5s; font-size: 43px; --drift-x: 1.3; animation-duration: 22s; color: rgba(255,255,255,0.26);}
+        .animated-bg span:nth-child(14) { left: 9%; animation-delay: 5.5s; font-size: 26px; --drift-x: -0.9; animation-duration: 12s; }
+        .animated-bg span:nth-child(15) { left: 13%; animation-delay: 2.2s; font-size: 37px; --drift-x: 0.9; animation-duration: 17s; color: rgba(255,255,255,0.23);}
+        .animated-bg span:nth-child(16) { left: 95%; animation-delay: 6.5s; font-size: 33px; --drift-x: -1.1; animation-duration: 19s; }
+        .animated-bg span:nth-child(17) { left: 83%; animation-delay: 1.8s; font-size: 41px; --drift-x: 0.6; animation-duration: 14s; color: rgba(255,255,255,0.27);}
+        .animated-bg span:nth-child(18) { left: 83%; animation-delay: 4.2s; font-size: 29px; --drift-x: -0.6; animation-duration: 16s; }
+        .animated-bg span:nth-child(19) { left: 93%; animation-delay: 0.2s; font-size: 39px; --drift-x: 1.4; animation-duration: 21s; color: rgba(255,255,255,0.21);}
+        .animated-bg span:nth-child(20) { left: 95%; animation-delay: 7s; font-size: 34px; --drift-x: 0; animation-duration: 15s; }
+
+.back-button {
+    /* Positioning */
+    position: fixed; /* Stays in place even when scrolling */
+    top: 20px;       /* Distance from the top edge of the viewport */
+    left: 20px;      /* Distance from the left edge of the viewport */
+    z-index: 1000;   /* Ensures it stays on top of other content */
+
+    /* Styling */
+    background-color: #4985ca; /* Use your theme's accent color */
+    color: var(--text-inverted); /* Text color that contrasts with accent */
+    border: none;
+    padding: 10px 15px;
+   
+    border-radius: 8px; /* Slightly rounded corners */
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none; /* In case it's an <a> tag styled as a button */
+    display: inline-flex; /* Allows text and potential icon to align */
+    align-items: center;
+    gap: 5px; /* Space between arrow and text */
+
+    /* Hover effect */
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg,var(--bg-gradient-start),var(--bg-gradient-end));
-  color:var(--text-primary); padding:20px; min-height:100vh;
-}
-.container{max-width:920px;margin:0 auto;padding:28px;background:var(--card-bg);border-radius:18px;border:1px solid var(--card-border);backdrop-filter: blur(8px);box-shadow:var(--shadow)}
-.header{text-align:center;margin-bottom:26px}
-.header h1{font-size:2.6rem;background:linear-gradient(45deg,var(--accent-blue),var(--success-green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header p{color:var(--text-secondary);margin-top:8px}
 
-/* form */
-.task-form{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
-.input-row{display:flex;gap:12px;flex-wrap:wrap}
-.input-row label{min-width:70px;color:var(--text-secondary);align-self:center}
-.input-row input,input[type="date"],input[type="time"],select{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--text-primary);font-size:0.95rem;flex:1}
-#taskInput{flex:1 1 100%}
-#addTaskBtn{align-self:flex-end;padding:10px 18px;border-radius:10px;border:none;background:linear-gradient(45deg,var(--accent-blue),var(--accent-hover));color:white;font-weight:600;cursor:pointer}
-#addTaskBtn:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
-
-/* actions & badges */
-ul{list-style:none;padding:0;margin-top:10px}
-.task-item{display:flex;align-items:center;justify-content:space-between;padding:14px;border-radius:12px;background:rgba(255,255,255,0.04);margin-bottom:12px;border-left:5px solid var(--accent-blue);position:relative;gap:12px}
-.task-item .left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-.task-text{font-size:1rem;word-break:break-word;display:flex;flex-direction:column;gap:6px}
-.task-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.badge{padding:4px 8px;border-radius:8px;font-weight:700;font-size:0.78rem}
-.badge.due{background:rgba(255,255,255,0.06);color:var(--text-secondary)}
-.badge.reminder{background:var(--reminder-yellow);color:#000}
-.badge.risk-high{background:rgba(231,76,60,0.12);color:var(--danger-red)}
-.badge.risk-low{background:rgba(39,174,96,0.12);color:var(--success-green)}
-.priority-pill{padding:4px 8px;border-radius:8px;font-weight:700;font-size:0.78rem}
-
-/* priority pill colors */
-.priority-low{background:rgba(74,144,226,0.12);color:var(--accent-blue)}
-.priority-medium{background:rgba(243,156,18,0.12);color:var(--warning-orange)}
-.priority-high{background:rgba(231,76,60,0.12);color:var(--danger-red)}
-
-/* action buttons */
-.task-actions{display:flex;gap:8px;flex-shrink:0}
-.task-actions button{padding:8px 12px;border-radius:8px;border:none;font-weight:700;cursor:pointer}
-.complete-btn{background:linear-gradient(45deg,var(--success-green),#229954);color:white}
-.delete-btn{background:linear-gradient(45deg,var(--danger-red),#C0392B);color:white}
-.btn-edit{background:rgba(255,255,255,0.06);color:var(--text-secondary)}
-
-/* filter and sort */
-.filter-tabs{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap}
-.filter-tab{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:none;color:var(--text-secondary);cursor:pointer}
-.filter-tab.active{background:var(--accent-blue);color:white}
-.sort-options{display:flex;justify-content:flex-end;align-items:center;margin-bottom:6px;gap:8px}
-
-/* empty */
-.empty-state{text-align:center;color:var(--text-secondary);padding:30px}
-
-/* responsive */
-@media (max-width:760px){
-  .task-item{flex-direction:column;align-items:flex-start}
-  .task-actions{width:100%;justify-content:flex-start}
-  .sort-options{justify-content:flex-start}
-
-  
-}
-/* ==========================
-   FIX FOR SELECT DROPDOWNS
-========================== */
-select {
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.15);  /* <-- ensure background is always visible */
-  color: var(--text-primary);
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+.back-button:hover {
+   /* background-color: var(--accent-hover-color);  A slightly darker shade for hover */
+   background:linear-gradient(135deg, #FFDB58 0%, #CC9B00 100%);;
+    transform: translateY(-2px); /* Subtle lift effect */
 }
 
-select:focus {
-  outline: none;
-  border-color: var(--accent-blue);
-  background: rgba(255,255,255,0.25); /* brighter when focused */
+.back-button:active {
+    transform: translateY(0); /* Resets on click */
 }
 
-/* Ensure dropdown options are always visible */
-select option {
-  background: #2c3e50;   /* dark background for dropdown */
-  color: #ffffff;        /* white text */
-  padding: 10px;
+/* If you want to refine the arrow's styling if it's a character like '←' */
+.back-button::before {
+    font-size: 1.2em; /* Slightly larger arrow */
+    margin-right: 1px; /* Space before the text */
 }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+            position: relative; /* Ensure it's above animated-bg */
+            z-index: 1; /* Ensure it's above animated-bg */
+        }
 
-</style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: bold;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--accent-blue), #27AE60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            line-height: 60px;
+        }
+
+        .task-form {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .task-form:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center; /* Align items vertically */
+        }
+
+        .input-group label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            min-width: 60px; /* Give labels some consistent width */
+        }
+
+        #taskInput,
+        #taskDueDate,
+        #taskPriority {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        #taskInput:focus,
+        #taskDueDate:focus,
+        #taskPriority:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
+        }
+
+        #taskInput::placeholder {
+            color: var(--text-secondary);
+        }
+
+        #taskPriority {
+            flex: 0.5; /* Make priority dropdown smaller */
+            min-width: 120px;
+            cursor: pointer;
+            color: #4192e2;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #addTaskBtn {
+            padding: 15px 25px;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-hover));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+            margin-top: 20px;
+            justify-content: center;
+            margin-left: 300px;
+        }
+
+        #addTaskBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        #addTaskBtn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: linear-gradient(45deg, var(--danger-red), #C0392B);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .task-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-blue);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .task-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            min-height: 400px;
+        }
+
+        #taskList {
+            list-style: none;
+        }
+
+        .task-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 15px;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .task-item.completed {
+            opacity: 0.7;
+            background: rgba(39, 174, 96, 0.1);
+            border-color: rgba(39, 174, 96, 0.3);
+        }
+
+        .task-item.priority-high { border-left: 5px solid var(--danger-red); }
+        .task-item.priority-medium { border-left: 5px solid var(--warning-orange); }
+        .task-item.priority-low { border-left: 5px solid var(--accent-blue); }
+
+
+        .task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 150px; /* Prevent text from becoming too narrow */
+        }
+
+        .task-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer; /* Indicate editable */
+            transition: all 0.3s ease;
+            word-break: break-word; /* Ensure long words break */
+        }
+
+        .task-text.editing {
+            outline: 2px dashed var(--accent-blue);
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+
+        .task-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .task-meta .priority {
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .task-meta .priority.high { color: var(--danger-red); }
+        .task-meta .priority.medium { color: var(--warning-orange); }
+        .task-meta .priority.low { color: var(--accent-blue); }
+        .task-meta .date {
+            white-space: nowrap; /* Keep date on one line */
+        }
+
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0; /* Prevent actions from shrinking */
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .complete-btn {
+            background: linear-gradient(45deg, var(--success-green), #229954);
+            color: white;
+            box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
+        }
+
+        .complete-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .delete-btn {
+            background: linear-gradient(45deg, var(--danger-red), #C0392B);
+            color: white;
+            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 15px;
+            flex-wrap: wrap; /* Allow tabs to wrap */
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap; /* Prevent text breaking */
+        }
+
+        .filter-tab.active {
+            background: var(--accent-blue);
+            color: white;
+            box-shadow: 0 3px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .filter-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .sort-options {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+            gap: 10px;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .sort-options select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .sort-options select:hover {
+            border-color: var(--accent-blue);
+        }
+        .sort-options select option {
+            background: var(--background-gradient-end);
+            color: var(--text-primary);
+        }
+
+        .clear-completed-btn {
+            background: linear-gradient(45deg, #e67e22, #d35400); /* Orange */
+            color: white;
+            box-shadow: 0 3px 10px rgba(230, 126, 34, 0.3);
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 12px;
+            display: none; /* Hidden by default, shown if completed tasks exist */
+        }
+
+        .clear-completed-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+        }
+
+        /* ML Features Styling */
+        .ml-suggestions {
+            background: rgba(74, 144, 226, 0.1);
+            border: 1px dashed var(--accent-blue);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .ml-suggestions h4 {
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .ml-suggestion-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ml-suggestion-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .ml-priority-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .ml-priority-high { background: var(--danger-red); }
+        .ml-priority-medium { background: var(--warning-orange); }
+        .ml-priority-low { background: var(--accent-blue); }
+
+        .ml-insights {
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px dashed var(--success-green);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .ml-insights h4 {
+            color: var(--success-green);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .ml-insight-item {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .input-group {
+                flex-direction: column;
+                align-items: stretch; /* Stretch items to full width */
+            }
+
+            .input-group input, .input-group select {
+                width: 100%; /* Full width inputs/selects */
+            }
+
+            .task-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .task-item {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .task-actions {
+                justify-content: center;
+            }
+
+            .filter-tabs {
+                justify-content: flex-start; /* Align tabs to start when wrapped */
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>AI Task Manager</h1>
-      <p>Priority prediction & overdue-risk (trained client-side)</p>
+<div class="animated-bg">
+    <span class="icon-float icon-lightbulb"></span>
+    <span class="icon-float icon-gear"></span>
+    <span class="icon-float icon-briefcase"></span>
+    <span class="icon-float icon-arrow"></span>
+    <span class="icon-float icon-cap"></span>
+    <span class="icon-float icon-speech"></span>
+    <span class="icon-float icon-star"></span>
+    <span class="icon-float icon-network"></span>
+    <span class="icon-float icon-puzzle"></span>
+    <span class="icon-float icon-target"></span>
+    <span class="icon-float icon-pencil"></span>
+    <span class="icon-float icon-rocket"></span>
+    <span class="icon-float icon-lightbulb"></span>
+    <span class="icon-float icon-gear"></span>
+    <span class="icon-float icon-cap"></span>
+    <span class="icon-float icon-briefcase"></span>
+    <span class="icon-float icon-star"></span>
+    <span class="icon-float icon-puzzle"></span>
+    <span class="icon-float icon-arrow"></span>
+    <span class="icon-float icon-target"></span>
+</div>
+ <button class="back-button" onclick="window.location.href='profile.html'">← Back to Profile</button>
+    <div class="container">
+        <div class="header">
+            <h1>Personal Task Manager</h1>
+            <p>Keep track of your tasks and boost your productivity!</p>
+        </div>
+
+        <div class="task-form">
+            <div class="input-group">
+                <label for="taskInput">Task:</label>
+                <input type="text" id="taskInput" placeholder="What needs to be done?" maxlength="200">
+            </div>
+            <div class="input-group">
+                <label for="taskDueDate">Due Date:</label>
+                <input type="date" id="taskDueDate">
+                <label for="taskPriority">Priority:</label>
+                <select id="taskPriority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <button id="addTaskBtn">Add Task</button>
+            <div id="taskErrorMessage" class="error-message"></div>
+            
+            <!-- ML Suggestions Container -->
+            <div id="mlSuggestions" class="ml-suggestions">
+                <h4>💡 AI Suggestions</h4>
+                <div id="suggestionList"></div>
+            </div>
+        </div>
+
+        <div class="task-stats">
+            <div class="stat">
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="completedTasks">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="pendingTasks">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+
+        <!-- ML Insights Panel -->
+        <div class="ml-insights">
+            <h4>📊 Productivity Insights</h4>
+            <div id="mlInsightsContent">
+                <div class="ml-insight-item">Complete 3 more tasks to reach your daily goal!</div>
+                <div class="ml-insight-item">You're most productive on Monday mornings</div>
+                <div class="ml-insight-item">Try breaking down large tasks into smaller steps</div>
+            </div>
+        </div>
+
+        <div class="task-container">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All Tasks</button>
+                <button class="filter-tab" data-filter="pending">Pending</button>
+                <button class="filter-tab" data-filter="completed">Completed</button>
+                <button class="filter-tab" data-filter="priority-high">High Priority</button>
+                <button class="filter-tab" data-filter="priority-medium">Medium Priority</button>
+                <button class="filter-tab" data-filter="priority-low">Low Priority</button>
+            </div>
+
+            <div class="sort-options">
+                <span>Sort by:</span>
+                <select id="sortTasks">
+                    <option value="addedDesc">Recently Added</option>
+                    <option value="dueDateAsc">Due Date (Soonest)</option>
+                    <option value="priorityDesc">Priority (High to Low)</option>
+                    <option value="textAsc">Alphabetical (A-Z)</option>
+                    <option value="mlPriority">AI Priority</option>
+                </select>
+            </div>
+
+            <ul id="taskList"></ul>
+            <button id="clearCompletedBtn" class="clear-completed-btn">Clear Completed Tasks</button>
+        </div>
     </div>
 
-    <div class="task-form">
-      <div class="input-row">
-        <label for="taskInput">Task</label>
-        <input id="taskInput" placeholder="What needs to be done?" maxlength="200" />
-      </div>
-
-      <div class="input-row">
-        <label for="taskDueDate">Due</label>
-        <input id="taskDueDate" type="date" />
-
-        <label for="taskPriority">Priority</label>
-        <select id="taskPriority">
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-
-        <label for="taskReminder">Remind</label>
-        <input id="taskReminder" type="time" />
-      </div>
-
-      <div style="display:flex;gap:12px;align-items:center;">
-        <button id="addTaskBtn">Add Task</button>
-        <div id="mlStatus" style="color:var(--text-secondary);font-size:0.92rem">ML: waiting for data...</div>
-      </div>
-    </div>
-
-    <div class="filter-tabs">
-      <button class="filter-tab active" data-filter="all">All</button>
-      <button class="filter-tab" data-filter="pending">Pending</button>
-      <button class="filter-tab" data-filter="completed">Completed</button>
-      <button class="filter-tab" data-filter="priority-high">High</button>
-      <button class="filter-tab" data-filter="priority-medium">Medium</button>
-      <button class="filter-tab" data-filter="priority-low">Low</button>
-    </div>
-
-    <div class="sort-options">
-      <label style="color:var(--text-secondary);margin-right:8px">Sort:</label>
-      <select id="sortTasks">
-        <option value="addedDesc">Recently Added</option>
-        <option value="dueDateAsc">Due Soon</option>
-        <option value="priorityDesc">Priority</option>
-      </select>
-    </div>
-
-    <ul id="taskList"></ul>
-  </div>
-
-<script>
-/*
-  AI/ML-enabled Task Manager
-  - Uses TF.js to train small models client-side
-  - Priority classifier: multiclass (0 low,1 medium,2 high)
-  - Overdue-risk classifier: binary (0 low risk,1 high risk)
-  - Vocabulary-based simple text features + metadata (due proximity, length, urgency words)
-  - Trains when enough labeled examples exist in localStorage
-*/
-
-// ------- Utilities & storage -------
-const LS_KEY = 'ai_tasks_v1';
-let tasks = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-
-const taskInput = document.getElementById('taskInput');
-const taskDueDate = document.getElementById('taskDueDate');
-const taskPriority = document.getElementById('taskPriority');
-const taskReminder = document.getElementById('taskReminder');
-const addTaskBtn = document.getElementById('addTaskBtn');
-const taskList = document.getElementById('taskList');
-const filterTabs = document.querySelectorAll('.filter-tab');
-const sortTasks = document.getElementById('sortTasks');
-const mlStatus = document.getElementById('mlStatus');
-
-const priorityMap = {low:0, medium:1, high:2};
-const reversePriority = ['low','medium','high'];
-const urgencyWords = ['urgent','asap','important','immediately','now','critical','priority'];
-
-// Save tasks & metadata
-function saveTasks(){
-  localStorage.setItem(LS_KEY, JSON.stringify(tasks));
-  updateMLModelsDebounced();
-}
-
-// Record completedAt when marking complete
-function markCompleted(task, completed){
-  task.completed = completed;
-  task.completedAt = completed ? new Date().toISOString() : null;
-  saveTasks();
-}
-
-// ------- Simple text processing / feature generator -------
-
-// Build vocabulary from existing tasks (top N words)
-function buildVocab(maxWords=60){
-  const freq = {};
-  tasks.forEach(t=>{
-    const words = (t.text||'').toLowerCase().match(/\b[a-z0-9]+\b/g) || [];
-    words.forEach(w => { freq[w] = (freq[w]||0)+1 });
-  });
-  // sort words by frequency, exclude numbers-only & very common stop words
-  const stop = new Set(['the','a','an','to','for','on','in','at','by','and','or','of','is','this','that','with','from','you','your']);
-  const wordsSorted = Object.entries(freq).filter(([w])=>!stop.has(w)).sort((a,b)=>b[1]-a[1]).slice(0,maxWords).map(([w])=>w);
-  return wordsSorted;
-}
-
-// turn text + metadata into numeric feature vector
-function textToFeatures(text, dueDate){
-  const words = (text||'').toLowerCase().match(/\b[a-z0-9]+\b/g) || [];
-  const lengthFeature = Math.min((text||'').length / 200, 1); // normalized length
-  let urgencyScore = 0;
-  words.forEach(w=> { if(urgencyWords.includes(w)) urgencyScore++; });
-  // days until due (if provided)
-  let daysUntilDue = 30; // large default
-  if(dueDate){
-    const due = new Date(dueDate);
-    const now = new Date();
-    const diff = Math.ceil((due.setHours(0,0,0,0) - (new Date()).setHours(0,0,0,0)) / (1000*60*60*24));
-    daysUntilDue = Math.max(Math.min(diff,30), -30); // clamp
-  }
-  // bag-of-words counts (using current vocab)
-  const vec = [];
-  for(const w of vocab){ vec.push(words.filter(x=>x===w).length); }
-  // normalize word counts by text length
-  const norm = (vec.reduce((s,v)=>s+v,0) || 1);
-  const normVec = vec.map(v => v / norm);
-  // features: normalized bag-of-words + length + urgency + due proximity scaled
-  const dueFeature = (30 - daysUntilDue) / 60; // maps to ~ [-0.5,0.5] (more recent -> larger)
-  return [...normVec, lengthFeature, urgencyScore/5, dueFeature];
-}
-
-// ------- Model definitions (small models for responsiveness) -------
-let vocab = buildVocab(50); // initial vocab (may be empty)
-let priorityModel = null;
-let riskModel = null;
-let priorityTrained = false;
-let riskTrained = false;
-
-function makePriorityModel(inputDim){
-  const model = tf.sequential();
-  model.add(tf.layers.dense({inputShape:[inputDim], units: 32, activation: 'relu'}));
-  model.add(tf.layers.dropout({rate:0.2}));
-  model.add(tf.layers.dense({units: 16, activation: 'relu'}));
-  model.add(tf.layers.dense({units: 3, activation: 'softmax'}));
-  model.compile({optimizer: tf.train.adam(0.01), loss: 'sparseCategoricalCrossentropy', metrics:['accuracy']});
-  return model;
-}
-function makeRiskModel(inputDim){
-  const model = tf.sequential();
-  model.add(tf.layers.dense({inputShape:[inputDim], units: 24, activation: 'relu'}));
-  model.add(tf.layers.dropout({rate:0.2}));
-  model.add(tf.layers.dense({units: 12, activation: 'relu'}));
-  model.add(tf.layers.dense({units: 2, activation: 'softmax'}));
-  model.compile({optimizer: tf.train.adam(0.01), loss: 'sparseCategoricalCrossentropy', metrics:['accuracy']});
-  return model;
-}
-
-// prepare training tensors from saved tasks
-function prepareTrainingDataForPriority(){
-  const X = [];
-  const y = [];
-  tasks.forEach(t=>{
-    if(t.priority && t.text){
-      X.push(textToFeatures(t.text, t.due));
-      y.push(priorityMap[t.priority] ?? 0);
-    }
-  });
-  if(X.length===0) return null;
-  return { X: tf.tensor2d(X), y: tf.tensor1d(y,'int32') };
-}
-function prepareTrainingDataForRisk(){
-  // label: 1 if task was completed after due date OR if it was frequently late; only use tasks with due and completedAt
-  const X = [];
-  const y = [];
-  tasks.forEach(t=>{
-    if(t.due && t.completedAt){
-      const due = new Date(t.due);
-      const completed = new Date(t.completedAt);
-      const overdue = completed > due ? 1 : 0;
-      X.push(textToFeatures(t.text, t.due));
-      y.push(overdue);
-    }
-  });
-  if(X.length===0) return null;
-  return { X: tf.tensor2d(X), y: tf.tensor1d(y,'int32') };
-}
-
-// Train both models when enough data
-async function trainModelsIfReady(){
-  // rebuild vocab from tasks (so model sees latest words)
-  vocab = buildVocab(50);
-  const inputDim = vocab.length + 3; // bag + length + urgency + dueFeature
-
-  // priority model: require at least 10 labeled tasks (with priority)
-  const priorityData = prepareTrainingDataForPriority();
-  if(priorityData && priorityData.X.shape[0] >= 10){
-    mlStatus.textContent = 'ML: training priority model...';
-    if(priorityModel) priorityModel.dispose();
-    priorityModel = makePriorityModel(inputDim);
-    await priorityModel.fit(priorityData.X, priorityData.y, {epochs: 30, batchSize: 8, verbose:0});
-    priorityTrained = true;
-    priorityData.X.dispose(); priorityData.y.dispose();
-    mlStatus.textContent = 'ML: priority model trained';
-  } else {
-    priorityTrained = false;
-    mlStatus.textContent = 'ML: not enough data for priority model (need 10+)';
-  }
-
-  // overdue risk model: require at least 15 labeled examples (due & completed)
-  const riskData = prepareTrainingDataForRisk();
-  if(riskData && riskData.X.shape[0] >= 15){
-    mlStatus.textContent = 'ML: training overdue-risk model...';
-    if(riskModel) riskModel.dispose();
-    riskModel = makeRiskModel(inputDim);
-    await riskModel.fit(riskData.X, riskData.y, {epochs: 30, batchSize: 8, verbose:0});
-    riskTrained = true;
-    riskData.X.dispose(); riskData.y.dispose();
-    mlStatus.textContent = 'ML: overdue-risk model trained';
-  } else {
-    riskTrained = false;
-    // don't overwrite priority status line if priority trained
-    if(!priorityTrained) mlStatus.textContent = 'ML: not enough data for overdue-risk model (need 15+)';
-  }
-}
-
-// small debounce to avoid retraining too often
-let trainTimeout = null;
-function updateMLModelsDebounced(delay=1500){
-  if(trainTimeout) clearTimeout(trainTimeout);
-  trainTimeout = setTimeout(()=>{ trainModelsIfReady().catch(e=>{ console.warn(e); mlStatus.textContent='ML: training error'; }); }, delay);
-}
-
-// Predict priority for a text (returns 'low'|'medium'|'high' or null)
-async function predictPriority(text, due){
-  if(!priorityTrained || !priorityModel) return null;
-  const f = textToFeatures(text, due);
-  const t = tf.tensor2d([f]);
-  const pred = priorityModel.predict(t);
-  const arr = await pred.array();
-  t.dispose(); pred.dispose();
-  const idx = arr[0].indexOf(Math.max(...arr[0]));
-  return reversePriority[idx];
-}
-
-// Predict overdue risk: returns 'high' or 'low' or null
-async function predictRisk(text, due){
-  if(!riskTrained || !riskModel) return null;
-  const f = textToFeatures(text, due);
-  const t = tf.tensor2d([f]);
-  const pred = riskModel.predict(t);
-  const arr = await pred.array();
-  t.dispose(); pred.dispose();
-  // arr[0][1] is probability of class 1 (overdue)
-  return arr[0][1] > 0.5 ? 'high' : 'low';
-}
-
-// ------- UI: render tasks, schedule reminders, hooks -------
-
-function formatDue(d){
-  if(!d) return '';
-  try{
-    const dt = new Date(d);
-    // local date string YYYY-MM-DD
-    return dt.toLocaleDateString();
-  }catch(e){return d}
-}
-
-function renderTasks(filter='all'){
-  taskList.innerHTML = '';
-  let filtered = tasks.slice();
-
-  // filter
-  if(filter !== 'all'){
-    if(filter === 'pending') filtered = filtered.filter(t => !t.completed);
-    else if(filter === 'completed') filtered = filtered.filter(t => t.completed);
-    else filtered = filtered.filter(t => t.priority === filter.split('-')[1]);
-  }
-
-  // sort
-  const sortVal = sortTasks.value;
-  if(sortVal === 'dueDateAsc') filtered.sort((a,b)=>{
-    const da = a.due ? new Date(a.due) : new Date(8640000000000000);
-    const db = b.due ? new Date(b.due) : new Date(8640000000000000);
-    return da - db;
-  });
-  else if(sortVal === 'priorityDesc') filtered.sort((a,b)=> priorityMap[b.priority]-priorityMap[a.priority]);
-  else filtered.sort((a,b)=> b.id - a.id);
-
-  if(filtered.length===0){
-    taskList.innerHTML = '<li class="empty-state">No tasks found.</li>';
-    return;
-  }
-
-  filtered.forEach(task=>{
-    const li = document.createElement('li');
-    li.className = `task-item priority-${task.priority}${task.completed?' completed':''}`;
-
-    // left block: text + meta
-    const left = document.createElement('div');
-    left.className = 'left';
-
-    const textWrap = document.createElement('div');
-    textWrap.className = 'task-text';
-
-    const titleLine = document.createElement('div');
-    titleLine.style.display='flex';
-    titleLine.style.gap='10px';
-    titleLine.style.alignItems='center';
-
-    const title = document.createElement('div');
-    title.textContent = task.text;
-    title.style.fontWeight = '600';
-    title.style.minWidth = '0';
-    title.style.overflow = 'hidden';
-    title.style.textOverflow = 'ellipsis';
-    title.style.whiteSpace = 'nowrap';
-
-    // priority pill
-    const pr = document.createElement('div');
-    pr.className = `priority-pill priority-${task.priority}`;
-    pr.textContent = task.priority.toUpperCase();
-
-    titleLine.appendChild(title);
-    titleLine.appendChild(pr);
-
-    // meta line: due / reminder / risk / createdAt
-    const meta = document.createElement('div');
-    meta.className = 'task-meta';
-
-    if(task.due){
-      const dueB = document.createElement('span');
-      dueB.className = 'badge due';
-      dueB.textContent = 'Due: ' + formatDue(task.due);
-      meta.appendChild(dueB);
-    }
-    if(task.reminder){
-      const remB = document.createElement('span');
-      remB.className = 'badge reminder';
-      remB.textContent = task.reminder;
-      meta.appendChild(remB);
-    }
-
-    // risk prediction badge (predict synchronously if we have model)
-    const riskSpan = document.createElement('span');
-    riskSpan.style.display='inline-block';
-    if(riskTrained){
-      // asynchronous prediction: show placeholder then replace
-      riskSpan.className = 'badge';
-      riskSpan.textContent = 'Risk: ...';
-      predictRisk(task.text, task.due).then(r=>{
-        if(r==='high'){ riskSpan.className='badge risk-high'; riskSpan.textContent='High risk'; }
-        else { riskSpan.className='badge risk-low'; riskSpan.textContent='Low risk'; }
-      }).catch(()=>{ riskSpan.style.display='none'; });
-      meta.appendChild(riskSpan);
-    }
-
-    // optional created/updated small stamp
-    const small = document.createElement('div');
-    small.style.fontSize='0.78rem';
-    small.style.color='var(--text-secondary)';
-    small.textContent = task.createdAt ? new Date(task.createdAt).toLocaleString() : '';
-    small.style.marginLeft = '6px';
-    meta.appendChild(small);
-
-    textWrap.appendChild(titleLine);
-    textWrap.appendChild(meta);
-
-    left.appendChild(textWrap);
-
-    // right: actions
-    const actions = document.createElement('div');
-    actions.className = 'task-actions';
-
-    const completeBtn = document.createElement('button');
-    completeBtn.className = 'complete-btn';
-    completeBtn.textContent = task.completed ? 'Undo' : 'Done';
-    completeBtn.addEventListener('click', ()=>{
-      if(!task.completed){
-        task.completed = true;
-        task.completedAt = new Date().toISOString();
-      } else {
-        task.completed = false;
-        task.completedAt = null;
-      }
-      saveTasks();
-      renderTasks(getActiveFilter());
-    });
-
-    const editBtn = document.createElement('button');
-    editBtn.className = 'btn-edit';
-    editBtn.textContent = 'Edit';
-    editBtn.addEventListener('click', ()=> openEditDialog(task));
-
-    const delBtn = document.createElement('button');
-    delBtn.className = 'delete-btn';
-    delBtn.textContent = 'Delete';
-    delBtn.addEventListener('click', ()=>{
-      if(confirm('Delete this task?')){
-        tasks = tasks.filter(t=>t.id !== task.id);
-        saveTasks();
-        renderTasks(getActiveFilter());
-      }
-    });
-
-    actions.appendChild(completeBtn);
-    actions.appendChild(editBtn);
-    actions.appendChild(delBtn);
-
-    li.appendChild(left);
-    li.appendChild(actions);
-
-    taskList.appendChild(li);
-  });
-}
-
-// open quick edit (inline-ish) - simple prompt-based to keep code small
-function openEditDialog(task){
-  const newText = prompt('Edit task text', task.text);
-  if(newText === null) return;
-  task.text = newText.trim() || task.text;
-  const newDue = prompt('Edit due date (YYYY-MM-DD) or blank', task.due || '');
-  if(newDue !== null) task.due = newDue.trim() || null;
-  const newReminder = prompt('Edit reminder time (HH:MM) or blank', task.reminder || '');
-  if(newReminder !== null) task.reminder = newReminder.trim() || null;
-  const newPriority = prompt('Edit priority (low/medium/high)', task.priority);
-  if(newPriority !== null && ['low','medium','high'].includes(newPriority.toLowerCase())) task.priority = newPriority.toLowerCase();
-
-  saveTasks();
-  renderTasks(getActiveFilter());
-}
-
-// get active filter
-function getActiveFilter(){
-  const active = document.querySelector('.filter-tab.active');
-  return active ? active.dataset.filter : 'all';
-}
-
-// schedule reminders: we'll run a periodic check that triggers Notification or alert
-function checkAndNotify(){
-  const now = new Date();
-  tasks.forEach(t=>{
-    if(!t.reminder || t.completed || t._notified) return;
-    // compute today's reminder datetime (uses local today with reminder time)
-    const [hh,mm] = t.reminder.split(':').map(Number);
-    if(isNaN(hh) || isNaN(mm)) return;
-    const reminderDt = new Date();
-    reminderDt.setHours(hh, mm, 0, 0);
-    // only notify if within the past minute and not previously notified
-    const diff = reminderDt - now;
-    if(diff <= 0 && diff > -60 * 1000 * 60){ // within the last hour tolerant window
-      // mark notified so we don't repeat
-      t._notified = true;
-      // show notification
-      if("Notification" in window && Notification.permission === "granted"){
-        new Notification('Task Reminder', { body: t.text });
-      } else {
-        alert(`Reminder: ${t.text}`);
-      }
-    }
-  });
-  // save the _notified flags to persist across reloads
-  saveTasks();
-}
-
-// request permission
-if("Notification" in window && Notification.permission !== "granted") {
-  Notification.requestPermission();
-}
-
-// periodic checker every 30 seconds
-setInterval(checkAndNotify, 30 * 1000);
-
-// ------- event handlers -------
-addTaskBtn.addEventListener('click', async ()=>{
-  const text = taskInput.value.trim();
-  if(!text){ alert('Task cannot be empty'); return; }
-
-  const due = taskDueDate.value || null;
-  let priority = taskPriority.value;
-  const reminder = taskReminder.value || null;
-
-  // baseline heuristic (small): if contains urgency word set high
-  if(urgencyWords.some(w=> new RegExp('\\b'+w+'\\b','i').test(text))) priority = 'high';
-
-  const task = {
-    id: Date.now(),
-    text,
-    due,
-    reminder,
-    priority,
-    completed: false,
-    createdAt: new Date().toISOString(),
-    completedAt: null,
-    _notified: false
-  };
-  tasks.unshift(task);
-  saveTasks();
-  renderTasks(getActiveFilter());
-
-  // attempt to auto-suggest priority using model if available (predict and override select for user)
-  if(priorityTrained){
-    const predicted = await predictPriority(text, due);
-    if(predicted) {
-      taskPriority.value = predicted;
-      // if user wants, we can auto-set — currently we set select for visibility but keep stored priority as original
-      task.priority = predicted;
-      saveTasks();
-      renderTasks(getActiveFilter());
-    }
-  }
-
-  // clear inputs
-  taskInput.value=''; taskDueDate.value=''; taskReminder.value=''; taskPriority.value='low';
-});
-
-// update priority suggestions while typing
-let suggestionTimeout = null;
-taskInput.addEventListener('input', ()=>{
-  if(suggestionTimeout) clearTimeout(suggestionTimeout);
-  suggestionTimeout = setTimeout(async ()=>{
-    const text = taskInput.value.trim();
-    if(!text) return;
-    if(priorityTrained){
-      const predicted = await predictPriority(text, taskDueDate.value || null);
-      if(predicted) taskPriority.value = predicted;
-    }
-  },400);
-});
-
-// filter tabs
-filterTabs.forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    filterTabs.forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    renderTasks(tab.dataset.filter);
-  });
-});
-
-// sort change
-sortTasks.addEventListener('change', ()=> renderTasks(getActiveFilter()));
-
-// initial render and training
-renderTasks();
-updateMLModelsDebounced();
-
-// also attempt to train on load if data exists
-trainModelsIfReady().catch(e=> console.warn(e));
-
-// Keep models updated when tasks change extensively: use a mutation hook to retrain periodically
-// (we already call updateMLModelsDebounced() inside saveTasks)
-
-// small visual helper when loading/saving
-window.addEventListener('beforeunload', ()=>{ /* models not persisted across reloads */ });
-
-// expose tasks for debugging (dev only)
-window._aiTasks = tasks;
-
-</script>
+    <script>
+        // ML Algorithms Implementation
+        class TaskML {
+            constructor() {
+                this.userPatterns = JSON.parse(localStorage.getItem('userPatterns')) || {};
+                this.taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || [];
+                this.initializeML();
+            }
+
+            initializeML() {
+                // Initialize user patterns if not exists
+                if (!this.userPatterns.completionRate) {
+                    this.userPatterns = {
+                        completionRate: 0.7,
+                        productiveHours: [9, 10, 11, 14, 15, 16], // 9AM-12PM, 2PM-5PM
+                        preferredTaskTypes: [],
+                        averageCompletionTime: 2, // hours
+                        priorityPatterns: {}
+                    };
+                }
+            }
+
+            // K-Means Clustering for task categorization
+            clusterTasks(tasks) {
+                // Simple implementation of K-means for task categorization
+                const categories = {
+                    'work': ['meeting', 'report', 'project', 'deadline', 'presentation'],
+                    'personal': ['grocery', 'family', 'home', 'shopping', 'clean'],
+                    'health': ['exercise', 'doctor', 'gym', 'yoga', 'meditation'],
+                    'learning': ['study', 'read', 'course', 'learn', 'research']
+                };
+
+                const taskVectors = tasks.map(task => {
+                    const vector = [];
+                    // Convert task text to feature vector
+                    for (const category in categories) {
+                        const score = categories[category].reduce((sum, keyword) => {
+                            return sum + (task.text.toLowerCase().includes(keyword) ? 1 : 0);
+                        }, 0);
+                        vector.push(score);
+                    }
+                    return vector;
+                });
+
+                // Simple clustering assignment
+                return tasks.map((task, index) => {
+                    const vector = taskVectors[index];
+                    const maxScore = Math.max(...vector);
+                    const categoryIndex = vector.indexOf(maxScore);
+                    const categoryNames = Object.keys(categories);
+                    return {
+                        ...task,
+                        category: maxScore > 0 ? categoryNames[categoryIndex] : 'other'
+                    };
+                });
+            }
+
+            // Decision Tree for priority prediction
+            predictPriority(taskText, dueDate) {
+                const features = this.extractFeatures(taskText, dueDate);
+                
+                // Simple decision tree rules
+                if (features.urgencyScore > 0.7) return 'high';
+                if (features.importanceScore > 0.6) return 'high';
+                if (features.timeSensitive) return 'high';
+                if (features.hasDeadline && features.daysUntilDue < 3) return 'high';
+                if (features.complexity > 0.7) return 'medium';
+                return 'low';
+            }
+
+            extractFeatures(taskText, dueDate) {
+                const urgencyKeywords = ['urgent', 'asap', 'immediately', 'emergency', 'critical'];
+                const importanceKeywords = ['important', 'crucial', 'essential', 'vital'];
+                const complexKeywords = ['complex', 'difficult', 'challenging', 'complicated'];
+                
+                const text = taskText.toLowerCase();
+                const now = new Date();
+                const due = dueDate ? new Date(dueDate) : null;
+                
+                return {
+                    urgencyScore: urgencyKeywords.reduce((score, word) => 
+                        score + (text.includes(word) ? 0.2 : 0), 0),
+                    importanceScore: importanceKeywords.reduce((score, word) => 
+                        score + (text.includes(word) ? 0.25 : 0), 0),
+                    complexity: complexKeywords.reduce((score, word) => 
+                        score + (text.includes(word) ? 0.3 : 0), 0),
+                    timeSensitive: text.includes('today') || text.includes('tomorrow'),
+                    hasDeadline: due !== null,
+                    daysUntilDue: due ? Math.ceil((due - now) / (1000 * 60 * 60 * 24)) : Infinity
+                };
+            }
+
+            // Collaborative Filtering for task suggestions
+            generateSuggestions(currentTasks) {
+                const commonTasks = {
+                    'work': [
+                        'Prepare weekly report',
+                        'Schedule team meeting',
+                        'Review project timeline',
+                        'Update project documentation',
+                        'Follow up with clients'
+                    ],
+                    'personal': [
+                        'Grocery shopping',
+                        'Pay utility bills',
+                        'Clean the house',
+                        'Family dinner planning',
+                        'Exercise routine'
+                    ],
+                    'health': [
+                        'Morning workout session',
+                        'Meal prep for the week',
+                        'Doctor appointment scheduling',
+                        'Meditation practice',
+                        'Evening walk'
+                    ],
+                    'learning': [
+                        'Read industry articles',
+                        'Practice coding skills',
+                        'Watch educational videos',
+                        'Research new technologies',
+                        'Online course progress'
+                    ]
+                };
+
+                const categorizedTasks = this.clusterTasks(currentTasks);
+                const categoryCounts = {};
+                
+                categorizedTasks.forEach(task => {
+                    categoryCounts[task.category] = (categoryCounts[task.category] || 0) + 1;
+                });
+
+                // Find least represented category
+                let minCategory = 'work';
+                let minCount = Infinity;
+                for (const category in commonTasks) {
+                    const count = categoryCounts[category] || 0;
+                    if (count < minCount) {
+                        minCount = count;
+                        minCategory = category;
+                    }
+                }
+
+                return commonTasks[minCategory] || commonTasks.work;
+            }
+
+            // Naive Bayes for completion prediction
+            predictCompletionProbability(task, userHistory) {
+                const similarTasks = userHistory.filter(t => 
+                    t.category === task.category && 
+                    t.priority === task.priority
+                );
+                
+                if (similarTasks.length === 0) return 0.5;
+                
+                const completedSimilar = similarTasks.filter(t => t.completed).length;
+                return completedSimilar / similarTasks.length;
+            }
+
+            // Update user patterns based on behavior
+            updateUserPatterns(completedTask) {
+                const hour = new Date().getHours();
+                if (!this.userPatterns.productiveHours.includes(hour)) {
+                    this.userPatterns.productiveHours.push(hour);
+                    this.userPatterns.productiveHours.sort((a, b) => a - b);
+                }
+
+                // Update completion rate
+                const totalTasks = this.taskHistory.length;
+                const completedTasks = this.taskHistory.filter(t => t.completed).length;
+                this.userPatterns.completionRate = completedTasks / totalTasks;
+
+                localStorage.setItem('userPatterns', JSON.stringify(this.userPatterns));
+            }
+
+            saveTaskHistory(task) {
+                this.taskHistory.push({
+                    ...task,
+                    timestamp: new Date().toISOString(),
+                    completionTime: task.completed ? this.calculateCompletionTime(task) : null
+                });
+                
+                // Keep only last 100 tasks for performance
+                if (this.taskHistory.length > 100) {
+                    this.taskHistory = this.taskHistory.slice(-100);
+                }
+                
+                localStorage.setItem('taskHistory', JSON.stringify(this.taskHistory));
+            }
+
+            calculateCompletionTime(task) {
+                const created = new Date(task.createdAt);
+                const completed = new Date(task.completedAt);
+                return (completed - created) / (1000 * 60 * 60); // Return hours
+            }
+
+            // A* Search Algorithm for optimal task scheduling
+            findOptimalTaskOrder(tasks) {
+                // Simplified A* implementation for task scheduling
+                const scoredTasks = tasks.map(task => ({
+                    ...task,
+                    score: this.calculateTaskScore(task)
+                }));
+
+                return scoredTasks.sort((a, b) => b.score - a.score);
+            }
+
+            calculateTaskScore(task) {
+                const priorityWeights = { high: 3, medium: 2, low: 1 };
+                const priorityScore = priorityWeights[task.priority] || 1;
+                
+                const dueDateScore = task.dueDate ? 
+                    Math.max(0, 10 - (new Date(task.dueDate) - new Date()) / (1000 * 60 * 60 * 24)) : 1;
+                
+                const complexityScore = task.text.length > 50 ? 0.8 : 1;
+                
+                return priorityScore * dueDateScore * complexityScore;
+            }
+        }
+
+        // Initialize ML System
+        const taskML = new TaskML();
+
+        // Get references to DOM elements
+        const taskInput = document.getElementById('taskInput');
+        const taskDueDate = document.getElementById('taskDueDate');
+        const taskPriority = document.getElementById('taskPriority');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const taskList = document.getElementById('taskList');
+        const taskErrorMessage = document.getElementById('taskErrorMessage');
+        const totalTasksEl = document.getElementById('totalTasks');
+        const completedTasksEl = document.getElementById('completedTasks');
+        const pendingTasksEl = document.getElementById('pendingTasks');
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const sortTasksSelect = document.getElementById('sortTasks');
+        const clearCompletedBtn = document.getElementById('clearCompletedBtn');
+        const mlSuggestions = document.getElementById('mlSuggestions');
+        const suggestionList = document.getElementById('suggestionList');
+
+        // Array to store tasks, loaded from Local Storage
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let currentFilter = 'all';
+        let currentSort = 'addedDesc'; // Default sort order
+
+        // Helper function to show an element
+        const show = (element) => element.style.display = 'block';
+        // Helper function to hide an element
+        const hide = (element) => element.style.display = 'none';
+
+        // Save tasks to Local Storage
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Update task statistics
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(task => task.completed).length;
+            const pending = total - completed;
+
+            totalTasksEl.textContent = total;
+            completedTasksEl.textContent = completed;
+            pendingTasksEl.textContent = pending;
+
+            // Show/hide clear completed button
+            if (completed > 0) {
+                show(clearCompletedBtn);
+            } else {
+                hide(clearCompletedBtn);
+            }
+
+            // Animate numbers
+            [totalTasksEl, completedTasksEl, pendingTasksEl].forEach(el => {
+                el.style.transform = 'scale(1.1)';
+                setTimeout(() => el.style.transform = 'scale(1)', 200);
+            });
+        }
+
+        // Sort tasks
+        function sortTasks(tasksToSort) {
+            const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
+
+            switch (currentSort) {
+                case 'addedDesc': // Newest first (default)
+                    return tasksToSort.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                case 'dueDateAsc': // Soonest due date first
+                    return tasksToSort.sort((a, b) => {
+                        if (!a.dueDate && !b.dueDate) return 0;
+                        if (!a.dueDate) return 1; // tasks without due date go to end
+                        if (!b.dueDate) return -1; // tasks without due date go to end
+                        return new Date(a.dueDate) - new Date(b.dueDate);
+                    });
+                case 'priorityDesc': // High priority first
+                    return tasksToSort.sort((a, b) => {
+                        const prioA = priorityOrder[a.priority] || 0;
+                        const prioB = priorityOrder[b.priority] || 0;
+                        return prioB - prioA;
+                    });
+                case 'textAsc': // Alphabetical A-Z
+                    return tasksToSort.sort((a, b) => a.text.localeCompare(b.text));
+                case 'mlPriority': // AI-based priority sorting
+                    return taskML.findOptimalTaskOrder(tasksToSort);
+                default:
+                    return tasksToSort;
+            }
+        }
+
+        // Filter tasks based on current filter
+        function getFilteredTasks() {
+            let filtered = tasks;
+
+            switch (currentFilter) {
+                case 'completed':
+                    filtered = tasks.filter(task => task.completed);
+                    break;
+                case 'pending':
+                    filtered = tasks.filter(task => !task.completed);
+                    break;
+                case 'priority-high':
+                    filtered = tasks.filter(task => task.priority === 'high');
+                    break;
+                case 'priority-medium':
+                    filtered = tasks.filter(task => task.priority === 'medium');
+                    break;
+                case 'priority-low':
+                    filtered = tasks.filter(task => task.priority === 'low');
+                    break;
+                default: // 'all'
+                    filtered = tasks;
+                    break;
+            }
+            return sortTasks([...filtered]); // Create a copy to sort without modifying original array
+        }
+
+        // Render/Re-render all tasks to the DOM
+        function renderTasks() {
+            taskList.innerHTML = '';
+            const filteredAndSortedTasks = getFilteredTasks();
+
+            if (filteredAndSortedTasks.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                let message = '';
+                if (currentFilter === 'all') {
+                    message = 'No tasks yet! Add your first task above to get started.';
+                } else if (currentFilter.startsWith('priority-')) {
+                    const priorityLabel = currentFilter.split('-')[1];
+                    message = `No ${priorityLabel} priority tasks.`;
+                } else {
+                    message = `No ${currentFilter} tasks. Switch to "All Tasks" to see everything.`;
+                }
+
+                emptyState.innerHTML = `
+                    <div class="empty-state-icon">📝</div>
+                    <h3>${message.split('.')[0]}</h3>
+                    <p>${message.split('.').slice(1).join('.') || ''}</p>
+                `;
+                taskList.appendChild(emptyState);
+                updateStats();
+                return;
+            }
+
+            filteredAndSortedTasks.forEach((task, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'task-item';
+                listItem.dataset.id = task.id;
+                listItem.classList.add(`priority-${task.priority || 'low'}`); // Add priority class for styling
+
+                if (task.completed) {
+                    listItem.classList.add('completed');
+                }
+
+                listItem.style.animationDelay = `${index * 0.05}s`; // Faster staggered animation
+
+                const taskContentDiv = document.createElement('div');
+                taskContentDiv.classList.add('task-content');
+
+                const taskTextSpan = document.createElement('span');
+                taskTextSpan.classList.add('task-text');
+                taskTextSpan.textContent = task.text;
+                taskTextSpan.contentEditable = false; // Not editable by default
+                taskTextSpan.setAttribute('role', 'textbox'); // For accessibility
+
+                const taskMetaDiv = document.createElement('div');
+                taskMetaDiv.classList.add('task-meta');
+
+                if (task.priority) {
+                    const prioritySpan = document.createElement('span');
+                    prioritySpan.classList.add('priority', task.priority);
+                    prioritySpan.textContent = `Priority: ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}`;
+                    taskMetaDiv.appendChild(prioritySpan);
+                }
+
+                if (task.dueDate) {
+                    const dueDateSpan = document.createElement('span');
+                    dueDateSpan.classList.add('date');
+                    const dueDate = new Date(task.dueDate + 'T00:00:00'); // Add T00:00:00 to avoid timezone issues
+                    const today = new Date();
+                    today.setHours(0,0,0,0); // Reset time for comparison
+
+                    let dateDisplay = dueDate.toLocaleDateString();
+
+                    if (dueDate < today && !task.completed) {
+                        dueDateSpan.style.color = varStyles.getPropertyValue('--danger-red');
+                        dueDateSpan.textContent = `Overdue: ${dateDisplay}`;
+                    } else if (dueDate.toDateString() === today.toDateString()) {
+                         dueDateSpan.textContent = `Due: Today`;
+                    } else {
+                        dueDateSpan.textContent = `Due: ${dateDisplay}`;
+                    }
+                    taskMetaDiv.appendChild(dueDateSpan);
+                }
+
+                // Add ML prediction badge
+                if (!task.completed) {
+                    const prediction = taskML.predictCompletionProbability(task, taskML.taskHistory);
+                    if (prediction > 0.7) {
+                        const predictionSpan = document.createElement('span');
+                        predictionSpan.classList.add('ml-priority-badge', 'ml-priority-high');
+                        predictionSpan.textContent = 'High Success';
+                        taskMetaDiv.appendChild(predictionSpan);
+                    }
+                }
+
+                taskContentDiv.appendChild(taskTextSpan);
+                taskContentDiv.appendChild(taskMetaDiv);
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.classList.add('task-actions');
+
+                const completeBtn = document.createElement('button');
+                completeBtn.classList.add('btn', 'complete-btn');
+                completeBtn.textContent = task.completed ? 'Undo' : 'Complete';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('btn', 'delete-btn');
+                deleteBtn.textContent = 'Delete';
+
+                actionsDiv.appendChild(completeBtn);
+                actionsDiv.appendChild(deleteBtn);
+
+                listItem.appendChild(taskContentDiv);
+                listItem.appendChild(actionsDiv);
+                taskList.appendChild(listItem);
+            });
+
+            updateStats();
+        }
+
+        // Show ML suggestions
+        function showMLSuggestions() {
+            const suggestions = taskML.generateSuggestions(tasks);
+            suggestionList.innerHTML = '';
+            
+            if (suggestions.length > 0) {
+                suggestions.forEach(suggestion => {
+                    const predictedPriority = taskML.predictPriority(suggestion, null);
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.className = 'ml-suggestion-item';
+                    suggestionItem.innerHTML = `
+                        ${suggestion}
+                        <span class="ml-priority-badge ml-priority-${predictedPriority}">
+                            ${predictedPriority}
+                        </span>
+                    `;
+                    
+                    suggestionItem.addEventListener('click', () => {
+                        taskInput.value = suggestion;
+                        taskPriority.value = predictedPriority;
+                        taskInput.focus();
+                    });
+                    
+                    suggestionList.appendChild(suggestionItem);
+                });
+                show(mlSuggestions);
+            } else {
+                hide(mlSuggestions);
+            }
+        }
+
+        // Add a new task
+        function addTask() {
+            const taskText = taskInput.value.trim();
+            const dueDate = taskDueDate.value;
+            const priority = taskPriority.value;
+
+            if (!taskText) {
+                taskErrorMessage.textContent = "Please enter a task before adding.";
+                show(taskErrorMessage);
+                taskInput.focus();
+                return;
+            }
+
+            if (taskText.length > 200) {
+                taskErrorMessage.textContent = "Task is too long. Please keep it under 200 characters.";
+                show(taskErrorMessage);
+                return;
+            }
+
+            hide(taskErrorMessage);
+
+            const newTask = {
+                id: Date.now(),
+                text: taskText,
+                completed: false,
+                createdAt: new Date().toISOString(),
+                dueDate: dueDate || null, // Store as string 'YYYY-MM-DD' or null
+                priority: priority || 'low' // Default to 'low'
+            };
+
+            // Use ML to predict priority if not set
+            if (!priority || priority === 'low') {
+                const mlPriority = taskML.predictPriority(taskText, dueDate);
+                newTask.priority = mlPriority;
+            }
+
+            tasks.unshift(newTask); // Add to beginning for newest first
+            saveTasks();
+            taskML.saveTaskHistory(newTask);
+            renderTasks();
+            taskInput.value = '';
+            taskDueDate.value = ''; // Clear date input
+            taskPriority.value = 'low'; // Reset priority
+
+            // Hide suggestions after adding task
+            hide(mlSuggestions);
+
+            // Show success feedback
+            addTaskBtn.textContent = '✓ Added!';
+            addTaskBtn.style.background = 'linear-gradient(45deg, #27AE60, #229954)';
+            setTimeout(() => {
+                addTaskBtn.textContent = 'Add Task';
+                addTaskBtn.style.background = 'linear-gradient(45deg, var(--accent-blue), var(--accent-hover))';
+            }, 1000);
+        }
+
+        // Function to handle task editing
+        function handleEditTask(event) {
+            const taskTextSpan = event.target;
+            const listItem = taskTextSpan.closest('.task-item');
+            const taskId = parseInt(listItem.dataset.id);
+            const task = tasks.find(t => t.id === taskId);
+
+            if (!taskTextSpan.classList.contains('editing')) {
+                // Enter edit mode
+                taskTextSpan.contentEditable = true;
+                taskTextSpan.classList.add('editing');
+                taskTextSpan.focus();
+                // Select all text for easier editing
+                const range = document.createRange();
+                range.selectNodeContents(taskTextSpan);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+            } else {
+                // Exit edit mode and save
+                taskTextSpan.contentEditable = false;
+                taskTextSpan.classList.remove('editing');
+                const newText = taskTextSpan.textContent.trim();
+
+                if (newText && newText !== task.text) {
+                    task.text = newText;
+                    saveTasks();
+                    // No need to re-render all tasks, just update this one
+                } else if (!newText) {
+                    // Revert to original if text is empty after editing
+                    taskTextSpan.textContent = task.text;
+                }
+            }
+        }
+
+        // Event Listeners
+        addTaskBtn.addEventListener('click', addTask);
+
+        taskInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                addTask();
+            }
+        });
+
+        // Show ML suggestions when input is focused
+        taskInput.addEventListener('focus', () => {
+            if (tasks.length > 0) {
+                showMLSuggestions();
+            }
+        });
+
+        // Hide error message when user starts typing
+        taskInput.addEventListener('input', () => {
+            if (taskErrorMessage.style.display === 'block') {
+                hide(taskErrorMessage);
+            }
+        });
+
+        // Task list event delegation (for complete, delete, and edit)
+        taskList.addEventListener('click', (event) => {
+            const target = event.target;
+            const listItem = target.closest('.task-item');
+
+            if (!listItem) return; // Clicked outside a task item
+
+            const taskId = parseInt(listItem.dataset.id);
+            const taskIndex = tasks.findIndex(task => task.id === taskId);
+            if (taskIndex === -1) return; // Task not found (shouldn't happen)
+
+            if (target.classList.contains('complete-btn')) {
+                tasks[taskIndex].completed = !tasks[taskIndex].completed;
+                tasks[taskIndex].completedAt = tasks[taskIndex].completed ? new Date().toISOString() : null;
+                saveTasks();
+
+                // Update ML patterns when task is completed
+                if (tasks[taskIndex].completed) {
+                    taskML.updateUserPatterns(tasks[taskIndex]);
+                }
+
+                listItem.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    listItem.style.transform = 'scale(1)';
+                    renderTasks();
+                }, 200);
+            } else if (target.classList.contains('delete-btn')) {
+                if (confirm('Are you sure you want to delete this task?')) {
+                    listItem.style.transform = 'translateX(-100%)';
+                    listItem.style.opacity = '0';
+                    setTimeout(() => {
+                        tasks = tasks.filter(task => task.id !== taskId);
+                        saveTasks();
+                        renderTasks();
+                    }, 300);
+                }
+            } else if (target.classList.contains('task-text')) {
+                 handleEditTask(event); // Start editing
+            }
+        });
+
+        // Event listener for finishing editing (blur or Enter key)
+        taskList.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && event.target.classList.contains('task-text')) {
+                event.preventDefault(); // Prevent new line in contenteditable
+                event.target.blur(); // Trigger blur to save
+            }
+        });
+
+        taskList.addEventListener('blur', (event) => {
+            if (event.target.classList.contains('task-text') && event.target.contentEditable === 'true') {
+                handleEditTask(event); // Save changes on blur
+            }
+        }, true); // Use capture phase to catch blur event for contenteditable elements
+
+        // Filter tab functionality
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilter = tab.dataset.filter;
+                renderTasks();
+            });
+        });
+
+        // Sort tasks functionality
+        sortTasksSelect.addEventListener('change', (event) => {
+            currentSort = event.target.value;
+            renderTasks();
+        });
+
+        // Clear completed tasks button
+        clearCompletedBtn.addEventListener('click', () => {
+            const completedCount = tasks.filter(task => task.completed).length;
+            if (completedCount > 0 && confirm(`Delete ${completedCount} completed task(s)?`)) {
+                tasks = tasks.filter(task => !task.completed);
+                saveTasks();
+                renderTasks();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (event) => {
+            // Focus input with Ctrl/Cmd + /
+            if ((event.ctrlKey || event.metaKey) && event.key === '/') {
+                event.preventDefault();
+                taskInput.focus();
+            }
+
+            // Clear completed tasks with Ctrl/Cmd + Shift + C
+            if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'C') {
+                event.preventDefault();
+                clearCompletedBtn.click(); // Trigger the button's click handler
+            }
+
+            // Show ML suggestions with Ctrl/Cmd + Space
+            if ((event.ctrlKey || event.metaKey) && event.key === ' ') {
+                event.preventDefault();
+                showMLSuggestions();
+            }
+        });
+
+        const varStyles = getComputedStyle(document.documentElement);
+
+        // Initialize the app
+        function initApp() {
+            renderTasks();
+            taskInput.focus();
+            // Set today's date as default for due date
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = (today.getMonth() + 1).toString().padStart(2, '0');
+            const day = today.getDate().toString().padStart(2, '0');
+            taskDueDate.value = `${year}-${month}-${day}`;
+            
+            // Show ML suggestions if there are existing tasks
+            if (tasks.length > 0) {
+                setTimeout(showMLSuggestions, 1000);
+            }
+        }
+
+        // Load app when DOM is ready
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
 </body>
 </html>
