@@ -1194,7 +1194,7 @@
                 chatHistory.push({ role: "user", parts: [{ text: salaryPrompt }] });
 
                 const payload = { contents: chatHistory };
-                const apiKey = "AIzaSyDk_jTVeFlX8d7uo3guo6-tFpuQjGMrl2Y"; 
+                const apiKey = "Give_API_KEY_HERE"; 
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
@@ -1249,4 +1249,5 @@
         });
     </script>
 </body>
+
 </html>
