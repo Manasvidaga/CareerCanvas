@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Vocabulary Builder - Career Canvas</title>
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Blue Theme Colors */
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #0ea5e9;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --hover-bg: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Background variables */
+            --bg-color: #f0f9ff;
+            --gradient-1: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+        }
+
+        .dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --accent-color: #60a5fa;
+            --text-color: #f8fafc;
+            --text-light: #cbd5e1;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+            --border-color: #475569;
+            --bg-color: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        /* NAVIGATION BAR */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dark-mode nav {
+            background-color: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* ANIMATED BACKGROUND */
+        .pinterest-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
+        }
+
+        .dark-mode .pinterest-bg {
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary-color) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent-color) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
+            padding: 48px;
+            max-width: 1000px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient-1);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: -200% 0; }
+            50% { background-position: 200% 0; }
+        }
+
+         .logo-img{
+            height: 50px;
+            width: 60px;
+        }
+
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-color);
+            margin-bottom: 16px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Word of the Day Section */
+        .word-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.6s ease-out 0.2s both;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .word-section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .word-label {
+            display: inline-block;
+            background: var(--gradient-1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .word-display {
+            margin-bottom: 30px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #wordDisplay {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(37, 99, 235, 0.2);
+        }
+
+        #pronunciationDisplay {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        #definitionDisplay {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        #examplesDisplay {
+            list-style: none;
+            padding: 0;
+        }
+
+        #examplesDisplay li {
+            background: rgba(37, 99, 235, 0.05);
+            border-left: 3px solid var(--primary-color);
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-color);
+            line-height: 1.6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #examplesDisplay li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background: rgba(37, 99, 235, 0.05);
+            transition: width 0.3s ease;
+        }
+
+        #examplesDisplay li:hover::before {
+            width: 100%;
+        }
+
+        /* ML Insights Section */
+        .ml-insights {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 5px solid var(--success-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .ml-insights h3 {
+            color: var(--success-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .ml-insights p {
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .confidence-meter {
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--success-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Buttons */
+        .word-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--gradient-1);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(37, 99, 235, 0.2);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+            display: none;
+            filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.3));
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error Message */
+        .error-message {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #ef4444;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        /* Saved Words Section */
+        .saved-words-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.6s ease-out 0.4s both;
+        }
+
+        .saved-words-section h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .saved-words-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+        }
+
+        #savedWordsList {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .saved-word-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .saved-word-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .saved-word-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .saved-word-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .saved-word-item h3 {
+            font-size: 1.6rem;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .saved-word-item .pronunciation-small {
+            font-size: 1rem;
+            color: var(--primary-color);
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        .saved-word-item .definition-small {
+            font-size: 1rem;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .saved-word-item .item-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .saved-word-item .item-controls button {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .remove-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important;
+        }
+
+        .remove-btn:hover {
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4) !important;
+        }
+
+        .details-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3) !important;
+        }
+
+        .details-btn:hover {
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4) !important;
+        }
+
+        .no-saved-words {
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            padding: 40px;
+            border: 2px dashed var(--border-color);
+            border-radius: 15px;
+            background: var(--hover-bg);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--hover-bg);
+            color: var(--text-color);
+            padding: 3rem 0 2rem;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 32px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            #wordDisplay {
+                font-size: 2.2rem;
+            }
+            
+            .word-controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            #savedWordsList {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .word-section, .saved-words-section {
+                padding: 20px;
+            }
+            
+            #wordDisplay {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Success Animation */
+        @keyframes success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-animation {
+            animation: success 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background with Animation -->
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="subtle-grid"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img class="logo-img" src="logo3.png">
+                <div class="logo-text">Career Canvas</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="profile.html" class="nav-link">Dashboard</a>
+                <a href="vocabulary.html" class="nav-link active">Vocabulary Builder</a>
+                
+                <!-- Toggle Button -->
+                <div class="toggle-container">
+                    <span class="toggle-label">Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="header">
+                <h1>📚 AI Vocabulary Builder</h1>
+                <p class="subtitle">Discover new words daily, understand their meanings, and build your vocabulary with ML-powered insights</p>
+            </div>
+
+            <div class="word-section">
+                <div class="word-label">Word of the Day</div>
+                <div class="word-display">
+                    <h2 id="wordDisplay">Loading Word...</h2>
+                    <p id="pronunciationDisplay"></p>
+                    <p id="definitionDisplay"></p>
+                    <ul id="examplesDisplay"></ul>
+                </div>
+                
+                <div id="mlInsights" class="ml-insights hidden">
+                    <h3>🤖 ML Insights</h3>
+                    <p id="difficultyLevel"></p>
+                    <p id="usageFrequency"></p>
+                    <p id="learningRecommendation"></p>
+                    <div class="confidence-meter">
+                        <div class="confidence-fill" id="confidenceFill"></div>
+                    </div>
+                </div>
+                
+                <div class="word-controls">
+                    <button id="getNewWordBtn">🔄 Get New Word</button>
+                    <button id="saveWordBtn">💾 Save Word</button>
+                </div>
+                <div id="loadingSpinner" class="loading-spinner"></div>
+                <div id="errorMessage" class="error-message"></div>
+            </div>
+
+            <div class="saved-words-section">
+                <h2>📖 My Saved Words</h2>
+                <ul id="savedWordsList"></ul>
+                <p id="noSavedWordsMessage" class="no-saved-words">No words saved yet. Click "Save Word" to add one!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Career Canvas</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="advicepage.html">Career Guides</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        createParticles();
+
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Toggle dark mode
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        const wordDisplay = document.getElementById('wordDisplay');
+        const pronunciationDisplay = document.getElementById('pronunciationDisplay');
+        const definitionDisplay = document.getElementById('definitionDisplay');
+        const examplesDisplay = document.getElementById('examplesDisplay');
+        const getNewWordBtn = document.getElementById('getNewWordBtn');
+        const saveWordBtn = document.getElementById('saveWordBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const errorMessage = document.getElementById('errorMessage');
+        const savedWordsList = document.getElementById('savedWordsList');
+        const noSavedWordsMessage = document.getElementById('noSavedWordsMessage');
+        const mlInsights = document.getElementById('mlInsights');
+        const difficultyLevel = document.getElementById('difficultyLevel');
+        const usageFrequency = document.getElementById('usageFrequency');
+        const learningRecommendation = document.getElementById('learningRecommendation');
+        const confidenceFill = document.getElementById('confidenceFill');
+
+        let currentWordData = null; 
+        const show = (element) => element.classList.remove('hidden');
+        const hide = (element) => element.classList.add('hidden');
+        const enable = (element) => element.disabled = false;
+        const disable = (element) => element.disabled = true;
+
+        const LOCAL_STORAGE_KEY = 'aiVocabularyBuilderSavedWords';
+
+        function getSavedWords() {
+            try {
+                const storedWords = localStorage.getItem(LOCAL_STORAGE_KEY);
+                return storedWords ? JSON.parse(storedWords) : [];
+            } catch (error) {
+                console.error("Error reading from localStorage:", error);
+                return [];
+            }
+        }
+
+        function saveWordsToLocalStorage(words) {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(words));
+            } catch (error) {
+                console.error("Error writing to localStorage:", error);
+            }
+        }
+
+        function addWordToSavedList(wordData) {
+            const savedWords = getSavedWords();
+            if (!savedWords.some(w => w.word.toLowerCase() === wordData.word.toLowerCase())) {
+                savedWords.push(wordData);
+                saveWordsToLocalStorage(savedWords);
+                renderSavedWords();
+                showSuccessMessage(`"${wordData.word}" saved successfully!`);
+            } else {
+                showErrorMessage(`"${wordData.word}" is already in your saved words!`);
+            }
+        }
+
+        function removeWordFromSavedList(wordToRemove) {
+            let savedWords = getSavedWords();
+            savedWords = savedWords.filter(w => w.word.toLowerCase() !== wordToRemove.toLowerCase());
+            saveWordsToLocalStorage(savedWords);
+            renderSavedWords();
+            showSuccessMessage(`"${wordToRemove}" removed.`);
+        }
+
+        function renderSavedWords() {
+            const savedWords = getSavedWords();
+            savedWordsList.innerHTML = ''; 
+
+            if (savedWords.length === 0) {
+                show(noSavedWordsMessage);
+            } else {
+                hide(noSavedWordsMessage);
+                savedWords.forEach((wordData, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'saved-word-item';
+                    li.style.animationDelay = `${index * 0.1}s`; // Stagger animation
+                    li.innerHTML = `
+                        <h3>${wordData.word}</h3>
+                        <p class="pronunciation-small">${wordData.pronunciation}</p>
+                        <p class="definition-small">${wordData.definition}</p>
+                        <div class="item-controls">
+                            <button class="details-btn" data-word="${wordData.word}">👁️ View Details</button>
+                            <button class="remove-btn" data-word="${wordData.word}">🗑️ Remove</button>
+                        </div>
+                    `;
+                    savedWordsList.appendChild(li);
+                });
+            }
+        }
+
+        // --- ML Algorithms for Vocabulary Enhancement ---
+        
+        // 1. Word Difficulty Classifier
+        function classifyWordDifficulty(word) {
+            // Algorithm: Naive Bayes-inspired classifier based on word features
+            const features = extractWordFeatures(word);
+            let difficultyScore = 0;
+            
+            difficultyScore += features.length * 0.1;
+            // Syllable count-based difficulty
+            difficultyScore += features.syllableCount * 0.3;
+            // Prefix/suffix complexity
+            difficultyScore += features.hasComplexPrefix * 0.5;
+            difficultyScore += features.hasComplexSuffix * 0.5;
+            // Non-English origin penalty
+            difficultyScore += features.nonEnglishOrigin * 1.0;
+
+            // Normalize score to 0-1 range
+            const normalizedScore = Math.min(difficultyScore / 5, 1);
+            
+            // Classify into difficulty levels
+            if (normalizedScore < 0.3) return { level: "Easy", score: normalizedScore };
+            if (normalizedScore < 0.7) return { level: "Intermediate", score: normalizedScore };
+            return { level: "Advanced", score: normalizedScore };
+        }
+        
+        function extractWordFeatures(word) {
+            const features = {
+                length: word.length,
+                syllableCount: estimateSyllables(word),
+                hasComplexPrefix: hasComplexPrefix(word),
+                hasComplexSuffix: hasComplexSuffix(word),
+                nonEnglishOrigin: hasNonEnglishOrigin(word)
+            };
+            return features;
+        }
+        
+        function estimateSyllables(word) {
+            // Simple syllable estimation algorithm
+            word = word.toLowerCase().replace(/[^a-z]/g, '');
+            if (word.length <= 3) return 1;
+            
+            let count = 0;
+            const vowels = 'aeiouy';
+            let prevCharIsVowel = false;
+            
+            for (let i = 0; i < word.length; i++) {
+                if (vowels.includes(word[i])) {
+                    if (!prevCharIsVowel) {
+                        count++;
+                    }
+                    prevCharIsVowel = true;
+                } else {
+                    prevCharIsVowel = false;
+                }
+            }
+            
+            // Adjust for silent 'e'
+            if (word.endsWith('e') && count > 1) count--;
+            
+            return Math.max(1, count);
+        }
+        
+        function hasComplexPrefix(word) {
+            const complexPrefixes = ['anti', 'auto', 'bi', 'co', 'counter', 'de', 'dis', 'extra', 'hyper', 'inter', 'macro', 'micro', 'mono', 'multi', 'non', 'over', 'post', 'pre', 'pro', 're', 'semi', 'sub', 'super', 'trans', 'tri', 'ultra', 'un', 'under'];
+            return complexPrefixes.some(prefix => word.toLowerCase().startsWith(prefix)) ? 1 : 0;
+        }
+        
+        function hasComplexSuffix(word) {
+            const complexSuffixes = ['able', 'acy', 'al', 'ance', 'dom', 'en', 'ence', 'er', 'est', 'ful', 'hood', 'ic', 'ical', 'ify', 'ion', 'ish', 'ism', 'ist', 'ity', 'ive', 'ize', 'less', 'ly', 'ment', 'ness', 'or', 'ous', 'ship', 'sion', 'tion', 'tude', 'ty'];
+            return complexSuffixes.some(suffix => word.toLowerCase().endsWith(suffix)) ? 1 : 0;
+        }
+        
+        function hasNonEnglishOrigin(word) {
+            // Simple check for common non-English patterns
+            const nonEnglishPatterns = [
+                /^[aeiou]{3,}/i, // Multiple consecutive vowels
+                /[q][^u]/i,     // Q not followed by U
+                /[xz]{2,}/i,    // Double X or Z
+                /[^aeiou]{4,}/i // Long consonant clusters
+            ];
+            return nonEnglishPatterns.some(pattern => pattern.test(word)) ? 1 : 0;
+        }
+        
+        // 2. Word Usage Frequency Predictor
+        function predictUsageFrequency(word) {
+            // Algorithm: Simple frequency estimation based on word properties
+            let frequencyScore = 0;
+            
+            // Shorter words are used more frequently
+            frequencyScore += Math.max(0, 10 - word.length) * 0.1;
+            
+            // Common prefixes/suffixes increase frequency
+            const commonPrefixes = ['un', 're', 'pre', 'dis', 'mis'];
+            const commonSuffixes = ['ing', 'ed', 's', 'ly', 'er', 'est', 'ment', 'ness'];
+            
+            if (commonPrefixes.some(prefix => word.toLowerCase().startsWith(prefix))) {
+                frequencyScore += 0.3;
+            }
+            
+            if (commonSuffixes.some(suffix => word.toLowerCase().endsWith(suffix))) {
+                frequencyScore += 0.3;
+            }
+            
+            // Normalize to 0-1 range
+            const normalizedScore = Math.min(frequencyScore / 2, 1);
+            
+            if (normalizedScore > 0.7) return { level: "High", score: normalizedScore };
+            if (normalizedScore > 0.4) return { level: "Medium", score: normalizedScore };
+            return { level: "Low", score: normalizedScore };
+        }
+        
+        // 3. Personalized Learning Recommendation Engine
+        function generateLearningRecommendation(word, difficulty, frequency) {
+            // Algorithm: Rule-based recommendation system
+            let recommendations = [];
+            
+            if (difficulty.level === "Advanced") {
+                recommendations.push("Focus on memorizing this word's definition and usage");
+                recommendations.push("Try using this word in writing exercises");
+            } else if (difficulty.level === "Intermediate") {
+                recommendations.push("Practice using this word in conversation");
+                recommendations.push("Create flashcards with example sentences");
+            } else {
+                recommendations.push("Review this word occasionally to maintain familiarity");
+            }
+            
+            if (frequency.level === "Low") {
+                recommendations.push("This word is less common - focus on recognition rather than active use");
+            } else if (frequency.level === "High") {
+                recommendations.push("This is a high-frequency word - prioritize mastering it");
+            }
+            
+            // Add context-specific recommendations
+            if (word.length > 10) {
+                recommendations.push("Break down the word into syllables for easier memorization");
+            }
+            
+            if (hasComplexPrefix(word) || hasComplexSuffix(word)) {
+                recommendations.push("Study the word's morphological structure (prefixes/suffixes)");
+            }
+            
+            return recommendations;
+        }
+        
+        // 4. Spaced Repetition Algorithm
+        function calculateNextReviewInterval(wordData, performanceScore) {
+            // Algorithm: Simplified version of SuperMemo's spaced repetition
+            
+            const baseInterval = 1; // days
+            const easeFactor = 2.5; // Standard ease factor
+            
+            if (performanceScore >= 0.9) {
+                // Excellent recall - significantly increase interval
+                return Math.min(wordData.interval * easeFactor, 365); // Cap at 1 year
+            } else if (performanceScore >= 0.7) {
+                // Good recall - moderate increase
+                return Math.min(wordData.interval * (easeFactor * 0.8), 180); // Cap at 6 months
+            } else if (performanceScore >= 0.5) {
+                // Fair recall - small increase
+                return Math.min(wordData.interval * (easeFactor * 0.5), 90); // Cap at 3 months
+            } else {
+                // Poor recall - reset to short interval
+                return baseInterval;
+            }
+        }
+
+        // --- Enhanced UI Feedback ---
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(16, 185, 129, 0.9);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                z-index: 1000;
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+                animation: slideInRight 0.3s ease-out;
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => document.body.removeChild(successDiv), 300);
+            }, 3000);
+        }
+
+        function showErrorMessage(message) {
+            errorMessage.textContent = message;
+            show(errorMessage);
+            setTimeout(() => hide(errorMessage), 5000); // Hide after 5 seconds
+        }
+
+        // --- Gemini API Integration for Word Generation ---
+        async function fetchNewWord() {
+            hide(errorMessage);
+            errorMessage.textContent = ''; // Clear previous error
+            show(loadingSpinner);
+            disable(getNewWordBtn);
+            disable(saveWordBtn);
+            currentWordData = null; // Clear previous word data
+            hide(mlInsights); // Hide ML insights until new word is loaded
+
+            // API Key Check
+            const GEMINI_API_KEY = "AIzaSyDk_jTVeFlX8d7uo3guo6-tFpuQjGMrl2Y"; // Replace with your actual key
+            if (GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_GOES_HERE" || !GEMINI_API_KEY) {
+                showErrorMessage("Error: Please replace 'YOUR_GEMINI_API_KEY_GOES_HERE' with your actual Gemini API key.");
+                hide(loadingSpinner);
+                enable(getNewWordBtn);
+                return;
+            }
+
+            try {
+                const prompt = `Provide a relatively uncommon but useful English word, its phonetic pronunciation (e.g., /fəˈnɛtɪk/), a concise definition, and three distinct example sentences using the word.
+Present this information clearly, labeled as follows, with example sentences as a numbered list:
+Word:
+Pronunciation:
+Definition:
+Examples:
+1.
+2.
+3.`;
+
+                const payload = {
+                    contents: [{ role: "user", parts: [{ text: prompt }] }]
+                };
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    // Attempt to extract more specific error from Gemini API response
+                    const errorMessage = errorData.error?.message || 'Unknown error';
+                    throw new Error(`API Error: ${response.status} - ${errorMessage}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+
+                    const aiText = result.candidates[0].content.parts[0].text;
+                    const parsedData = parseAiResponse(aiText);
+
+                    if (parsedData.word && parsedData.definition) {
+                        currentWordData = parsedData;
+                        displayWord(parsedData);
+                        
+                        // Apply ML algorithms to the new word
+                        applyMLInsights(parsedData.word);
+                        
+                        enable(saveWordBtn); // Enable save button only if word is valid
+                    } else {
+                        throw new Error("Could not parse word data from AI response. The response format might be unexpected. Trying again might help.");
+                    }
+
+                } else {
+                    throw new Error("No valid response from AI model. Please try again.");
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch new word:", error);
+                showErrorMessage(`Sorry, something went wrong: ${error.message}. Please check your API key and try again.`);
+                clearCurrentWordDisplay(); // Clear display on error
+                disable(saveWordBtn); // Disable save button on error
+            } finally {
+                hide(loadingSpinner);
+                enable(getNewWordBtn);
+            }
+        }
+
+        // Apply ML insights to the current word
+        function applyMLInsights(word) {
+            const difficulty = classifyWordDifficulty(word);
+            const frequency = predictUsageFrequency(word);
+            const recommendations = generateLearningRecommendation(word, difficulty, frequency);
+            
+            // Update ML insights section
+            difficultyLevel.textContent = `Difficulty: ${difficulty.level} (${Math.round(difficulty.score * 100)}%)`;
+            usageFrequency.textContent = `Usage Frequency: ${frequency.level} (${Math.round(frequency.score * 100)}%)`;
+            learningRecommendation.textContent = `Recommendation: ${recommendations[0]}`;
+            
+            // Set confidence meter
+            confidenceFill.style.width = `${(1 - difficulty.score) * 100}%`;
+            
+            // Show ML insights
+            show(mlInsights);
+        }
+
+        // Helper to parse the AI's structured text response
+        function parseAiResponse(text) {
+            const data = {
+                word: '',
+                pronunciation: '',
+                definition: '',
+                examples: []
+            };
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+            let currentSection = '';
+            
+            for (const line of lines) {
+                if (line.startsWith('Word:')) {
+                    data.word = line.substring(5).trim();
+                    currentSection = 'word';
+                } else if (line.startsWith('Pronunciation:')) {
+                    data.pronunciation = line.substring(14).trim();
+                    currentSection = 'pronunciation';
+                } else if (line.startsWith('Definition:')) {
+                    data.definition = line.substring(11).trim();
+                    currentSection = 'definition';
+                } else if (line.startsWith('Examples:')) {
+                    currentSection = 'examples';
+                } else if (currentSection === 'examples') {
+                    // This regex handles lines starting with "1.", "2.", etc., and subsequent lines for multiline examples
+                    const exampleMatch = line.match(/^(\d+\.\s*)(.*)/);
+                    if (exampleMatch) {
+                        data.examples.push(exampleMatch[2].trim());
+                    } else if (line.length > 0 && data.examples.length > 0) {
+                        // Append to the last example if it's a continuation line
+                        data.examples[data.examples.length - 1] += ' ' + line;
+                    }
+                }
+            }
+            return data;
+        }
+
+        // --- Display Current Word ---
+        function displayWord(wordData) {
+            wordDisplay.textContent = wordData.word || 'N/A';
+            pronunciationDisplay.textContent = wordData.pronunciation || 'N/A';
+            definitionDisplay.textContent = wordData.definition || 'N/A';
+            examplesDisplay.innerHTML = '';
+            
+            if (wordData.examples && wordData.examples.length > 0) {
+                wordData.examples.forEach((example, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = example;
+                    li.style.animationDelay = `${index * 0.1}s`;
+                    examplesDisplay.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'No example sentences provided.';
+                examplesDisplay.appendChild(li);
+            }
+        }
+
+        function clearCurrentWordDisplay() {
+            wordDisplay.textContent = 'No word loaded.';
+            pronunciationDisplay.textContent = '';
+            definitionDisplay.textContent = '';
+            examplesDisplay.innerHTML = '';
+        }
+
+        // --- Event Listeners ---
+        getNewWordBtn.addEventListener('click', fetchNewWord);
+
+        saveWordBtn.addEventListener('click', () => {
+            if (currentWordData) {
+                addWordToSavedList(currentWordData);
+                saveWordBtn.classList.add('success-animation');
+                setTimeout(() => saveWordBtn.classList.remove('success-animation'), 300);
+            } else {
+                showErrorMessage("No word to save! Get a new word first.");
+            }
+        });
+
+        // Event delegation for Remove and View Details buttons on saved words
+        savedWordsList.addEventListener('click', (event) => {
+            const target = event.target;
+            // Use closest to ensure we get the button with data-word, even if clicking on an icon/text inside
+            const button = target.closest('.remove-btn, .details-btn');
+
+            if (button) {
+                const word = button.dataset.word;
+                if (button.classList.contains('remove-btn') && word) {
+                    if (confirm(`Are you sure you want to remove "${word}"?`)) {
+                        removeWordFromSavedList(word);
+                    }
+                } else if (button.classList.contains('details-btn') && word) {
+                    const savedWords = getSavedWords();
+                    const wordToDisplay = savedWords.find(w => w.word.toLowerCase() === word.toLowerCase());
+                    if (wordToDisplay) {
+                        displayWord(wordToDisplay);
+                        applyMLInsights(wordToDisplay.word);
+                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top to see the word
+                        enable(saveWordBtn); // Enable save button as there's a word displayed
+                        currentWordData = wordToDisplay; // Set current word data to the viewed word
+                    }
+                }
+            }
+        });
+
+        // --- Add CSS animations ---
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchNewWord(); 
+            renderSavedWords();
+        });
+    </script>
+</body>
+</html>
