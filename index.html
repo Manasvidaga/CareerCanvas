@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Canvas - Professional Career Advice</title>
+    <title>Career Canvas - Your Professional Career Guide</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -12,7 +12,7 @@
             --secondary-color: #764ba2;
             --accent-color: #f093fb;
             --text-color: #2d3748;
-            --bg-color: #f0f9ff; /* Changed to light blue background */
+            --bg-color: #f0f9ff; 
             --card-bg: #ffffff;
             --toggle-bg: #e2e8f0;
             --toggle-circle: #ffffff;
@@ -255,11 +255,20 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-        .logoimg {
-            width: 80px;
-             margin-right: 0; /* Ensure no right margin */
-              vertical-align: middle;
-            }
+         .logo-img{
+            height: 50px;
+            width: 60px;
+        }
+
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
 
         /* Header with Animation */
@@ -1082,7 +1091,8 @@
     <div class="container">
         <header>
             <div class="logo-container">
-                <div class="logo">Career Canvas</div>
+                <img class="logo-img" src="logo3.png">
+                <div class="logo-text">Career Canvas</div>
             </div>
             <nav class="main-nav">
                 <ul>
@@ -1178,7 +1188,6 @@
             </section>
         </main>
         
-        <!-- Footer from the first file -->
         <footer>
             <div class="container1">
                 <div class="footer-content">
@@ -1195,31 +1204,30 @@
                     <div class="footer-column">
                         <h3>Resources</h3>
                         <ul class="footer-links">
-                            <li><a href="#">Career Guides</a></li>
-                            <li><a href="#">Blog</a></li>
+                            <li><a href="resources.html">Career Guides</a></li>
+                            <li><a href="blog.html">Blog</a></li>
                         </ul>
                     </div>
                     
                     <div class="footer-column">
                         <h3>Company</h3>
                         <ul class="footer-links">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="contact.html">Contact</a></li>
                         </ul>
                     </div>
                     
                     <div class="footer-column">
                         <h3>Legal</h3>
                         <ul class="footer-links">
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="service.html">Terms of Service</a></li>
                         </ul>
                     </div>
                 </div>
                 
                 <div class="footer-bottom">
-                    <p>&copy; 2023 Career Canvas. All rights reserved.</p>
+                    <p>&copy; 2025 Career Canvas. All rights reserved.</p>
                 </div>
             </div>
         </footer>
@@ -1249,7 +1257,6 @@
 
         window.addEventListener('scroll', updateScrollProgress);
 
-        // Animation for feature cards and service items
         document.addEventListener('DOMContentLoaded', () => {
             const observerOptions = {
                 threshold: 0.1,
@@ -1263,19 +1270,15 @@
                     }
                 });
             }, observerOptions);
-
-            // Observe feature cards
             document.querySelectorAll('.feature-card').forEach(card => {
                 observer.observe(card);
             });
 
-            // Observe service items
             document.querySelectorAll('.service-item').forEach(item => {
                 observer.observe(item);
             });
         });
 
-        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1289,7 +1292,6 @@
             });
         });
 
-        // Add loading animation
         window.addEventListener('load', () => {
             document.body.style.opacity = '0';
             setTimeout(() => {
@@ -1306,28 +1308,20 @@
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                
-                // Random size between 5 and 15px
                 const size = Math.random() * 10 + 5;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
                 
-                // Random position
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation duration between 10 and 20s
                 const duration = Math.random() * 10 + 10;
                 particle.style.animationDuration = `${duration}s`;
                 
-                // Random delay
                 particle.style.animationDelay = `${Math.random() * 5}s`;
                 
                 particlesContainer.appendChild(particle);
             }
         }
-        
-        // Initialize particles
         createParticles();
     </script>
 </body>
