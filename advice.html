@@ -724,11 +724,12 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+            <p>&copy; 2023 Career Canvas. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
+        // Create animated particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = 30;
@@ -737,6 +738,7 @@
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
+                // Random size between 5 and 15px
                 const size = Math.random() * 10 + 5;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
@@ -756,15 +758,18 @@
             }
         }
 
+        // Initialize particles when page loads
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
             
+            // Get references to DOM elements
             const careerInput = document.getElementById('careerInput');
             const getAdviceBtn = document.getElementById('getAdviceBtn');
             const loadingSpinner = document.getElementById('loadingSpinner');
             const errorMessage = document.getElementById('errorMessage');
             const outputArea = document.getElementById('outputArea');
 
+            // Function to show/hide elements
             const show = (element) => {
                 element.style.display = element === loadingSpinner ? 'flex' : 'block';
             };
@@ -782,11 +787,13 @@
                     return;
                 }
 
+                // Clear previous output and error
                 hide(outputArea);
                 hide(errorMessage);
                 outputArea.textContent = '';
                 errorMessage.textContent = '';
 
+                // Show loading spinner
                 show(loadingSpinner);
                 getAdviceBtn.disabled = true;
 
@@ -795,7 +802,7 @@
                     chatHistory.push({ role: "user", parts: [{ text: prompt }] });
 
                     const payload = { contents: chatHistory };
-                    const apiKey = "Add_API_KEY_HERE";
+                    const apiKey = "AIzaSyDk_jTVeFlX8d7uo3guo6-tFpuQjGMrl2Y";
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {
@@ -840,5 +847,4 @@
         });
     </script>
 </body>
-
 </html>
