@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Article Summarizer - Career Canvas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #0ea5e9;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #ffffff;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --gradient-primary: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-fast: all 0.2s ease;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --border-radius: 20px;
+            --border-radius-sm: 12px;
+            
+            --primary-color: #2563eb;
+            --secondary-color: #0ea5e9;
+            --accent-color: #06b6d4;
+            --gradient-1: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Animated Background */
+        .pinterest-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.15;
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.25;
+            }
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.15;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.15;
+            }
+        }
+
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary-color) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent-color) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* Enhanced Navigation Bar */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Main Content Container */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 0;
+        }
+
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-lg);
+            padding: 50px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .feature-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .tag {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Enhanced Input Styles */
+        .input-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 20px;
+            background: var(--light);
+            border: 2px solid var(--card-border);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            color: var(--dark);
+            resize: vertical;
+            min-height: 250px;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        textarea::placeholder {
+            color: var(--gray);
+            opacity: 0.7;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Enhanced Slider Control */
+        .summary-length-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 35px;
+            padding: 20px;
+            background: var(--light-gray);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--card-border);
+        }
+
+        .summary-length-control label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .summary-length-control input[type="range"] {
+            width: 200px;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, var(--primary) 0%, var(--primary) 33%, var(--card-border) 33%, var(--card-border) 100%);
+            outline: none;
+            -webkit-appearance: none;
+            transition: var(--transition);
+        }
+
+        .summary-length-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .summary-length-control input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .summary-length-control input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: var(--shadow-md);
+        }
+
+        #sentenceCountDisplay {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+            min-width: 100px;
+            text-align: center;
+            padding: 8px 16px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+
+        /* Enhanced Button */
+        button {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 18px 40px;
+            border-radius: var(--border-radius-sm);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Enhanced Loading Spinner */
+        .loading-spinner {
+            border: 4px solid rgba(37, 99, 235, 0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+            display: none;
+            filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.5));
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Enhanced Output Areas */
+        .summary-output-area {
+            background: var(--light-gray);
+            border-left: 5px solid var(--primary);
+            border-radius: var(--border-radius-sm);
+            padding: 25px;
+            font-size: 1.05rem;
+            color: var(--dark);
+            line-height: 1.8;
+            white-space: pre-wrap;
+            box-shadow: var(--shadow-sm);
+            margin-top: 30px;
+            text-align: left;
+            min-height: 60px;
+            border: 1px solid var(--card-border);
+            transition: var(--transition);
+        }
+
+        .summary-output-area:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, rgba(255, 112, 67, 0.1), rgba(255, 112, 67, 0.05));
+            color: #e53e3e;
+            padding: 20px;
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            text-align: center;
+            border: 2px solid rgba(229, 62, 62, 0.3);
+            margin-top: 30px;
+            display: none;
+        }
+
+        /* Stats Display */
+        .stats-display {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--light-gray);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--card-border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--light-gray);
+            color: var(--dark);
+            padding: 5rem 0 2.5rem;
+            margin-top: auto;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-column h3 {
+            color: var(--dark);
+            margin-bottom: 1.8rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition-fast);
+            font-size: 1rem;
+            display: inline-block;
+            position: relative;
+            padding-left: 0;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(8px);
+            padding-left: 8px;
+        }
+
+        .footer-links a::before {
+            content: '→';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: -10px;
+        }
+
+        .footer-bottom {
+            padding-top: 2.5rem;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.95rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--card-border);
+        }
+
+        .social-link:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        /* ML Algorithm Toggle */
+        .algorithm-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .algorithm-btn {
+            background: var(--light-gray);
+            color: var(--gray);
+            border: 1px solid var(--card-border);
+            padding: 10px 20px;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .algorithm-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .nav-links {
+                gap: 2rem;
+            }
+            
+            .container {
+                padding: 30px 25px;
+                margin: 0 10px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .feature-tags {
+                justify-content: center;
+            }
+            
+            textarea {
+                padding: 15px;
+                font-size: 0.95rem;
+                min-height: 200px;
+            }
+            
+            .summary-length-control {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .slider-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .summary-length-control input[type="range"] {
+                width: 100%;
+            }
+            
+            button {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+            
+            .stats-display {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .summary-output-area, .error-message {
+                padding: 20px;
+                font-size: 0.95rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .container {
+                padding: 25px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background for Entire Page -->
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="subtle-grid"></div>
+    </div>
+
+    <!-- Enhanced Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">CC</div>
+                <div class="logo-text">Career Canvas</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link">Career Advisor</a>
+                <a href="#" class="nav-link">About Us</a>
+                <a href="#" class="nav-link active">AI Summarizer</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            
+            <div class="header">
+                <h1>AI Article Summarizer</h1>
+                <p class="subtitle">Transform lengthy articles into concise, intelligent summaries powered by advanced AI technology.</p>
+                <div class="feature-tags">
+                    <span class="tag">AI Powered</span>
+                    <span class="tag">Smart Analysis</span>
+                    <span class="tag">Instant Results</span>
+                </div>
+            </div>
+
+            <div class="algorithm-toggle">
+                <button class="algorithm-btn active" data-algorithm="gemini">AI Summary </button>
+                <button class="algorithm-btn" data-algorithm="extractive">Extractive Summary</button>
+                <button class="algorithm-btn" data-algorithm="abstractive">Abstractive Summary</button>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label" for="articleTextInput">Article Content</label>
+                <textarea id="articleTextInput" placeholder="Paste your article, blog post, research paper, or any lengthy text here for intelligent summarization..."></textarea>
+            </div>
+
+            <div class="summary-length-control">
+                <label for="summaryLength">Summary Length:</label>
+                <div class="slider-container">
+                    <input type="range" id="summaryLength" min="3" max="15" value="5">
+                    <span id="sentenceCountDisplay">5 sentences</span>
+                </div>
+            </div>
+
+            <button id="summarizeBtn">
+                <span>Generate Summary</span>
+            </button>
+
+            <div id="loadingSpinner" class="loading-spinner"></div>
+            <div id="errorMessage" class="error-message"></div>
+            
+            <div id="summaryOutput" class="summary-output-area">
+                Your intelligent summary will appear here. The AI will analyze your content and extract the most important points and key insights.
+            </div>
+
+            <div id="statsDisplay" class="stats-display" style="display: none;">
+                <div class="stat-item">
+                    <span id="originalWords" class="stat-value">0</span>
+                    <span class="stat-label">Original Words</span>
+                </div>
+                <div class="stat-item">
+                    <span id="summaryWords" class="stat-value">0</span>
+                    <span class="stat-label">Summary Words</span>
+                </div>
+                <div class="stat-item">
+                    <span id="compressionRatio" class="stat-value">0%</span>
+                    <span class="stat-label">Compression</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Career Canvas</h3>
+                <p style="color: var(--gray); margin-bottom: 2rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Career Guides</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">AI Summarizer</a></li>
+                    <li><a href="#">Career Tools</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Testimonials</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Data Protection</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const GEMINI_API_KEY = "AIzaSyDk_jTVeFlX8d7uo3guo6-tFpuQjGMrl2Y"; 
+
+        // --- DOM Elements ---
+        const articleTextInput = document.getElementById('articleTextInput');
+        const summaryLengthInput = document.getElementById('summaryLength');
+        const sentenceCountDisplay = document.getElementById('sentenceCountDisplay');
+        const summarizeBtn = document.getElementById('summarizeBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const errorMessage = document.getElementById('errorMessage');
+        const summaryOutput = document.getElementById('summaryOutput');
+        const statsDisplay = document.getElementById('statsDisplay');
+        const originalWords = document.getElementById('originalWords');
+        const summaryWords = document.getElementById('summaryWords');
+        const compressionRatio = document.getElementById('compressionRatio');
+        const algorithmButtons = document.querySelectorAll('.algorithm-btn');
+        
+        let currentAlgorithm = 'gemini';
+
+        // --- Helper Functions ---
+        const show = (element) => element.style.display = 'block';
+        const hide = (element) => element.style.display = 'none';
+        const wordCount = (text) => text.trim().split(/\s+/).filter(word => word.length > 0).length;
+
+        // Update sentence count display and slider background
+        const updateSliderDisplay = () => {
+            const value = summaryLengthInput.value;
+            sentenceCountDisplay.textContent = `${value} sentences`;
+            
+            // Update slider background gradient
+            const percentage = ((value - 3) / (15 - 3)) * 100;
+            summaryLengthInput.style.background = `linear-gradient(to right, var(--primary) 0%, var(--primary) ${percentage}%, var(--card-border) ${percentage}%, var(--card-border) 100%)`;
+        };
+
+        summaryLengthInput.addEventListener('input', updateSliderDisplay);
+        
+        // Initialize slider display
+        updateSliderDisplay();
+
+        // Update stats display
+        const updateStats = (originalText, summaryText) => {
+            const originalWordCount = wordCount(originalText);
+            const summaryWordCount = wordCount(summaryText);
+            const compression = Math.round(((originalWordCount - summaryWordCount) / originalWordCount) * 100);
+
+            originalWords.textContent = originalWordCount.toLocaleString();
+            summaryWords.textContent = summaryWordCount.toLocaleString();
+            compressionRatio.textContent = `${compression}%`;
+            
+            show(statsDisplay);
+        };
+
+        // Algorithm toggle functionality
+        algorithmButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                algorithmButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentAlgorithm = button.dataset.algorithm;
+            });
+        });
+
+        // Extractive summarization algorithm
+        const extractiveSummarize = (text, sentenceCount) => {
+            // Split text into sentences
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            
+            // Simple scoring based on word frequency
+            const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+            const wordFreq = {};
+            words.forEach(word => {
+                wordFreq[word] = (wordFreq[word] || 0) + 1;
+            });
+            
+            // Score sentences based on word frequency
+            const sentenceScores = sentences.map(sentence => {
+                const sentenceWords = sentence.toLowerCase().match(/\b\w+\b/g) || [];
+                let score = 0;
+                sentenceWords.forEach(word => {
+                    score += wordFreq[word] || 0;
+                });
+                return {
+                    sentence: sentence.trim(),
+                    score: score / sentenceWords.length
+                };
+            });
+            
+            // Sort sentences by score and take top ones
+            sentenceScores.sort((a, b) => b.score - a.score);
+            const topSentences = sentenceScores.slice(0, sentenceCount);
+            
+            // Sort back to original order
+            topSentences.sort((a, b) => 
+                sentences.indexOf(a.sentence) - sentences.indexOf(b.sentence)
+            );
+            
+            return topSentences.map(item => item.sentence).join('. ') + '.';
+        };
+
+        // Abstractive summarization simulation
+        const abstractiveSummarize = (text, sentenceCount) => {
+            // This is a simplified simulation - in a real app, you'd use a proper abstractive model
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            
+            // Take the first, middle, and last sentences for a basic abstractive effect
+            const importantSentences = [
+                sentences[0],
+                sentences[Math.floor(sentences.length / 2)],
+                sentences[sentences.length - 1]
+            ].filter(s => s);
+            
+            // Combine and rephrase slightly (simulated)
+            return importantSentences.slice(0, sentenceCount)
+                .map(s => s.trim() + (s.endsWith('.') ? '' : '.'))
+                .join(' ');
+        };
+
+        // --- Main Summarization Logic ---
+        summarizeBtn.addEventListener('click', async () => {
+            const articleText = articleTextInput.value.trim();
+            const sentenceCount = parseInt(summaryLengthInput.value);
+
+            // Clear previous output and error messages
+            summaryOutput.textContent = 'Your intelligent summary will appear here. The AI will analyze your content and extract the most important points and key insights.';
+            hide(errorMessage);
+            hide(statsDisplay);
+            errorMessage.textContent = '';
+
+            // Enhanced input validation
+            if (!articleText) {
+                errorMessage.textContent = "Please paste some text into the article input area to generate a summary.";
+                show(errorMessage);
+                return;
+            }
+
+            if (articleText.length < 100) {
+                errorMessage.textContent = "Please provide a longer text (at least 100 characters) for better summarization results.";
+                show(errorMessage);
+                return;
+            }
+
+            // Show loading state
+            show(loadingSpinner);
+            summarizeBtn.disabled = true;
+
+            try {
+                let summarizedText = '';
+
+                if (currentAlgorithm === 'gemini') {
+                    // Gemini API summarization
+                    const prompt = `Please create a comprehensive summary of the following article in exactly ${sentenceCount} sentences. 
+
+Instructions:
+- Focus on the main points, key insights, and most important information
+- Maintain the original tone and context
+- Ensure each sentence is informative and well-structured
+- Include specific details and examples when relevant
+- Make the summary coherent and easy to understand
+
+Article to summarize:
+"""
+${articleText}
+"""
+
+Summary (${sentenceCount} sentences):`;
+
+                    const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                    const payload = { contents: chatHistory };
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API Error: ${response.status} - ${errorData.error?.message || 'Unknown error occurred'}`);
+                    }
+
+                    const result = await response.json();
+
+                    // Enhanced response validation
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        
+                        summarizedText = result.candidates[0].content.parts[0].text.trim();
+                        
+                        if (!summarizedText) {
+                            throw new Error("The AI returned an empty summary. Please try again with different content.");
+                        }
+                    } else {
+                        throw new Error("No valid summary was generated. Please check your content and try again.");
+                    }
+                } else if (currentAlgorithm === 'extractive') {
+                    // Extractive summarization
+                    summarizedText = extractiveSummarize(articleText, sentenceCount);
+                } else if (currentAlgorithm === 'abstractive') {
+                    // Abstractive summarization
+                    summarizedText = abstractiveSummarize(articleText, sentenceCount);
+                }
+
+                summaryOutput.textContent = summarizedText;
+                updateStats(articleText, summarizedText);
+
+            } catch (error) {
+                console.error("Summarization failed:", error);
+                let errorMsg = "An unexpected error occurred. Please try again.";
+                
+                if (error.message.includes("API Error: 400")) {
+                    errorMsg = "Invalid request. Please check your API key and try again.";
+                } else if (error.message.includes("API Error: 403")) {
+                    errorMsg = "API access denied. Please verify your API key has the necessary permissions.";
+                } else if (error.message.includes("API Error: 429")) {
+                    errorMsg = "Rate limit exceeded. Please wait a moment before trying again.";
+                } else if (error.message.includes("Failed to fetch")) {
+                    errorMsg = "Network error. Please check your internet connection and try again.";
+                } else if (error.message) {
+                    errorMsg = error.message;
+                }
+                
+                errorMessage.textContent = errorMsg;
+                show(errorMessage);
+            } finally {
+                hide(loadingSpinner);
+                summarizeBtn.disabled = false;
+            }
+        });
+
+        // Add keyboard shortcut for summarization (Ctrl+Enter)
+        articleTextInput.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                summarizeBtn.click();
+            }
+        });
+
+        // Auto-resize textarea
+        articleTextInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.max(250, this.scrollHeight) + 'px';
+        });
+
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 25;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 3 and 8px
+                const size = Math.random() * 5 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration between 10 and 20s
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                // Random color from your theme
+                const colors = ['#2563eb', '#0ea5e9', '#06b6d4', '#3b82f6'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = randomColor;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+        });
+    </script>
+</body>
+</html>
