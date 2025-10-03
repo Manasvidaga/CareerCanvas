@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student News Feed - Career Canvas</title>
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Blue Theme Colors */
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #0ea5e9;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --hover-bg: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Background variables */
+            --bg-color: #f0f9ff;
+            --gradient-1: linear-gradient(135deg, #1557e4 0%, #2497cc 100%);
+            --gradient-2: linear-gradient(135deg, #0d86be 0%, #0fb0cc 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #16ad7b 100%);
+        }
+
+        .dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --accent-color: #60a5fa;
+            --text-color: #f8fafc;
+            --text-light: #cbd5e1;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+            --border-color: #475569;
+            --bg-color: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        /* NAVIGATION BAR */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dark-mode nav {
+            background-color: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* ANIMATED BACKGROUND */
+        .pinterest-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
+        }
+
+        .dark-mode .pinterest-bg {
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary-color) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent-color) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+         
+        .logo-img{
+            height: 50px;
+            width: 60px;
+        }
+
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
+            padding: 48px;
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin: 0 auto;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient-1);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: -200% 0; }
+            50% { background-position: 200% 0; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-color);
+            margin-bottom: 16px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Search Section */
+        .search-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 30px;
+            justify-content: center;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            animation: popIn 0.6s 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            80% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .search-section > * {
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .search-section > input[type="text"] { animation-delay: 0.6s; }
+        .search-section > button { animation-delay: 0.65s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        input[type="text"] {
+            padding: 15px 20px;
+            width: 350px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: var(--text-light);
+        }
+
+        input[type="text"]:focus {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        button {
+            background: var(--gradient-1);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* ML Insights Section */
+        .ml-insights {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 5px solid var(--success-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .ml-insights h3 {
+            color: var(--success-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .ml-insights p {
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .confidence-meter {
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--success-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .news-article {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .news-article::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .news-article:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .news-article:hover::before {
+            opacity: 1;
+        }
+
+        .article-image-container {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .news-article img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .news-article:hover img {
+            transform: scale(1.1);
+        }
+
+        .article-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(37, 99, 235, 0.9);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .article-details {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .news-article h2 {
+            margin-top: 0;
+            font-size: 1.3em;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            color: var(--text-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-article p {
+            font-size: 0.95em;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .source-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .source-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.85em;
+        }
+
+        .article-date {
+            font-size: 0.8em;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .read-time {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        /* Filter Tags */
+        .filter-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .filter-tag.active {
+            background: var(--gradient-1);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(37, 99, 235, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-message, .error-message, .no-news-message {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 2px dashed rgba(37, 99, 235, 0.3);
+            color: var(--primary-color);
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        .error-message {
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--hover-bg);
+            color: var(--text-color);
+            padding: 3rem 0 2rem;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 32px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            .search-section { 
+                padding: 20px; 
+                flex-direction: column; 
+            }
+            
+            input[type="text"] { 
+                width: 100%; 
+                max-width: none; 
+            }
+            
+            .news-grid { 
+                grid-template-columns: 1fr; 
+                gap: 20px; 
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .filter-tags {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .search-section {
+                padding: 20px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background with Animation -->
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="subtle-grid"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img class="logo-img" src="logo3.png">
+                <div class="logo-text">Career Canvas</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="profile.html" class="nav-link">Dashboard</a>
+                <a href="news.html" class="nav-link active">News Feed</a>
+                
+                <!-- Toggle Button -->
+                <div class="toggle-container">
+                    <span class="toggle-label">Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="header">
+                <h1>📰 Student News Feed</h1>
+                <p class="subtitle">Stay updated with the latest education and career news with ML-powered insights</p>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="Search news topics..." autocomplete="off" />
+                <button id="searchBtn">Search</button>
+                <button id="refreshBtn">
+                    <span id="refreshIcon">🔄</span>
+                    Refresh
+                </button>
+            </div>
+
+            <div id="mlInsights" class="ml-insights hidden">
+                <h3>🤖 ML Insights</h3>
+                <p id="sentimentAnalysis"></p>
+                <p id="trendingTopics"></p>
+                <p id="newsRecommendation"></p>
+                <div class="confidence-meter">
+                    <div class="confidence-fill" id="confidenceFill"></div>
+                </div>
+            </div>
+
+            <div class="stats-bar" id="statsBar" class="hidden">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalArticles">0</div>
+                    <div class="stat-label">Articles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalSources">0</div>
+                    <div class="stat-label">Sources</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="lastUpdated">--</div>
+                    <div class="stat-label">Last Updated</div>
+                </div>
+            </div>
+
+            <div class="filter-tags" id="filterTags" class="hidden">
+                <div class="filter-tag active" data-sort="publishedAt">Latest</div>
+                <div class="filter-tag" data-sort="title">Alphabetical</div>
+                <div class="filter-tag" data-sort="source">By Source</div>
+                <div class="filter-tag" data-sort="relevance">Relevance</div>
+            </div>
+
+            <div id="newsFeed" class="news-grid">
+                <div class="loading-message">
+                    <div class="loading-spinner"></div>
+                    <p style="margin-top: 15px;">Loading latest news...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Career Canvas</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="advicepage.html">Career Guides</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 5 and 15px
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration between 10 and 20s
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles
+        createParticles();
+
+        // Dark mode toggle functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or respect OS preference
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Toggle dark mode
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // IMPORTANT: REPLACE WITH YOUR ACTUAL GNEWS API KEY
+        const GNEWS_API_KEY = 'd6346c4574d2bf644cec3cbf5723fd0c';
+
+        // Global variables
+        let allArticles = [];
+        let currentSort = 'publishedAt';
+        let isLoading = false;
+
+        // DOM elements
+        const newsFeedDiv = document.getElementById('newsFeed');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const refreshIcon = document.getElementById('refreshIcon');
+        const statsBar = document.getElementById('statsBar');
+        const filterTags = document.getElementById('filterTags');
+        const mlInsights = document.getElementById('mlInsights');
+        const sentimentAnalysis = document.getElementById('sentimentAnalysis');
+        const trendingTopics = document.getElementById('trendingTopics');
+        const newsRecommendation = document.getElementById('newsRecommendation');
+        const confidenceFill = document.getElementById('confidenceFill');
+
+        // --- ML Algorithms for News Analysis ---
+
+        // 1. Sentiment Analysis Algorithm
+        function analyzeSentiment(text) {
+            // Algorithm: Rule-based sentiment analysis with weighted keywords
+            const positiveWords = [
+                'breakthrough', 'innovation', 'success', 'achievement', 'growth', 
+                'improvement', 'positive', 'advancement', 'solution', 'opportunity',
+                'excellent', 'amazing', 'great', 'good', 'beneficial', 'progress'
+            ];
+            
+            const negativeWords = [
+                'crisis', 'problem', 'issue', 'challenge', 'difficulty', 'setback',
+                'negative', 'decline', 'failure', 'risk', 'threat', 'warning',
+                'bad', 'poor', 'difficult', 'struggle', 'concern'
+            ];
+            
+            const neutralWords = [
+                'study', 'research', 'analysis', 'report', 'data', 'findings',
+                'development', 'change', 'update', 'announcement', 'information'
+            ];
+            
+            let positiveScore = 0;
+            let negativeScore = 0;
+            let neutralScore = 0;
+            
+            const words = text.toLowerCase().split(/\s+/);
+            
+            words.forEach(word => {
+                if (positiveWords.includes(word)) positiveScore += 1;
+                if (negativeWords.includes(word)) negativeScore += 1;
+                if (neutralWords.includes(word)) neutralScore += 1;
+            });
+            
+            const totalScore = positiveScore + negativeScore + neutralScore;
+            
+            if (totalScore === 0) return { sentiment: "Neutral", confidence: 0.5 };
+            
+            const positiveRatio = positiveScore / totalScore;
+            const negativeRatio = negativeScore / totalScore;
+            
+            if (positiveRatio > negativeRatio && positiveRatio > 0.3) {
+                return { 
+                    sentiment: "Positive", 
+                    confidence: Math.min(positiveRatio * 1.5, 0.95) 
+                };
+            } else if (negativeRatio > positiveRatio && negativeRatio > 0.3) {
+                return { 
+                    sentiment: "Negative", 
+                    confidence: Math.min(negativeRatio * 1.5, 0.95) 
+                };
+            } else {
+                return { 
+                    sentiment: "Neutral", 
+                    confidence: Math.max(neutralScore / totalScore, 0.5) 
+                };
+            }
+        }
+
+        // 2. Topic Trend Detection Algorithm
+        function detectTrendingTopics(articles) {
+            // Algorithm: TF-IDF inspired topic extraction with frequency analysis
+            const topicKeywords = {
+                'AI & Technology': ['ai', 'artificial intelligence', 'machine learning', 'technology', 'digital', 'innovation'],
+                'Education': ['education', 'school', 'university', 'student', 'learning', 'campus'],
+                'Career & Jobs': ['career', 'job', 'employment', 'work', 'professional', 'hiring'],
+                'Science & Research': ['science', 'research', 'study', 'discovery', 'experiment', 'scientific'],
+                'Business & Economy': ['business', 'economy', 'market', 'financial', 'investment', 'economic']
+            };
+            
+            const topicCounts = {};
+            Object.keys(topicKeywords).forEach(topic => {
+                topicCounts[topic] = 0;
+            });
+            
+            articles.forEach(article => {
+                const text = (article.title + ' ' + (article.description || '')).toLowerCase();
+                
+                Object.entries(topicKeywords).forEach(([topic, keywords]) => {
+                    keywords.forEach(keyword => {
+                        if (text.includes(keyword)) {
+                            topicCounts[topic]++;
+                        }
+                    });
+                });
+            });
+            
+            // Find top trending topics
+            const sortedTopics = Object.entries(topicCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3)
+                .filter(([_, count]) => count > 0);
+            
+            return sortedTopics.map(([topic, count]) => ({
+                topic,
+                frequency: count,
+                percentage: (count / articles.length) * 100
+            }));
+        }
+
+        // 3. Content Relevance Scoring Algorithm
+        function calculateRelevanceScore(article, userInterests = ['education', 'technology', 'career']) {
+            // Algorithm: Content-based relevance scoring with user interest matching
+            let relevanceScore = 0;
+            const text = (article.title + ' ' + (article.description || '')).toLowerCase();
+            
+            // Base relevance based on common student interests
+            userInterests.forEach(interest => {
+                if (text.includes(interest)) {
+                    relevanceScore += 2;
+                }
+            });
+            
+            // Boost for recent articles (recency factor)
+            const articleDate = new Date(article.publishedAt);
+            const currentDate = new Date();
+            const daysDifference = (currentDate - articleDate) / (1000 * 60 * 60 * 24);
+            
+            if (daysDifference <= 1) relevanceScore += 3;
+            else if (daysDifference <= 3) relevanceScore += 2;
+            else if (daysDifference <= 7) relevanceScore += 1;
+            
+            // Boost for comprehensive content
+            const contentLength = text.length;
+            if (contentLength > 500) relevanceScore += 1;
+            
+            // Normalize score to 0-10 range
+            return Math.min(relevanceScore, 10);
+        }
+
+        // 4. Personalization Recommendation Engine
+        function generatePersonalizedRecommendations(articles, userProfile = {}) {
+            // Algorithm: Hybrid recommendation system (content-based + collaborative filtering inspired)
+            const scoredArticles = articles.map(article => {
+                const relevanceScore = calculateRelevanceScore(article, userProfile.interests || ['education', 'technology']);
+                const sentiment = analyzeSentiment(article.title + ' ' + (article.description || ''));
+                
+                // Adjust score based on sentiment (prefer positive/neutral for students)
+                let adjustedScore = relevanceScore;
+                if (sentiment.sentiment === 'Positive') adjustedScore += 1;
+                if (sentiment.sentiment === 'Negative') adjustedScore -= 0.5;
+                
+                return {
+                    ...article,
+                    relevanceScore: adjustedScore,
+                    sentiment: sentiment.sentiment,
+                    sentimentConfidence: sentiment.confidence
+                };
+            });
+            
+            // Sort by relevance score and return top recommendations
+            return scoredArticles
+                .sort((a, b) => b.relevanceScore - a.relevanceScore)
+                .slice(0, Math.min(6, scoredArticles.length));
+        }
+
+        // Apply ML insights to the news feed
+        function applyMLInsights(articles) {
+            if (articles.length === 0) return;
+            
+            // Analyze overall sentiment
+            const allText = articles.map(a => a.title + ' ' + (a.description || '')).join(' ');
+            const overallSentiment = analyzeSentiment(allText);
+            
+            // Detect trending topics
+            const trending = detectTrendingTopics(articles);
+            
+            // Generate recommendations
+            const topRecommendations = generatePersonalizedRecommendations(articles);
+            
+            // Update ML insights section
+            sentimentAnalysis.textContent = `Overall Sentiment: ${overallSentiment.sentiment} (${Math.round(overallSentiment.confidence * 100)}% confidence)`;
+            
+            if (trending.length > 0) {
+                trendingTopics.textContent = `Trending: ${trending.map(t => t.topic).join(', ')}`;
+            } else {
+                trendingTopics.textContent = 'No clear trending topics detected';
+            }
+            
+            if (topRecommendations.length > 0) {
+                newsRecommendation.textContent = `Top Recommendation: ${topRecommendations[0].title.substring(0, 60)}...`;
+            }
+            
+            // Set confidence meter
+            confidenceFill.style.width = `${overallSentiment.confidence * 100}%`;
+            
+            // Show ML insights
+            mlInsights.classList.remove('hidden');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchNews();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            searchBtn.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSearch();
+            });
+            
+            refreshBtn.addEventListener('click', fetchNews);
+
+            // Sort filters
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('click', (e) => {
+                    document.querySelector('.filter-tag.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    currentSort = e.target.dataset.sort;
+                    displayNews(allArticles);
+                });
+            });
+        }
+
+        async function handleSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                await fetchNews(query);
+            } else {
+                await fetchNews();
+            }
+        }
+
+        function setLoadingState(loading) {
+            isLoading = loading;
+            refreshBtn.classList.toggle('loading', loading);
+            if (loading) {
+                refreshIcon.innerHTML = '<div class="loading-spinner"></div>';
+                refreshBtn.disabled = true;
+            } else {
+                refreshIcon.innerHTML = '🔄';
+                refreshBtn.disabled = false;
+            }
+        }
+
+        async function fetchNews(customQuery = null) {
+            if (!GNEWS_API_KEY || GNEWS_API_KEY === 'YOUR_GNEWS_API_KEY_HERE') {
+                displayMessage('⚠️ Please replace "YOUR_GNEWS_API_KEY_HERE" with your actual GNews API key to load news.', 'error-message');
+                return;
+            }
+
+            setLoadingState(true);
+            displayMessage('<div class="loading-spinner"></div><p style="margin-top: 15px;">Fetching latest news...</p>', 'loading-message');
+
+            const query = customQuery || 'education OR technology OR career OR student OR university';
+            const lang = 'en';
+            const country = 'us';
+            const maxArticles = 12;
+
+            const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&lang=${lang}&country=${country}&max=${maxArticles}&token=${GNEWS_API_KEY}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    const errorMessage = data.errors ? data.errors.join(', ') : 'Unknown error occurred.';
+                    displayMessage(`❌ Error fetching news: ${errorMessage}`, 'error-message');
+                    return;
+                }
+
+                if (data.articles && data.articles.length > 0) {
+                    allArticles = data.articles.map(article => ({
+                        ...article,
+                        readTime: estimateReadTime(article.description || article.title),
+                        category: detectCategory(article.title + ' ' + (article.description || '')),
+                        relevanceScore: calculateRelevanceScore(article)
+                    }));
+                    
+                    // Apply ML insights
+                    applyMLInsights(allArticles);
+                    
+                    displayNews(allArticles);
+                    updateStats(allArticles);
+                    showFilters();
+                } else {
+                    displayMessage('📰 No news articles found for the selected criteria. Try different keywords!', 'no-news-message');
+                    hideStats();
+                }
+
+            } catch (error) {
+                displayMessage('🌐 Failed to fetch news. Please check your network connection.', 'error-message');
+                console.error('Fetch Error:', error);
+                hideStats();
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        function estimateReadTime(text) {
+            const wordsPerMinute = 200;
+            const words = text.split(' ').length;
+            const minutes = Math.ceil(words / wordsPerMinute);
+            return `${minutes} min read`;
+        }
+
+        function detectCategory(text) {
+            const categories = {
+                'AI & Tech': ['ai', 'artificial intelligence', 'machine learning', 'technology', 'software', 'digital'],
+                'Education': ['education', 'school', 'university', 'student', 'learning', 'campus'],
+                'Career': ['career', 'job', 'employment', 'work', 'professional', 'hiring'],
+                'Science': ['science', 'research', 'study', 'discovery', 'experiment'],
+                'Business': ['business', 'economy', 'market', 'financial', 'economic']
+            };
+
+            for (const [category, keywords] of Object.entries(categories)) {
+                if (keywords.some(keyword => text.toLowerCase().includes(keyword))) {
+                    return category;
+                }
+            }
+            return 'General';
+        }
+
+        function sortArticles(articles, sortBy) {
+            return [...articles].sort((a, b) => {
+                switch (sortBy) {
+                    case 'title':
+                        return a.title.localeCompare(b.title);
+                    case 'source':
+                        return a.source.name.localeCompare(b.source.name);
+                    case 'relevance':
+                        return (b.relevanceScore || 0) - (a.relevanceScore || 0);
+                    case 'publishedAt':
+                    default:
+                        return new Date(b.publishedAt) - new Date(a.publishedAt);
+                }
+            });
+        }
+
+        function displayNews(articles) {
+            const sortedArticles = sortArticles(articles, currentSort);
+            newsFeedDiv.innerHTML = '';
+
+            sortedArticles.forEach((article, index) => {
+                const articleElement = document.createElement('a');
+                articleElement.href = article.url;
+                articleElement.target = '_blank';
+                articleElement.rel = 'noopener noreferrer';
+                articleElement.classList.add('news-article', 'fade-in');
+                articleElement.style.animationDelay = `${index * 0.1}s`;
+
+                const imageSrc = article.image || `https://via.placeholder.com/350x200/2563eb/ffffff?text=${encodeURIComponent(article.source.name)}`;
+                const publishedDate = new Date(article.publishedAt).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                // Add sentiment indicator
+                const sentiment = analyzeSentiment(article.title + ' ' + (article.description || ''));
+                const sentimentEmoji = sentiment.sentiment === 'Positive' ? '😊' : 
+                                      sentiment.sentiment === 'Negative' ? '😟' : '😐';
+
+                articleElement.innerHTML = `
+                    <div class="article-image-container">
+                        <img src="${imageSrc}" alt="${article.title}" loading="lazy">
+                        <div class="article-category">${article.category} ${sentimentEmoji}</div>
+                    </div>
+                    <div class="article-details">
+                        <h2>${article.title}</h2>
+                        <p>${article.description || 'Click to read the full article and discover more details.'}</p>
+                        <div class="article-footer">
+                            <div class="source-info">
+                                <span class="source-name">${article.source.name}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="article-date">📅 ${publishedDate}</span>
+                                <span class="read-time">${article.readTime}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                newsFeedDiv.appendChild(articleElement);
+            });
+        }
+
+        function updateStats(articles) {
+            const uniqueSources = new Set(articles.map(article => article.source.name)).size;
+            const lastUpdated = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            document.getElementById('totalArticles').textContent = articles.length;
+            document.getElementById('totalSources').textContent = uniqueSources;
+            document.getElementById('lastUpdated').textContent = lastUpdated;
+            
+            statsBar.classList.remove('hidden');
+        }
+
+        function showFilters() {
+            filterTags.classList.remove('hidden');
+        }
+
+        function hideStats() {
+            statsBar.classList.add('hidden');
+            filterTags.classList.add('hidden');
+        }
+
+        function displayMessage(message, className = '') {
+            newsFeedDiv.innerHTML = `<div class="${className}">${message}</div>`;
+        }
+    </script>
+</body>
+</html>
