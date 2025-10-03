@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI/ML Enhanced Skill Gap Analyzer</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(100deg, #141E30 , #243B55 ); min-height: 100vh; padding: 20px; color: #e0e0e0; overflow-x: hidden; }
+.container { max-width: 1000px; margin: 0 auto; background: rgba(40, 44, 52, 0.5); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); overflow: hidden; position: relative; z-index: 1; }
+.header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 30px; text-align: center; }
+.header h1 { font-size: 2.7rem; margin-bottom: 10px; font-weight: 300; }
+.header p { font-size: 1.2rem; opacity: 0.9; }
+.main-content { padding: 40px; }
+.form-section { margin-bottom: 30px; }
+.form-group { margin-bottom: 25px; }
+label { display: block; margin-bottom: 8px; font-weight: 600; color: #c5c8c6; font-size: 1.1rem; }
+select, .multi-select-container { width: 100%; padding: 12px; border: 2px solid #4a4e69; border-radius: 10px; font-size: 1rem; background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9)); color: white; }
+select option { background-color: #2c313a; color: white; }
+select:focus { outline: none; border-color: #61afef; box-shadow: 0 0 0 3px rgba(97,175,239,0.25); }
+.multi-select-container { min-height: 150px; max-height: 200px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; align-content: flex-start; background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9)); }
+.skill-tag { padding: 6px 12px; border-radius: 20px; font-size: 0.9rem; cursor: pointer; border: 2px solid #4c566a; user-select: none; transition: all 0.3s ease; }
+.required-skill { background: #4c566a; color: #ebcb8b; border-color: #5e5473; }
+.optional-skill { background: #3b596a; color: #88c0d0; border-color: #4c7080; }
+.required-skill.selected { background: #ebcb8b; color: #2e3440; border-color: #d08770; }
+.optional-skill.selected { background: #88c0d0; color: #2e3440; border-color: #5e81ac; }
+.skill-tag:hover { transform: translateY(-2px); }
+.analyze-btn { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 15px 40px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(21,63,143,0.4); transition: all 0.3s ease; }
+.analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(7,122,209,0.6); }
+.analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.progress-section { margin-top: 40px; display: none; }
+.progress-container { background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9)); border-radius: 10px; padding: 20px; margin-bottom: 30px; }
+.progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.progress-title { font-size: 1.2rem; font-weight: 600; color: #c5c8c6; }
+.progress-percentage { font-size: 1.5rem; font-weight: 700; color: #61afef; }
+.progress-bar { width: 100%; height: 15px; background: lightslategray; border-radius: 10px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 10px; transition: width 1.5s ease-in-out; }
+.results-section { display: none; margin-top: 40px; }
+.results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+.result-card { background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9)); border-radius: 15px; padding: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); border-left: 5px solid #61afef; }
+.result-card h3 { color: #eceff4; margin-bottom: 15px; font-size: 1.3rem; }
+.skill-list { list-style: none; }
+.skill-list li { padding: 8px 0; border-bottom: 1px solid #3a3f4c; display: flex; justify-content: space-between; align-items: center; color: #d8dee9; }
+.skill-list li:last-child { border-bottom: none; }
+.skill-priority { padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+.priority-high { background: #5c2b29; color: #e06c75; }
+.priority-low { background: #2a4d36; color: #98c379; }
+.learning-path { background: linear-gradient(135deg, rgba(36,59,85,0.9), rgba(20,30,48,0.9)); color: white; border-radius: 15px; padding: 25px; margin-top: 20px; }
+.path-step { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; display: flex; align-items: flex-start; }
+.step-number { display: inline-block; background: rgba(255,255,255,0.08); width: 30px; height: 30px; border-radius: 50%; text-align: center; line-height: 30px; margin-right: 15px; font-weight: 600; color: #e5e9f0; flex-shrink: 0; }
+@media (max-width:768px){.results-grid{grid-template-columns:1fr;}.container{margin:10px;}.main-content{padding:20px;}body{padding:10px;}}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🤖 AI/ML Skill Gap Analyzer</h1>
+        <p>Get dynamic, AI-style skill recommendations</p>
+    </div>
+    <div class="main-content">
+        <div class="form-section">
+            <div class="form-group">
+                <label for="goalSelect">Select Your Career Goal:</label>
+                <select id="goalSelect">
+                    <option value="">Choose your target role...</option>
+                    <option value="frontend">Frontend Developer</option>
+                    <option value="backend">Backend Developer</option>
+                    <option value="fullstack">Full Stack Developer</option>
+                    <option value="mobile">Mobile App Developer</option>
+                    <option value="devops">DevOps Engineer</option>
+                    <option value="datascience">Data Scientist</option>
+                    <option value="ml">Machine Learning Engineer</option>
+                    <option value="cybersecurity">Cybersecurity Specialist</option>
+                    <option value="cloud">Cloud Engineer</option>
+                    <option value="ai">AI Engineer</option>
+                    <option value="dataengineer">Data Engineer</option>
+                    <option value="gamedev">Game Developer</option>
+                    <option value="blockchain">Blockchain Developer</option>
+                    <option value="iot">IoT Engineer</option>
+                    <option value="qa">QA Engineer</option>
+                    <option value="businessanalyst">Business Analyst</option>
+                    <option value="productmanager">Product Manager</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Select Skills You Already Know:</label>
+                <div class="multi-select-container" id="skillsContainer">
+                    <div style="color:#a0a0a0; font-style:italic; padding:20px; text-align:center;">
+                        Please select a career goal first to see relevant skills
+                    </div>
+                </div>
+            </div>
+            <button class="analyze-btn" id="analyzeBtn">🔍 Analyze Skill Gap</button>
+        </div>
+        <div class="progress-section" id="progressSection">
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span class="progress-title">Analyzing Your Skills...</span>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width:0%;background:linear-gradient(90deg,#5e81ac 0%,#88c0d0 100%)"></div>
+                </div>
+            </div>
+        </div>
+        <div class="results-section" id="resultsSection"></div>
+    </div>
+</div>
+
+<script>
+// ---------- Skill Database ----------
+const skillDatabase = {
+    frontend: { required: ['HTML','CSS','JavaScript','React','Responsive Design','Git','webpack','TypeScript'], optional:['Vue.js','Angular','Sass/SCSS','Testing (Jest)','UI/UX Design'] },
+    backend: { required: ['Node.js','Python','SQL','REST APIs','Git','Database Design','Authentication','Server Management'], optional:['GraphQL','Docker','Redis','Microservices','AWS'] },
+    fullstack: { required:['HTML','CSS','JavaScript','React','Node.js','SQL','REST APIs','Git','Database Design'], optional:['TypeScript','Docker','AWS','Testing (Jest)','GraphQL'] },
+    mobile: { required:['React Native','JavaScript','Mobile UI/UX','API Integration','Git','App Store Deployment'], optional:['Flutter','Swift','Kotlin','Push Notifications','Native Modules'] },
+    devops: { required:['Linux','Docker','Kubernetes','CI/CD','AWS','Git','Monitoring','Infrastructure as Code'], optional:['Terraform','Jenkins','Ansible','Prometheus','ELK Stack'] },
+    datascience: { required:['Python','SQL','Statistics','Pandas','NumPy','Data Visualization','Machine Learning Basics'], optional:['R','Tableau','Jupyter','Scikit-learn','TensorFlow'] },
+    ml: { required:['Python','Statistics','Machine Learning Basics','TensorFlow','PyTorch','Data Preprocessing','Model Deployment'], optional:['Deep Learning','Computer Vision','NLP','MLOps','Kubernetes'] },
+    cybersecurity: { required:['Network Security','Linux','Penetration Testing','Security Frameworks','Incident Response','Risk Assessment'], optional:['Ethical Hacking','Cryptography','SIEM Tools','Compliance','Cloud Security'] },
+    cloud: { required: ['AWS','Azure','GCP','Docker','Kubernetes','Terraform'], optional:['CI/CD','Serverless','Monitoring','Networking'] },
+    ai: { required: ['Python','TensorFlow','PyTorch','Statistics','Machine Learning Basics'], optional:['Deep Learning','NLP','Computer Vision','Reinforcement Learning'] },
+    dataengineer: { required: ['SQL','Python','ETL','Data Warehousing','Big Data','Spark'], optional:['Airflow','Kafka','NoSQL','Cloud Storage'] },
+    gamedev: { required: ['C++','C#','Unity','Unreal Engine','Game Physics'], optional:['Shaders','AI for Games','Networking','VR/AR'] },
+    blockchain: { required: ['Solidity','Ethereum','Smart Contracts','Cryptography','Blockchain Fundamentals'], optional:['Web3.js','Hyperledger','Decentralized Apps','DeFi'] },
+    iot: { required: ['C','Python','Embedded Systems','Sensors','Networking'], optional:['MQTT','Edge Computing','Cloud Integration','Security'] },
+    qa: { required: ['Manual Testing','Selenium','JIRA','Test Planning','Bug Tracking'], optional:['Performance Testing','Automation Testing','API Testing','CI/CD'] },
+    businessanalyst: { required: ['Requirements Gathering','Documentation','SQL','Data Analysis','Communication'], optional:['Excel','Tableau','PowerBI','UML'] },
+    productmanager: { required: ['Product Strategy','Roadmapping','Market Research','Stakeholder Management'], optional:['Agile','Scrum','Wireframing','Analytics']}
+};
+
+// ---------- Helper Functions ----------
+function populateSkills() {
+    const container = document.getElementById('skillsContainer');
+    const goal = document.getElementById('goalSelect').value;
+    container.innerHTML = '';
+    if (!goal) { 
+        container.innerHTML='<div style="color:#a0a0a0; font-style:italic; padding:20px; text-align:center;">Please select a career goal first to see relevant skills</div>'; 
+        return;
+    }
+    const roleSkills = skillDatabase[goal];
+    const relevantSkills = [...new Set([...roleSkills.required, ...roleSkills.optional])].sort();
+    relevantSkills.forEach(skill => {
+        const skillTag = document.createElement('div');
+        skillTag.className = 'skill-tag ' + (roleSkills.required.includes(skill) ? 'required-skill' : 'optional-skill');
+        skillTag.dataset.skillName = skill;
+        skillTag.innerHTML = `${skill} <span class="skill-type">${roleSkills.required.includes(skill)?'⭐':'💡'}</span>`;
+        skillTag.addEventListener('click', () => skillTag.classList.toggle('selected'));
+        container.appendChild(skillTag);
+    });
+    if (relevantSkills.length > 0) {
+        const legend = document.createElement('div');
+        legend.style.cssText='width:100%; margin-top:15px; font-size:0.9rem; color:#a0a0a0; text-align:center; padding-bottom:5px;';
+        legend.innerHTML='⭐ Required Skills     💡 Optional Skills';
+        container.appendChild(legend);
+    }
+}
+
+function getSelectedSkills() {
+    return Array.from(document.querySelectorAll('.skill-tag.selected')).map(tag => tag.dataset.skillName);
+}
+
+// ---------- Simulate AI/ML Skill Gap Analysis ----------
+function performSkillGapAnalysis(goal, selectedSkills) {
+    const roleSkills = skillDatabase[goal];
+    const missingRequired = roleSkills.required.filter(skill => !selectedSkills.includes(skill));
+    const missingOptional = roleSkills.optional.filter(skill => !selectedSkills.includes(skill));
+
+    // Simulate ML-style scoring (required = 2, optional = 1)
+    const scoredSkills = [...missingRequired.map(s => ({skill: s, score: 2})), ...missingOptional.map(s => ({skill: s, score: 1}))];
+
+    // Simulate AI prioritization: randomize a bit to mimic model prediction
+    const randomizedOrder = scoredSkills.sort((a,b) => b.score - a.score || Math.random() - 0.5);
+
+    const learningPath = randomizedOrder.map(item => item.skill);
+    return {missingRequired, missingOptional, orderedMissing: randomizedOrder, learningPath};
+}
+
+// ---------- Display ----------
+function displayResults({missingRequired, missingOptional, orderedMissing, learningPath}) {
+    const resultsSection = document.getElementById('resultsSection');
+    resultsSection.innerHTML = '';
+    resultsSection.style.display = 'block';
+
+    const grid = document.createElement('div');
+    grid.className = 'results-grid';
+
+    const requiredCard = document.createElement('div');
+    requiredCard.className = 'result-card';
+    requiredCard.innerHTML = `<h3>Missing Required Skills</h3><ul class="skill-list">${missingRequired.map(skill => `<li>${skill} <span class="skill-priority priority-high">High</span></li>`).join('')}</ul>`;
+
+    const optionalCard = document.createElement('div');
+    optionalCard.className = 'result-card';
+    optionalCard.innerHTML = `<h3>Missing Optional Skills</h3><ul class="skill-list">${missingOptional.map(skill => `<li>${skill} <span class="skill-priority priority-low">Low</span></li>`).join('')}</ul>`;
+
+    grid.appendChild(requiredCard);
+    grid.appendChild(optionalCard);
+    resultsSection.appendChild(grid);
+
+    const learningDiv = document.createElement('div');
+    learningDiv.className = 'learning-path';
+    learningDiv.innerHTML = '<h3>Recommended Learning Path (AI-style)</h3>' + learningPath.map((skill,index) => `<div class="path-step"><span class="step-number">${index+1}</span>${skill}</div>`).join('');
+    resultsSection.appendChild(learningDiv);
+}
+
+// ---------- Progress Simulation ----------
+function simulateAnalysis() {
+    return new Promise(resolve => {
+        let progressFill = document.getElementById('progressFill');
+        let progressPercentageText = document.getElementById('progressPercentage');
+        let currentProgress = 0;
+        progressFill.style.width='0%';
+        progressPercentageText.textContent='0%';
+        const interval = setInterval(()=>{
+            currentProgress += Math.floor(Math.random()*5)+2;
+            if(currentProgress>100) currentProgress=100;
+            progressFill.style.width = currentProgress+'%';
+            progressPercentageText.textContent = currentProgress+'%';
+            if(currentProgress>=100){ clearInterval(interval); resolve(); }
+        },100);
+    });
+}
+
+// ---------- Analyze ----------
+async function analyzeSkillGap() {
+    const goal = document.getElementById('goalSelect').value;
+    if(!goal){ alert('Please select a career goal first!'); return; }
+    document.getElementById('progressSection').style.display='block';
+    document.getElementById('resultsSection').style.display='none';
+    document.getElementById('analyzeBtn').disabled=true;
+    await simulateAnalysis();
+    const analysis = performSkillGapAnalysis(goal, getSelectedSkills());
+    displayResults(analysis);
+    document.getElementById('analyzeBtn').disabled=false;
+}
+
+// ---------- Event Listeners ----------
+document.getElementById('goalSelect').addEventListener('change', populateSkills);
+document.getElementById('analyzeBtn').addEventListener('click', analyzeSkillGap);
+
+</script>
+</body>
+</html>
