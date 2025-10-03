@@ -1005,7 +1005,6 @@
     </style>
 </head>
 <body>
-    <!-- Background with Animation -->
     <div class="pinterest-bg">
         <div class="particles-container" id="particles"></div>
         <div class="geometric-pattern"></div>
@@ -1018,7 +1017,6 @@
         <div class="subtle-grid"></div>
     </div>
 
-    <!-- Navigation Bar -->
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo">
@@ -1034,7 +1032,6 @@
                 <a href="profile.html" class="nav-link">Dashboard</a>
                 <a href="news.html" class="nav-link active">News Feed</a>
                 
-                <!-- Toggle Button -->
                 <div class="toggle-container">
                     <span class="toggle-label">Dark Mode</span>
                     <label class="toggle-switch">
@@ -1046,7 +1043,6 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="container">
             <div class="header">
@@ -1143,7 +1139,6 @@
     </footer>
 
     <script>
-        // Create animated particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = 30;
@@ -1151,35 +1146,23 @@
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                
-                // Random size between 5 and 15px
                 const size = Math.random() * 10 + 5;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
-                
-                // Random position
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation duration between 10 and 20s
                 const duration = Math.random() * 10 + 10;
                 particle.style.animationDuration = `${duration}s`;
-                
-                // Random delay
                 particle.style.animationDelay = `${Math.random() * 5}s`;
                 
                 particlesContainer.appendChild(particle);
             }
         }
-        
-        // Initialize particles
-        createParticles();
 
-        // Dark mode toggle functionality
+        createParticles();
         const darkModeToggle = document.getElementById('darkModeToggle');
         const body = document.body;
 
-        // Check for saved theme preference or respect OS preference
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
         const currentTheme = localStorage.getItem('theme');
         
@@ -1199,15 +1182,12 @@
             }
         });
 
-        // IMPORTANT: REPLACE WITH YOUR ACTUAL GNEWS API KEY
-        const GNEWS_API_KEY = 'd6346c4574d2bf644cec3cbf5723fd0c';
+        const GNEWS_API_KEY = 'PLACE_API_KEY_HERE';
 
-        // Global variables
         let allArticles = [];
         let currentSort = 'publishedAt';
         let isLoading = false;
 
-        // DOM elements
         const newsFeedDiv = document.getElementById('newsFeed');
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
@@ -1623,4 +1603,5 @@
         }
     </script>
 </body>
+
 </html>
