@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skill Gap Analysis Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Blue Theme Colors */
@@ -58,7 +59,172 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            display: flex;
+            flex-direction: column;
             transition: var(--transition);
+        }
+
+        /* NAVIGATION BAR */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dark-mode nav {
+            background-color: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
         }
 
         /* ANIMATED BACKGROUND */
@@ -245,6 +411,14 @@
             }
         }
 
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
         /* MAIN CONTAINER */
         .container {
             max-width: 1000px;
@@ -336,66 +510,6 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
-        }
-
-        /* Toggle Button */
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 0 40px;
-        }
-
-        .toggle-label {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #e2e8f0;
-            transition: var(--transition);
-            border-radius: 30px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: var(--transition);
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background: var(--gradient-1);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(24px);
         }
 
         .form-section {
@@ -789,7 +903,71 @@
             border-radius: 8px;
         }
 
+        /* FOOTER */
+        footer {
+            background: var(--hover-bg);
+            color: var(--text-color);
+            padding: 3rem 0 2rem;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
         @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
             .results-grid {
                 grid-template-columns: 1fr;
             }
@@ -806,29 +984,64 @@
                 flex-direction: column;
                 padding: 0 20px;
             }
-            
-            .toggle-container {
-                padding: 0 20px;
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="pinterest-bg">
-        <div class="particles-container" id="particles"></div>
-        <div class="geometric-pattern"></div>
-        <div class="floating-elements"></div>
-        <div class="subtle-grid"></div>
+  <!-- Background with Animation -->
+  <div class="pinterest-bg">
+    <div class="particles-container" id="particles"></div>
+    <div class="geometric-pattern"></div>
+    <div class="floating-elements">
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
     </div>
-    
-    <div class="toggle-container">
-        <span class="toggle-label">Dark Mode</span>
-        <label class="toggle-switch">
+    <div class="subtle-grid"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">CC</div>
+        <div class="logo-text">Career Canvas</div>
+      </a>
+      
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+        <a href="blog.html" class="nav-link">Blog</a>
+        <a href="profile.html" class="nav-link">Dashboard</a>
+        <a href="advicepage.html" class="nav-link">Career Advisor</a>
+        <!-- Toggle Button -->
+        <div class="toggle-container">
+          <span class="toggle-label">Dark Mode</span>
+          <label class="toggle-switch">
             <input type="checkbox" id="darkModeToggle">
             <span class="toggle-slider"></span>
-        </label>
+          </label>
+        </div>
+      </div>
     </div>
-    
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
     <div class="container">
         <div class="header">
             <h1>🎯 Career Skill Bridge Analyzer</h1>
@@ -893,778 +1106,673 @@
             </div>
         </div>
     </div>
+  </div>
 
-    <script>
-        // Create particles for background
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particleCount = 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size between 3px and 8px
-                const size = Math.random() * 5 + 3;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random animation delay
-                particle.style.animationDelay = `${Math.random() * 15}s`;
-                
-                container.appendChild(particle);
-            }
-        }
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-column">
+        <h3>Career Canvas</h3>
+        <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Resources</h3>
+        <ul class="footer-links">
+          <li><a href="#">Career Guides</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Company</h3>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Legal</h3>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Create particles for background
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
         
-        // Create floating elements
-        function createFloatingElements() {
-            const container = document.querySelector('.floating-elements');
-            const elementCount = 4; // Already defined in CSS, but we can add more if needed
-            
-            // The floating elements are already defined in CSS, so we don't need to create them here
-            // This function is kept for potential future use
-        }
+        // Random size between 3px and 8px
+        const size = Math.random() * 5 + 3;
+        particle.style.width = ${size}px;
+        particle.style.height = ${size}px;
         
-        // Dark mode toggle
-        document.getElementById('darkModeToggle').addEventListener('change', function() {
-            document.body.classList.toggle('dark-mode', this.checked);
-            // Save preference to localStorage
-            localStorage.setItem('darkMode', this.checked);
-        });
+        // Random position
+        particle.style.left = ${Math.random() * 100}%;
+        particle.style.top = ${Math.random() * 100}%;
         
-        // Check for saved dark mode preference
-        window.addEventListener('DOMContentLoaded', () => {
-            const darkMode = localStorage.getItem('darkMode') === 'true';
-            document.getElementById('darkModeToggle').checked = darkMode;
-            document.body.classList.toggle('dark-mode', darkMode);
-            
-            createParticles();
-            createFloatingElements();
-            initializeApp();
-        });
-
-        // ML Algorithms Implementation for Skill Gap Analysis
-        class SkillML {
-            constructor() {
-                this.skillCorrelations = this.initializeSkillCorrelations();
-                this.marketTrends = this.initializeMarketTrends();
-                this.userHistory = JSON.parse(localStorage.getItem('skillAnalysisHistory')) || [];
-                this.learningPatterns = this.initializeLearningPatterns();
-            }
-
-            // K-Means Clustering for skill categorization
-            clusterSkills(skills, goal) {
-                const skillVectors = skills.map(skill => {
-                    const vector = [];
-                    // Feature extraction for clustering
-                    vector.push(this.skillCorrelations[skill]?.demand || 0.5);
-                    vector.push(this.skillCorrelations[skill]?.difficulty || 0.5);
-                    vector.push(this.skillCorrelations[skill]?.importance[goal] || 0.5);
-                    vector.push(this.skillCorrelations[skill]?.learningTime || 0.5);
-                    return vector;
-                });
-
-                // Simple K-means implementation (k=3: Quick, Medium, Long-term)
-                const clusters = [[], [], []];
-                const centroids = [
-                    [0.8, 0.3, 0.9, 0.2], // Quick wins (high demand, low difficulty)
-                    [0.6, 0.6, 0.7, 0.5], // Medium term
-                    [0.4, 0.8, 0.8, 0.8]  // Long-term investments
-                ];
-
-                skills.forEach((skill, index) => {
-                    const vector = skillVectors[index];
-                    let minDistance = Infinity;
-                    let bestCluster = 0;
-
-                    centroids.forEach((centroid, clusterIndex) => {
-                        const distance = this.euclideanDistance(vector, centroid);
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            bestCluster = clusterIndex;
-                        }
-                    });
-
-                    clusters[bestCluster].push({
-                        skill,
-                        vector,
-                        cluster: bestCluster
-                    });
-                });
-
-                return clusters;
-            }
-
-            euclideanDistance(a, b) {
-                return Math.sqrt(a.reduce((sum, val, i) => sum + Math.pow(val - b[i], 2), 0));
-            }
-
-            // Random Forest-like decision making for skill recommendations
-            predictOptimalLearningPath(missingSkills, knownSkills, goal) {
-                const featureMatrix = missingSkills.map(skill => {
-                    const features = this.extractSkillFeatures(skill, knownSkills, goal);
-                    return {
-                        skill,
-                        features,
-                        score: this.calculateSkillScore(features)
-                    };
-                });
-
-                // Multiple decision trees (simplified)
-                const tree1 = this.decisionTree1(featureMatrix);
-                const tree2 = this.decisionTree2(featureMatrix);
-                const tree3 = this.decisionTree3(featureMatrix);
-
-                // Ensemble voting
-                return this.ensembleVoting([tree1, tree2, tree3]);
-            }
-
-            extractSkillFeatures(skill, knownSkills, goal) {
-                const correlations = this.skillCorrelations[skill] || {};
-                const prerequisites = correlations.prerequisites || [];
-                const knownPrerequisites = prerequisites.filter(prereq => knownSkills.includes(prereq));
-                
-                return {
-                    demand: correlations.demand || 0.5,
-                    difficulty: correlations.difficulty || 0.5,
-                    importance: correlations.importance?.[goal] || 0.5,
-                    learningTime: correlations.learningTime || 0.5,
-                    prerequisiteCoverage: prerequisites.length > 0 ? knownPrerequisites.length / prerequisites.length : 1,
-                    marketTrend: this.marketTrends[skill] || 0.5,
-                    synergy: this.calculateSynergyScore(skill, knownSkills)
-                };
-            }
-
-            calculateSkillScore(features) {
-                // Weighted scoring based on multiple factors
-                const weights = {
-                    demand: 0.25,
-                    importance: 0.30,
-                    prerequisiteCoverage: 0.20,
-                    marketTrend: 0.15,
-                    synergy: 0.10
-                };
-
-                return Object.keys(weights).reduce((score, key) => {
-                    return score + (features[key] * weights[key]);
-                }, 0);
-            }
-
-            calculateSynergyScore(skill, knownSkills) {
-                let synergy = 0;
-                knownSkills.forEach(knownSkill => {
-                    const correlation = this.skillCorrelations[knownSkill]?.synergies?.[skill] || 0;
-                    synergy += correlation;
-                });
-                return Math.min(synergy / knownSkills.length, 1);
-            }
-
-            // Simplified decision trees
-            decisionTree1(skills) {
-                return skills.sort((a, b) => {
-                    if (a.features.prerequisiteCoverage > b.features.prerequisiteCoverage) return -1;
-                    if (a.features.prerequisiteCoverage < b.features.prerequisiteCoverage) return 1;
-                    return b.features.demand - a.features.demand;
-                });
-            }
-
-            decisionTree2(skills) {
-                return skills.sort((a, b) => {
-                    const scoreA = a.features.importance * 0.6 + a.features.marketTrend * 0.4;
-                    const scoreB = b.features.importance * 0.6 + b.features.marketTrend * 0.4;
-                    return scoreB - scoreA;
-                });
-            }
-
-            decisionTree3(skills) {
-                return skills.sort((a, b) => {
-                    // Quick wins first
-                    const timeScoreA = (1 - a.features.learningTime) * 0.7 + a.features.synergy * 0.3;
-                    const timeScoreB = (1 - b.features.learningTime) * 0.7 + b.features.synergy * 0.3;
-                    return timeScoreB - timeScoreA;
-                });
-            }
-
-            ensembleVoting(trees) {
-                const skillScores = new Map();
-                
-                trees.forEach((tree, treeIndex) => {
-                    tree.forEach((item, rank) => {
-                        const currentScore = skillScores.get(item.skill) || 0;
-                        // Higher rank = better score (inverse of rank)
-                        skillScores.set(item.skill, currentScore + (tree.length - rank));
-                    });
-                });
-
-                return Array.from(skillScores.entries())
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([skill]) => skill);
-            }
-
-            // Naive Bayes for success prediction
-            predictSuccessProbability(learningPath, knownSkills, goal) {
-                const features = this.extractLearningPathFeatures(learningPath, knownSkills, goal);
-                
-                // Simplified Naive Bayes calculation
-                const priorSuccessRate = 0.7; // Base success rate
-                const featureWeights = {
-                    prerequisiteCoverage: 0.3,
-                    averageDifficulty: -0.2,
-                    marketAlignment: 0.25,
-                    learningTimeEfficiency: 0.15,
-                    synergyScore: 0.1
-                };
-
-                let probability = priorSuccessRate;
-                Object.keys(featureWeights).forEach(feature => {
-                    probability += features[feature] * featureWeights[feature];
-                });
-
-                return Math.max(0.1, Math.min(0.95, probability));
-            }
-
-            extractLearningPathFeatures(learningPath, knownSkills, goal) {
-                let totalPrerequisiteCoverage = 0;
-                let totalDifficulty = 0;
-                let totalMarketAlignment = 0;
-                let totalLearningTime = 0;
-                let totalSynergy = 0;
-
-                learningPath.forEach(skill => {
-                    const skillFeatures = this.extractSkillFeatures(skill, knownSkills, goal);
-                    totalPrerequisiteCoverage += skillFeatures.prerequisiteCoverage;
-                    totalDifficulty += skillFeatures.difficulty;
-                    totalMarketAlignment += skillFeatures.marketTrend;
-                    totalLearningTime += skillFeatures.learningTime;
-                    totalSynergy += skillFeatures.synergy;
-                });
-
-                const pathLength = learningPath.length;
-                return {
-                    prerequisiteCoverage: totalPrerequisiteCoverage / pathLength,
-                    averageDifficulty: totalDifficulty / pathLength,
-                    marketAlignment: totalMarketAlignment / pathLength,
-                    learningTimeEfficiency: (1 - totalLearningTime / pathLength),
-                    synergyScore: totalSynergy / pathLength
-                };
-            }
-
-            // A* Search for optimal learning sequence
-            findOptimalLearningSequence(missingSkills, knownSkills) {
-                const graph = this.buildSkillGraph();
-                const openSet = new PriorityQueue();
-                const cameFrom = new Map();
-                const gScore = new Map();
-                const fScore = new Map();
-
-                missingSkills.forEach(skill => {
-                    gScore.set(skill, Infinity);
-                    fScore.set(skill, Infinity);
-                });
-
-                // Start with skills that have all prerequisites met
-                const startingSkills = missingSkills.filter(skill => {
-                    const prerequisites = this.skillCorrelations[skill]?.prerequisites || [];
-                    return prerequisites.every(prereq => knownSkills.includes(prereq));
-                });
-
-                startingSkills.forEach(skill => {
-                    openSet.enqueue(skill, this.heuristic(skill, knownSkills));
-                    gScore.set(skill, 0);
-                    fScore.set(skill, this.heuristic(skill, knownSkills));
-                });
-
-                while (!openSet.isEmpty()) {
-                    const current = openSet.dequeue().element;
-
-                    if (!missingSkills.includes(current)) continue;
-
-                    const neighbors = graph.get(current) || [];
-                    for (const neighbor of neighbors) {
-                        if (!missingSkills.includes(neighbor)) continue;
-
-                        const tentativeGScore = gScore.get(current) + this.getEdgeCost(current, neighbor);
-                        
-                        if (tentativeGScore < (gScore.get(neighbor) || Infinity)) {
-                            cameFrom.set(neighbor, current);
-                            gScore.set(neighbor, tentativeGScore);
-                            fScore.set(neighbor, tentativeGScore + this.heuristic(neighbor, knownSkills));
-                            
-                            if (!openSet.items.some(item => item.element === neighbor)) {
-                                openSet.enqueue(neighbor, fScore.get(neighbor));
-                            }
-                        }
-                    }
-                }
-
-                return this.reconstructPath(cameFrom, missingSkills, gScore);
-            }
-
-            heuristic(skill, knownSkills) {
-                const features = this.extractSkillFeatures(skill, knownSkills, '');
-                return 1 - (features.prerequisiteCoverage * 0.3 + features.demand * 0.3 + features.importance * 0.4);
-            }
-
-            getEdgeCost(fromSkill, toSkill) {
-                const fromFeatures = this.skillCorrelations[fromSkill] || {};
-                const toFeatures = this.skillCorrelations[toSkill] || {};
-                return (fromFeatures.learningTime || 0.5) + (toFeatures.learningTime || 0.5);
-            }
-
-            buildSkillGraph() {
-                const graph = new Map();
-                Object.keys(this.skillCorrelations).forEach(skill => {
-                    const correlations = this.skillCorrelations[skill];
-                    if (correlations.prerequisites) {
-                        correlations.prerequisites.forEach(prereq => {
-                            if (!graph.has(prereq)) graph.set(prereq, []);
-                            graph.get(prereq).push(skill);
-                        });
-                    }
-                });
-                return graph;
-            }
-
-            reconstructPath(cameFrom, missingSkills, gScore) {
-                const skillsByCost = Array.from(gScore.entries())
-                    .filter(([skill]) => missingSkills.includes(skill))
-                    .sort((a, b) => a[1] - b[1])
-                    .map(([skill]) => skill);
-
-                return skillsByCost;
-            }
-
-            // Market trend analysis using simple time series
-            analyzeMarketTrends(skills) {
-                const trends = skills.map(skill => {
-                    const baseTrend = this.marketTrends[skill] || 0.5;
-                    const volatility = Math.random() * 0.2 - 0.1; // Simulated market volatility
-                    return {
-                        skill,
-                        trend: Math.max(0.1, Math.min(1, baseTrend + volatility)),
-                        confidence: 0.7 + Math.random() * 0.3
-                    };
-                });
-
-                return trends.sort((a, b) => b.trend - a.trend);
-            }
-
-            // Initialize ML data
-            initializeSkillCorrelations() {
-                return {
-                    'HTML': { demand: 0.9, difficulty: 0.2, learningTime: 0.3, importance: { frontend: 0.95, fullstack: 0.8 }, prerequisites: [], synergies: { 'CSS': 0.8, 'JavaScript': 0.7 } },
-                    'CSS': { demand: 0.9, difficulty: 0.3, learningTime: 0.4, importance: { frontend: 0.9, fullstack: 0.7 }, prerequisites: ['HTML'], synergies: { 'HTML': 0.8, 'JavaScript': 0.6 } },
-                    'JavaScript': { demand: 0.95, difficulty: 0.6, learningTime: 0.7, importance: { frontend: 1.0, backend: 0.8, fullstack: 1.0, mobile: 0.9 }, prerequisites: ['HTML'], synergies: { 'React': 0.9, 'Node.js': 0.8, 'TypeScript': 0.7 } },
-                    'React': { demand: 0.9, difficulty: 0.7, learningTime: 0.6, importance: { frontend: 0.95, fullstack: 0.8, mobile: 0.8 }, prerequisites: ['JavaScript'], synergies: { 'JavaScript': 0.9, 'TypeScript': 0.8 } },
-                    'Node.js': { demand: 0.85, difficulty: 0.7, learningTime: 0.6, importance: { backend: 0.9, fullstack: 0.8 }, prerequisites: ['JavaScript'], synergies: { 'JavaScript': 0.8, 'REST APIs': 0.7 } },
-                    'Python': { demand: 0.9, difficulty: 0.5, learningTime: 0.5, importance: { backend: 0.8, datascience: 1.0, ml: 1.0 }, prerequisites: [], synergies: { 'Django': 0.8, 'Pandas': 0.9, 'TensorFlow': 0.7 } },
-                    'SQL': { demand: 0.85, difficulty: 0.6, learningTime: 0.5, importance: { backend: 0.9, fullstack: 0.8, datascience: 0.8 }, prerequisites: [], synergies: { 'Database Design': 0.9, 'REST APIs': 0.6 } },
-                    'Docker': { demand: 0.8, difficulty: 0.7, learningTime: 0.5, importance: { devops: 1.0, backend: 0.7 }, prerequisites: ['Linux'], synergies: { 'Kubernetes': 0.9, 'AWS': 0.7 } },
-                    'AWS': { demand: 0.85, difficulty: 0.8, learningTime: 0.7, importance: { devops: 0.95, backend: 0.7 }, prerequisites: ['Linux'], synergies: { 'Docker': 0.7, 'Kubernetes': 0.8 } }
-                };
-            }
-
-            initializeMarketTrends() {
-                return {
-                    'React': 0.9, 'TypeScript': 0.85, 'Python': 0.95, 'Docker': 0.8,
-                    'Kubernetes': 0.75, 'AWS': 0.9, 'TensorFlow': 0.7, 'PyTorch': 0.8,
-                    'GraphQL': 0.6, 'REST APIs': 0.7, 'SQL': 0.8, 'NoSQL': 0.65
-                };
-            }
-
-            initializeLearningPatterns() {
-                return {
-                    averageCompletionTime: 2.5, // months
-                    optimalSkillGroupSize: 3,
-                    recommendedWeeklyHours: 10
-                };
-            }
-
-            // Save user analysis for future ML improvements
-            saveAnalysis(analysis) {
-                this.userHistory.push({
-                    timestamp: new Date().toISOString(),
-                    analysis,
-                    successMetrics: this.calculateSuccessMetrics(analysis)
-                });
-
-                // Keep only last 50 analyses
-                if (this.userHistory.length > 50) {
-                    this.userHistory = this.userHistory.slice(-50);
-                }
-
-                localStorage.setItem('skillAnalysisHistory', JSON.stringify(this.userHistory));
-            }
-
-            calculateSuccessMetrics(analysis) {
-                return {
-                    skillCoverage: analysis.completionPercentage / 100,
-                    learningPathEfficiency: analysis.learningPath.length > 0 ? 0.8 : 0.5,
-                    marketAlignment: this.calculateMarketAlignment(analysis.missingSkills)
-                };
-            }
-
-            calculateMarketAlignment(skills) {
-                const totalTrend = skills.reduce((sum, skill) => {
-                    return sum + (this.marketTrends[skill] || 0.5);
-                }, 0);
-                return totalTrend / skills.length;
-            }
-        }
-
-        // Initialize ML System
-        const skillML = new SkillML();
-
-        // DSA Concepts Implementation
-        class SkillMap {
-            constructor() { this.skills = new Map(); }
-            add(skill, priority) { this.skills.set(skill, priority); }
-            has(skill) { return this.skills.has(skill); }
-            get(skill) { return this.skills.get(skill); }
-            getAll() { return Array.from(this.skills.entries()); }
-        }
+        // Random animation delay
+        particle.style.animationDelay = ${Math.random() * 15}s;
         
-        class PriorityQueue {
-            constructor() { this.items = []; }
-            enqueue(element, priority) {
-                const queueElement = { element, priority }; let added = false;
-                for (let i = 0; i < this.items.length; i++) {
-                    if (queueElement.priority > this.items[i].priority) {
-                        this.items.splice(i, 0, queueElement); added = true; break;
-                    }
-                }
-                if (!added) { this.items.push(queueElement); }
-            }
-            dequeue() { return this.items.shift(); }
-            isEmpty() { return this.items.length === 0; }
-            toArray() { return this.items.map(item => ({ skill: item.element, priority: item.priority }));}
-        }
-        
-        class LearningGraph {
-            constructor() { this.adjacencyList = new Map(); }
-            addVertex(skill) { if (!this.adjacencyList.has(skill)) { this.adjacencyList.set(skill, []); } }
-            addEdge(prerequisite, skill) {
-                this.addVertex(prerequisite); this.addVertex(skill);
-                this.adjacencyList.get(prerequisite).push(skill);
-            }
-            topologicalSort(missingSkills) {
-                const visited = new Set(); const stack = [];
-                const dfs = (skill) => {
-                    visited.add(skill);
-                    const neighbors = this.adjacencyList.get(skill) || [];
-                    for (const neighbor of neighbors) {
-                        if (missingSkills.includes(neighbor) && !visited.has(neighbor)) { dfs(neighbor); }
-                    }
-                    stack.push(skill);
-                };
-                const allSkillsInGraph = new Set(this.adjacencyList.keys());
-                missingSkills.forEach(skill => { if (allSkillsInGraph.has(skill)) { this.addVertex(skill); }});
-                const skillsToProcessForSort = missingSkills.filter(skill => allSkillsInGraph.has(skill));
-                for (const skill of skillsToProcessForSort) { if (!visited.has(skill)) { dfs(skill); } }
-                let sortedPath = stack.reverse();
-                const skillsInSortedPath = new Set(sortedPath);
-                missingSkills.forEach(skill => { if (!skillsInSortedPath.has(skill)) { sortedPath.push(skill); }});
-                return sortedPath;
-            }
-        }
+        container.appendChild(particle);
+      }
+    }
+    
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
 
-        const skillDatabase = {
-            frontend: { required: ['HTML', 'CSS', 'JavaScript', 'React', 'Responsive Design', 'Git', 'webpack', 'TypeScript'], optional: ['Vue.js', 'Angular', 'Sass/SCSS', 'Testing (Jest)', 'UI/UX Design']},
-            backend: { required: ['Node.js', 'Python', 'SQL', 'REST APIs', 'Git', 'Database Design', 'Authentication', 'Server Management'], optional: ['GraphQL', 'Docker', 'Redis', 'Microservices', 'AWS']},
-            fullstack: { required: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'SQL', 'REST APIs', 'Git', 'Database Design'], optional: ['TypeScript', 'Docker', 'AWS', 'Testing (Jest)', 'GraphQL']},
-            mobile: { required: ['React Native', 'JavaScript', 'Mobile UI/UX', 'API Integration', 'Git', 'App Store Deployment'], optional: ['Flutter', 'Swift', 'Kotlin', 'Push Notifications', 'Native Modules']},
-            devops: { required: ['Linux', 'Docker', 'Kubernetes', 'CI/CD', 'AWS', 'Git', 'Monitoring', 'Infrastructure as Code'], optional: ['Terraform', 'Jenkins', 'Ansible', 'Prometheus', 'ELK Stack']},
-            datascience: { required: ['Python', 'SQL', 'Statistics', 'Pandas', 'NumPy', 'Data Visualization', 'Machine Learning Basics'], optional: ['R', 'Tableau', 'Jupyter', 'Scikit-learn', 'TensorFlow']},
-            ml: { required: ['Python', 'Statistics', 'Machine Learning Basics', 'TensorFlow', 'PyTorch', 'Data Preprocessing', 'Model Deployment'], optional: ['Deep Learning', 'Computer Vision', 'NLP', 'MLOps', 'Kubernetes']},
-            cybersecurity: { required: ['Network Security', 'Linux', 'Penetration Testing', 'Security Frameworks', 'Incident Response', 'Risk Assessment'], optional: ['Ethical Hacking', 'Cryptography', 'SIEM Tools', 'Compliance', 'Cloud Security']}
-        };
-        const allSkills = [...new Set(Object.values(skillDatabase).flatMap(role => [...role.required, ...role.optional]))].sort();
-        const learningGraph = new LearningGraph();
-        learningGraph.addEdge('HTML', 'CSS'); learningGraph.addEdge('CSS', 'JavaScript');
-        learningGraph.addEdge('JavaScript', 'React'); learningGraph.addEdge('JavaScript', 'Vue.js'); learningGraph.addEdge('JavaScript', 'Angular');
-        learningGraph.addEdge('JavaScript', 'TypeScript'); learningGraph.addEdge('React', 'Testing (Jest)'); learningGraph.addEdge('CSS', 'Sass/SCSS');
-        learningGraph.addEdge('JavaScript', 'webpack'); learningGraph.addEdge('JavaScript', 'Node.js'); learningGraph.addEdge('Python', 'REST APIs');
-        learningGraph.addEdge('Node.js', 'REST APIs'); learningGraph.addEdge('SQL', 'Database Design'); learningGraph.addEdge('REST APIs', 'Authentication');
-        learningGraph.addEdge('Node.js', 'Microservices'); learningGraph.addEdge('Python', 'Microservices'); learningGraph.addEdge('Linux', 'Server Management');
-        learningGraph.addEdge('Linux', 'Docker'); learningGraph.addEdge('Docker', 'Kubernetes'); learningGraph.addEdge('Git', 'CI/CD');
-        learningGraph.addEdge('Docker', 'CI/CD'); learningGraph.addEdge('AWS', 'Infrastructure as Code'); learningGraph.addEdge('Infrastructure as Code', 'Terraform');
-        learningGraph.addEdge('Kubernetes', 'Monitoring'); learningGraph.addEdge('Monitoring', 'Prometheus'); learningGraph.addEdge('Monitoring', 'ELK Stack');
-        learningGraph.addEdge('Python', 'Pandas'); learningGraph.addEdge('Python', 'NumPy'); learningGraph.addEdge('Pandas', 'Data Visualization');
-        learningGraph.addEdge('NumPy', 'Data Visualization'); learningGraph.addEdge('Statistics', 'Machine Learning Basics'); learningGraph.addEdge('Python', 'Machine Learning Basics');
-        learningGraph.addEdge('Machine Learning Basics', 'Scikit-learn'); learningGraph.addEdge('Machine Learning Basics', 'TensorFlow');
-        learningGraph.addEdge('Machine Learning Basics', 'PyTorch'); learningGraph.addEdge('TensorFlow', 'Deep Learning'); learningGraph.addEdge('PyTorch', 'Deep Learning');
-        learningGraph.addEdge('Data Preprocessing', 'Machine Learning Basics'); learningGraph.addEdge('Machine Learning Basics', 'Model Deployment');
-        learningGraph.addEdge('Model Deployment', 'MLOps'); learningGraph.addEdge('Linux', 'Network Security'); learningGraph.addEdge('Network Security', 'Penetration Testing');
-        learningGraph.addEdge('Penetration Testing', 'Ethical Hacking'); learningGraph.addEdge('Security Frameworks', 'Risk Assessment');
-        learningGraph.addEdge('Security Frameworks', 'Compliance'); learningGraph.addEdge('Network Security', 'Incident Response');
-        learningGraph.addEdge('Network Security', 'SIEM Tools'); learningGraph.addEdge('AWS', 'Cloud Security');
-        allSkills.forEach(skill => learningGraph.addVertex(skill));
+    // Check for saved theme preference or respect OS preference
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const currentTheme = localStorage.getItem('theme');
+    
+    if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+      body.classList.add('dark-mode');
+      darkModeToggle.checked = true;
+    }
 
-        function initializeApp() {
-            populateSkills();
-            document.getElementById('goalSelect').addEventListener('change', populateSkills);
+    // Toggle dark mode
+    darkModeToggle.addEventListener('change', () => {
+      if (darkModeToggle.checked) {
+        body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Initialize particles and dark mode
+    window.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      initializeApp();
+    });
+
+    // ML Algorithms Implementation for Skill Gap Analysis
+    class SkillML {
+        constructor() {
+            this.skillCorrelations = this.initializeSkillCorrelations();
+            this.marketTrends = this.initializeMarketTrends();
+            this.userHistory = JSON.parse(localStorage.getItem('skillAnalysisHistory')) || [];
+            this.learningPatterns = this.initializeLearningPatterns();
         }
 
-        function populateSkills() {
-            const container = document.getElementById('skillsContainer');
-            const selectedGoal = document.getElementById('goalSelect').value;
-            
-            container.innerHTML = ''; // Clear previous skills
-            
-            if (!selectedGoal) { // This condition is crucial and correct
-                const placeholder = document.createElement('div');
-                placeholder.style.cssText = 'color: var(--text-light); font-style: italic; padding: 20px; text-align: center;';
-                placeholder.textContent = 'Please select a career goal first to see relevant skills';
-                container.appendChild(placeholder);
-                return;
-            }
-            
-            const goalSkills = skillDatabase[selectedGoal];
-            const relevantSkills = [...new Set([...goalSkills.required, ...goalSkills.optional])].sort();
-            
-            relevantSkills.forEach(skill => {
-                const skillTag = document.createElement('div');
-                skillTag.className = 'skill-tag';
-                
-                if (goalSkills.required.includes(skill)) {
-                    skillTag.classList.add('required-skill');
-                } else {
-                    skillTag.classList.add('optional-skill');
-                }
-                
-                skillTag.innerHTML = `
-                    ${skill}
-                    <span class="skill-type">${goalSkills.required.includes(skill) ? '⭐' : '💡'}</span>
-                `;
-                skillTag.dataset.skillName = skill; // Correctly storing skill name
-                skillTag.onclick = () => toggleSkill(skillTag); // Correctly attaching click handler
-                container.appendChild(skillTag);
-            });
-            
-            if (relevantSkills.length > 0) {
-                const legend = document.createElement('div');
-                legend.style.cssText = 'width: 100%; margin-top: 15px; font-size: 0.9rem; color: var(--text-light); text-align: center; padding-bottom: 5px;';
-                legend.innerHTML = '⭐ Required Skills     💡 Optional Skills';
-                container.appendChild(legend);
-            }
-        }
-
-        function toggleSkill(element) { 
-            element.classList.toggle('selected'); // Correctly toggles the .selected class
-        }
-
-        function getSelectedSkills() {
-            // Correctly gets all elements with .skill-tag and .selected classes
-            const selectedTags = document.querySelectorAll('.skill-tag.selected'); 
-            // Correctly extracts the skill name from the dataset
-            return Array.from(selectedTags).map(tag => tag.dataset.skillName); 
-        }
-
-        async function analyzeSkillGap() {
-            const goal = document.getElementById('goalSelect').value;
-            const knownSkills = getSelectedSkills(); // Gets the selected skills
-            
-            if (!goal) { 
-                alert('Please select a career goal first!'); 
-                return; 
-            }
-            
-            document.getElementById('progressSection').style.display = 'block';
-            document.getElementById('resultsSection').style.display = 'none';
-            document.getElementById('analyzeBtn').disabled = true;
-            
-            await simulateAnalysis();
-            // knownSkills are passed to the analysis function
-            const analysis = performSkillGapAnalysis(goal, knownSkills); 
-            displayResults(analysis);
-            document.getElementById('analyzeBtn').disabled = false;
-        }
-
-        function simulateAnalysis() {
-            return new Promise((resolve) => {
-                const progressFill = document.getElementById('progressFill');
-                const progressPercentageText = document.getElementById('progressPercentage');
-                let currentProgress = 0;
-                
-                progressFill.style.width = '0%';
-                progressPercentageText.textContent = '0%';
-
-                const interval = setInterval(() => {
-                    currentProgress += Math.random() * 15;
-                    if (currentProgress > 100) currentProgress = 100;
-                    
-                    progressFill.style.width = currentProgress + '%';
-                    progressPercentageText.textContent = Math.round(currentProgress) + '%';
-                    
-                    if (currentProgress >= 100) {
-                        clearInterval(interval);
-                        setTimeout(resolve, 500);
-                    }
-                }, 200);
-            });
-        }
-
-        function performSkillGapAnalysis(goal, knownSkills) { // knownSkills is received here
-            const roleSkills = skillDatabase[goal];
-            const knownSkillsSet = new Set(knownSkills); // And used to create a Set for efficient lookup
-            
-            const missingRequired = roleSkills.required.filter(skill => !knownSkillsSet.has(skill));
-            const missingOptional = roleSkills.optional.filter(skill => !knownSkillsSet.has(skill));
-            
-            const priorityQueue = new PriorityQueue();
-            missingRequired.forEach(skill => priorityQueue.enqueue(skill, 3)); 
-            missingOptional.forEach(skill => priorityQueue.enqueue(skill, 1)); 
-            
-            const totalGoalSkills = roleSkills.required.length + roleSkills.optional.length;
-            const knownRelevantSkillsCount = knownSkills.filter(skill => 
-                roleSkills.required.includes(skill) || roleSkills.optional.includes(skill)
-            ).length;
-            
-            const completionPercentage = totalGoalSkills > 0 ? Math.round((knownRelevantSkillsCount / totalGoalSkills) * 100) : 0;
-            
-            const allMissingSkills = [...missingRequired, ...missingOptional];
-            
-            // Use ML algorithms for enhanced analysis
-            const mlLearningPath = skillML.predictOptimalLearningPath(allMissingSkills, knownSkills, goal);
-            const marketTrends = skillML.analyzeMarketTrends(allMissingSkills);
-            const successProbability = skillML.predictSuccessProbability(mlLearningPath, knownSkills, goal);
-            const skillClusters = skillML.clusterSkills(allMissingSkills, goal);
-            
-            // Save analysis for ML learning
-            skillML.saveAnalysis({
-                goal,
-                knownSkills,
-                missingSkills: allMissingSkills,
-                completionPercentage,
-                learningPath: mlLearningPath
+        // K-Means Clustering for skill categorization
+        clusterSkills(skills, goal) {
+            const skillVectors = skills.map(skill => {
+                const vector = [];
+                // Feature extraction for clustering
+                vector.push(this.skillCorrelations[skill]?.demand || 0.5);
+                vector.push(this.skillCorrelations[skill]?.difficulty || 0.5);
+                vector.push(this.skillCorrelations[skill]?.importance[goal] || 0.5);
+                vector.push(this.skillCorrelations[skill]?.learningTime || 0.5);
+                return vector;
             });
 
+            // Simple K-means implementation (k=3: Quick, Medium, Long-term)
+            const clusters = [[], [], []];
+            const centroids = [
+                [0.8, 0.3, 0.9, 0.2], // Quick wins (high demand, low difficulty)
+                [0.6, 0.6, 0.7, 0.5], // Medium term
+                [0.4, 0.8, 0.8, 0.8]  // Long-term investments
+            ];
+
+            skills.forEach((skill, index) => {
+                const vector = skillVectors[index];
+                let minDistance = Infinity;
+                let bestCluster = 0;
+
+                centroids.forEach((centroid, clusterIndex) => {
+                    const distance = this.euclideanDistance(vector, centroid);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        bestCluster = clusterIndex;
+                    }
+                });
+
+                clusters[bestCluster].push({
+                    skill,
+                    vector,
+                    cluster: bestCluster
+                });
+            });
+
+            return clusters;
+        }
+
+        euclideanDistance(a, b) {
+            return Math.sqrt(a.reduce((sum, val, i) => sum + Math.pow(val - b[i], 2), 0));
+        }
+
+        // Random Forest-like decision making for skill recommendations
+        predictOptimalLearningPath(missingSkills, knownSkills, goal) {
+            const featureMatrix = missingSkills.map(skill => {
+                const features = this.extractSkillFeatures(skill, knownSkills, goal);
+                return {
+                    skill,
+                    features,
+                    score: this.calculateSkillScore(features)
+                };
+            });
+
+            // Multiple decision trees (simplified)
+            const tree1 = this.decisionTree1(featureMatrix);
+            const tree2 = this.decisionTree2(featureMatrix);
+            const tree3 = this.decisionTree3(featureMatrix);
+
+            // Ensemble voting
+            return this.ensembleVoting([tree1, tree2, tree3]);
+        }
+
+        extractSkillFeatures(skill, knownSkills, goal) {
+            const correlations = this.skillCorrelations[skill] || {};
+            const prerequisites = correlations.prerequisites || [];
+            const knownPrerequisites = prerequisites.filter(prereq => knownSkills.includes(prereq));
+            
             return {
-                goal,
-                knownSkills: knownSkills.filter(skill => 
-                    roleSkills.required.includes(skill) || roleSkills.optional.includes(skill)
-                ).sort(),
-                missingRequired,
-                missingOptional,
-                prioritizedSkills: priorityQueue.toArray(),
-                completionPercentage,
-                learningPath: mlLearningPath,
-                marketTrends,
-                successProbability,
-                skillClusters
+                demand: correlations.demand || 0.5,
+                difficulty: correlations.difficulty || 0.5,
+                importance: correlations.importance?.[goal] || 0.5,
+                learningTime: correlations.learningTime || 0.5,
+                prerequisiteCoverage: prerequisites.length > 0 ? knownPrerequisites.length / prerequisites.length : 1,
+                marketTrend: this.marketTrends[skill] || 0.5,
+                synergy: this.calculateSynergyScore(skill, knownSkills)
             };
         }
 
-        function displayResults(analysis) {
-            document.getElementById('progressSection').style.display = 'none';
-            const resultsSection = document.getElementById('resultsSection');
-            resultsSection.style.display = 'block';
-            const goalName = analysis.goal.charAt(0).toUpperCase() + analysis.goal.slice(1);
-            
-            // Format ML insights
-            const mlInsights = generateMLInsights(analysis);
-            const mlRecommendations = generateMLRecommendations(analysis);
-            
-            resultsSection.innerHTML = `
-                <div class="progress-container">
-                    <div class="progress-header">
-                        <span class="progress-title">Skill Completion for ${goalName}</span>
-                        <span class="progress-percentage">${analysis.completionPercentage}%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${analysis.completionPercentage}%;"></div>
-                    </div>
-                </div>
-                <div class="results-grid">
-                    <div class="result-card">
-                        <h3>✅ Skills You Have (${analysis.knownSkills.length})</h3>
-                        ${analysis.knownSkills.length > 0 ? `<ul class="skill-list">${analysis.knownSkills.map(skill => `<li>${skill}</li>`).join('')}</ul>` : '<p style="color: var(--text-light);">No relevant skills selected for this goal.</p>'}
-                    </div>
-                    <div class="result-card">
-                        <h3>📚 Skills to Learn (${analysis.missingRequired.length + analysis.missingOptional.length})</h3>
-                        ${(analysis.missingRequired.length + analysis.missingOptional.length) > 0 ? `<ul class="skill-list">${analysis.prioritizedSkills.map(item => `<li>${item.skill}<span class="skill-priority priority-${item.priority === 3 ? 'high' : 'low'}">${item.priority === 3 ? 'Required' : 'Optional'}</span></li>`).join('')}</ul>` : '<p style="color: var(--text-light);">You have all the skills for this goal!</p>'}
-                    </div>
-                </div>
-                ${mlInsights}
-                ${mlRecommendations}
-                ${analysis.learningPath.length > 0 ? `
-                <div class="learning-path">
-                    <h3>🗺 AI-Optimized Learning Path (Top 5)</h3>
-                    <p style="opacity: 0.8; margin-bottom: 15px;">Success probability: <strong>${Math.round(analysis.successProbability * 100)}%</strong></p>
-                    ${analysis.learningPath.slice(0, 5).map((skill, index) => {
-                        const marketTrend = analysis.marketTrends.find(t => t.skill === skill);
-                        const trendIcon = marketTrend && marketTrend.trend > 0.7 ? '📈' : marketTrend && marketTrend.trend > 0.5 ? '➡️' : '📉';
-                        return `
-                        <div class="path-step">
-                            <span class="step-number">${index + 1}</span>
-                            <div>
-                                <strong>${skill} ${trendIcon}</strong>
-                                <p style="font-size:0.9em; opacity: 0.8;">${getSkillDescription(skill, analysis)}</p>
-                            </div>
-                        </div>`;
-                    }).join('')}
-                    ${analysis.learningPath.length > 5 ? '<p style="text-align:center; margin-top:15px; font-size:0.9em; opacity:0.8;">...and more skills optimized by AI</p>' : ''}
-                </div>` : (analysis.missingRequired.length + analysis.missingOptional.length) > 0 ? `
-                <div class="learning-path"><h3>🗺 Recommended Learning Path</h3><p style="opacity: 0.8;">No specific prerequisite order found for the remaining skills. You can learn them in any preferred order or based on interest.</p></div>` : ''}
-            `;
+        calculateSkillScore(features) {
+            // Weighted scoring based on multiple factors
+            const weights = {
+                demand: 0.25,
+                importance: 0.30,
+                prerequisiteCoverage: 0.20,
+                marketTrend: 0.15,
+                synergy: 0.10
+            };
+
+            return Object.keys(weights).reduce((score, key) => {
+                return score + (features[key] * weights[key]);
+            }, 0);
         }
 
-        function generateMLInsights(analysis) {
-            const quickWins = analysis.skillClusters[0] || [];
-            const strategicSkills = analysis.skillClusters[1] || [];
-            const longTermSkills = analysis.skillClusters[2] || [];
-            
-            return `
-                <div class="ml-insights">
-                    <h3>🧠 AI Insights</h3>
-                    <div class="insight-item">
-                        <strong>Quick Wins (${quickWins.length})</strong>: Focus on these high-impact, easier skills first
-                    </div>
-                    <div class="insight-item">
-                        <strong>Strategic Skills (${strategicSkills.length})</strong>: Balanced difficulty and importance
-                    </div>
-                    <div class="insight-item">
-                        <strong>Long-term Investments (${longTermSkills.length})</strong>: Advanced skills with high future value
-                    </div>
-                    <div class="insight-item">
-                        <strong>Market Alignment</strong>: Your path aligns ${Math.round(analysis.successProbability * 100)}% with current industry trends
-                    </div>
-                </div>
-            `;
+        calculateSynergyScore(skill, knownSkills) {
+            let synergy = 0;
+            knownSkills.forEach(knownSkill => {
+                const correlation = this.skillCorrelations[knownSkill]?.synergies?.[skill] || 0;
+                synergy += correlation;
+            });
+            return Math.min(synergy / knownSkills.length, 1);
         }
 
-        function generateMLRecommendations(analysis) {
-            const highDemandSkills = analysis.marketTrends.filter(t => t.trend > 0.7).slice(0, 3);
-            
-            if (highDemandSkills.length === 0) return '';
-            
-            return `
-                <div class="ml-recommendations">
-                    <h3>🚀 High-Demand Skills</h3>
-                    ${highDemandSkills.map(skill => `
-                        <div class="ml-suggestion-item">
-                            ${skill.skill} 
-                            <span class="ml-confidence confidence-${skill.trend > 0.8 ? 'high' : skill.trend > 0.6 ? 'medium' : 'low'}">
-                                ${Math.round(skill.trend * 100)}% demand
-                            </span>
-                            <p style="font-size:0.9em; opacity:0.8; margin-top:5px;">High market value with growing industry adoption</p>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+        // Simplified decision trees
+        decisionTree1(skills) {
+            return skills.sort((a, b) => {
+                if (a.features.prerequisiteCoverage > b.features.prerequisiteCoverage) return -1;
+                if (a.features.prerequisiteCoverage < b.features.prerequisiteCoverage) return 1;
+                return b.features.demand - a.features.demand;
+            });
         }
 
-        function getSkillDescription(skill, analysis) {
-            const isRequired = analysis.missingRequired.includes(skill);
-            const marketTrend = analysis.marketTrends.find(t => t.skill === skill);
-            const trendText = marketTrend ? ` (${marketTrend.trend > 0.7 ? 'High' : marketTrend.trend > 0.5 ? 'Medium' : 'Low'} demand)` : '';
-            
-            return `Focus on mastering ${skill} as it's ${isRequired ? 'an essential required skill' : 'a valuable optional skill'} for your goal${trendText}.`;
+        decisionTree2(skills) {
+            return skills.sort((a, b) => {
+                const scoreA = a.features.importance * 0.6 + a.features.marketTrend * 0.4;
+                const scoreB = b.features.importance * 0.6 + b.features.marketTrend * 0.4;
+                return scoreB - scoreA;
+            });
         }
-    </script>
-</body>
-</html>
+
+        decisionTree3(skills) {
+            return skills.sort((a, b) => {
+                // Quick wins first
+                const timeScoreA = (1 - a.features.learningTime) * 0.7 + a.features.synergy * 0.3;
+                const timeScoreB = (1 - b.features.learningTime) * 0.7 + b.features.synergy * 0.3;
+                return timeScoreB - timeScoreA;
+            });
+        }
+
+        ensembleVoting(trees) {
+            const skillScores = new Map();
+            
+            trees.forEach((tree, treeIndex) => {
+                tree.forEach((item, rank) => {
+                    const currentScore = skillScores.get(item.skill) || 0;
+                    // Higher rank = better score (inverse of rank)
+                    skillScores.set(item.skill, currentScore + (tree.length - rank));
+                });
+            });
+
+            return Array.from(skillScores.entries())
+                .sort((a, b) => b[1] - a[1])
+                .map(([skill]) => skill);
+        }
+
+        // Naive Bayes for success prediction
+        predictSuccessProbability(learningPath, knownSkills, goal) {
+            const features = this.extractLearningPathFeatures(learningPath, knownSkills, goal);
+            
+            // Simplified Naive Bayes calculation
+            const priorSuccessRate = 0.7; // Base success rate
+            const featureWeights = {
+                prerequisiteCoverage: 0.3,
+                averageDifficulty: -0.2,
+                marketAlignment: 0.25,
+                learningTimeEfficiency: 0.15,
+                synergyScore: 0.1
+            };
+
+            let probability = priorSuccessRate;
+            Object.keys(featureWeights).forEach(feature => {
+                probability += features[feature] * featureWeights[feature];
+            });
+
+            return Math.max(0.1, Math.min(0.95, probability));
+        }
+
+        extractLearningPathFeatures(learningPath, knownSkills, goal) {
+            let totalPrerequisiteCoverage = 0;
+            let totalDifficulty = 0;
+            let totalMarketAlignment = 0;
+            let totalLearningTime = 0;
+            let totalSynergy = 0;
+
+            learningPath.forEach(skill => {
+                const skillFeatures = this.extractSkillFeatures(skill, knownSkills, goal);
+                totalPrerequisiteCoverage += skillFeatures.prerequisiteCoverage;
+                totalDifficulty += skillFeatures.difficulty;
+                totalMarketAlignment += skillFeatures.marketTrend;
+                totalLearningTime += skillFeatures.learningTime;
+                totalSynergy += skillFeatures.synergy;
+            });
+
+            const pathLength = learningPath.length;
+            return {
+                prerequisiteCoverage: totalPrerequisiteCoverage / pathLength,
+                averageDifficulty: totalDifficulty / pathLength,
+                marketAlignment: totalMarketAlignment / pathLength,
+                learningTimeEfficiency: (1 - totalLearningTime / pathLength),
+                synergyScore: totalSynergy / pathLength
+            };
+        }
+
+        // A* Search for optimal learning sequence
+        findOptimalLearningSequence(missingSkills, knownSkills) {
+            const graph = this.buildSkillGraph();
+            const openSet = new PriorityQueue();
+            const cameFrom = new Map();
+            const gScore = new Map();
+            const fScore = new Map();
+
+            missingSkills.forEach(skill => {
+                gScore.set(skill, Infinity);
+                fScore.set(skill, Infinity);
+            });
+
+            // Start with skills that have all prerequisites met
+            const startingSkills = missingSkills.filter(skill => {
+                const prerequisites = this.skillCorrelations[skill]?.prerequisites || [];
+                return prerequisites.every(prereq => knownSkills.includes(prereq));
+            });
+
+            startingSkills.forEach(skill => {
+                openSet.enqueue(skill, this.heuristic(skill, knownSkills));
+                gScore.set(skill, 0);
+                fScore.set(skill, this.heuristic(skill, knownSkills));
+            });
+
+            while (!openSet.isEmpty()) {
+                const current = openSet.dequeue().element;
+
+                if (!missingSkills.includes(current)) continue;
+
+                const neighbors = graph.get(current) || [];
+                for (const neighbor of neighbors) {
+                    if (!missingSkills.includes(neighbor)) continue;
+
+                    const tentativeGScore = gScore.get(current) + this.getEdgeCost(current, neighbor);
+                    
+                    if (tentativeGScore < (gScore.get(neighbor) || Infinity)) {
+                        cameFrom.set(neighbor, current);
+                        gScore.set(neighbor, tentativeGScore);
+                        fScore.set(neighbor, tentativeGScore + this.heuristic(neighbor, knownSkills));
+                        
+                        if (!openSet.items.some(item => item.element === neighbor)) {
+                            openSet.enqueue(neighbor, fScore.get(neighbor));
+                        }
+                    }
+                }
+            }
+
+            return this.reconstructPath(cameFrom, missingSkills, gScore);
+        }
+
+        heuristic(skill, knownSkills) {
+            const features = this.extractSkillFeatures(skill, knownSkills, '');
+            return 1 - (features.prerequisiteCoverage * 0.3 + features.demand * 0.3 + features.importance * 0.4);
+        }
+
+        getEdgeCost(fromSkill, toSkill) {
+            const fromFeatures = this.skillCorrelations[fromSkill] || {};
+            const toFeatures = this.skillCorrelations[toSkill] || {};
+            return (fromFeatures.learningTime || 0.5) + (toFeatures.learningTime || 0.5);
+        }
+
+        buildSkillGraph() {
+            const graph = new Map();
+            Object.keys(this.skillCorrelations).forEach(skill => {
+                const correlations = this.skillCorrelations[skill];
+                if (correlations.prerequisites) {
+                    correlations.prerequisites.forEach(prereq => {
+                        if (!graph.has(prereq)) graph.set(prereq, []);
+                        graph.get(prereq).push(skill);
+                    });
+                }
+            });
+            return graph;
+        }
+
+        reconstructPath(cameFrom, missingSkills, gScore) {
+            const skillsByCost = Array.from(gScore.entries())
+                .filter(([skill]) => missingSkills.includes(skill))
+                .sort((a, b) => a[1] - b[1])
+                .map(([skill]) => skill);
+
+            return skillsByCost;
+        }
+
+        // Market trend analysis using simple time series
+        analyzeMarketTrends(skills) {
+            const trends = skills.map(skill => {
+                const baseTrend = this.marketTrends[skill] || 0.5;
+                const volatility = Math.random() * 0.2 - 0.1; // Simulated market volatility
+                return {
+                    skill,
+                    trend: Math.max(0.1, Math.min(1, baseTrend + volatility)),
+                    confidence: 0.7 + Math.random() * 0.3
+                };
+            });
+
+            return trends.sort((a, b) => b.trend - a.trend);
+        }
+
+        // Initialize ML data
+        initializeSkillCorrelations() {
+            return {
+                'HTML': { demand: 0.9, difficulty: 0.2, learningTime: 0.3, importance: { frontend: 0.95, fullstack: 0.8 }, prerequisites: [], synergies: { 'CSS': 0.8, 'JavaScript': 0.7 } },
+                'CSS': { demand: 0.9, difficulty: 0.3, learningTime: 0.4, importance: { frontend: 0.9, fullstack: 0.7 }, prerequisites: ['HTML'], synergies: { 'HTML': 0.8, 'JavaScript': 0.6 } },
+                'JavaScript': { demand: 0.95, difficulty: 0.6, learningTime: 0.7, importance: { frontend: 1.0, backend: 0.8, fullstack: 1.0, mobile: 0.9 }, prerequisites: ['HTML'], synergies: { 'React': 0.9, 'Node.js': 0.8, 'TypeScript': 0.7 } },
+                'React': { demand: 0.9, difficulty: 0.7, learningTime: 0.6, importance: { frontend: 0.95, fullstack: 0.8, mobile: 0.8 }, prerequisites: ['JavaScript'], synergies: { 'JavaScript': 0.9, 'TypeScript': 0.8 } },
+                'Node.js': { demand: 0.85, difficulty: 0.7, learningTime: 0.6, importance: { backend: 0.9, fullstack: 0.8 }, prerequisites: ['JavaScript'], synergies: { 'JavaScript': 0.8, 'REST APIs': 0.7 } },
+                'Python': { demand: 0.9, difficulty: 0.5, learningTime: 0.5, importance: { backend: 0.8, datascience: 1.0, ml: 1.0 }, prerequisites: [], synergies: { 'Django': 0.8, 'Pandas': 0.9, 'TensorFlow': 0.7 } },
+                'SQL': { demand: 0.85, difficulty: 0.6, learningTime: 0.5, importance: { backend: 0.9, fullstack: 0.8, datascience: 0.8 }, prerequisites: [], synergies: { 'Database Design': 0.9, 'REST APIs': 0.6 } },
+                'Docker': { demand: 0.8, difficulty: 0.7, learningTime: 0.5, importance: { devops: 1.0, backend: 0.7 }, prerequisites: ['Linux'], synergies: { 'Kubernetes': 0.9, 'AWS': 0.7 } },
+                'AWS': { demand: 0.85, difficulty: 0.8, learningTime: 0.7, importance: { devops: 0.95, backend: 0.7 }, prerequisites: ['Linux'], synergies: { 'Docker': 0.7, 'Kubernetes': 0.8 } }
+            };
+        }
+
+        initializeMarketTrends() {
+            return {
+                'React': 0.9, 'TypeScript': 0.85, 'Python': 0.95, 'Docker': 0.8,
+                'Kubernetes': 0.75, 'AWS': 0.9, 'TensorFlow': 0.7, 'PyTorch': 0.8,
+                'GraphQL': 0.6, 'REST APIs': 0.7, 'SQL': 0.8, 'NoSQL': 0.65
+            };
+        }
+
+        initializeLearningPatterns() {
+            return {
+                averageCompletionTime: 2.5, // months
+                optimalSkillGroupSize: 3,
+                recommendedWeeklyHours: 10
+            };
+        }
+
+        // Save user analysis for future ML improvements
+        saveAnalysis(analysis) {
+            this.userHistory.push({
+                timestamp: new Date().toISOString(),
+                analysis,
+                successMetrics: this.calculateSuccessMetrics(analysis)
+            });
+
+            // Keep only last 50 analyses
+            if (this.userHistory.length > 50) {
+                this.userHistory = this.userHistory.slice(-50);
+            }
+
+            localStorage.setItem('skillAnalysisHistory', JSON.stringify(this.userHistory));
+        }
+
+        calculateSuccessMetrics(analysis) {
+            return {
+                skillCoverage: analysis.completionPercentage / 100,
+                learningPathEfficiency: analysis.learningPath.length > 0 ? 0.8 : 0.5,
+                marketAlignment: this.calculateMarketAlignment(analysis.missingSkills)
+            };
+        }
+
+        calculateMarketAlignment(skills) {
+            const totalTrend = skills.reduce((sum, skill) => {
+                return sum + (this.marketTrends[skill] || 0.5);
+            }, 0);
+            return totalTrend / skills.length;
+        }
+    }
+
+    // Initialize ML System
+    const skillML = new SkillML();
+
+    // DSA Concepts Implementation
+    class SkillMap {
+        constructor() { this.skills = new Map(); }
+        add(skill, priority) { this.skills.set(skill, priority); }
+        has(skill) { return this.skills.has(skill); }
+        get(skill) { return this.skills.get(skill); }
+        getAll() { return Array.from(this.skills.entries()); }
+    }
+    
+    class PriorityQueue {
+        constructor() { this.items = []; }
+        enqueue(element, priority) {
+            const queueElement = { element, priority }; let added = false;
+            for (let i = 0; i < this.items.length; i++) {
+                if (queueElement.priority > this.items[i].priority) {
+                    this.items.splice(i, 0, queueElement); added = true; break;
+                }
+            }
+            if (!added) { this.items.push(queueElement); }
+        }
+        dequeue() { return this.items.shift(); }
+        isEmpty() { return this.items.length === 0; }
+        toArray() { return this.items.map(item => ({ skill: item.element, priority: item.priority }));}
+    }
+    
+    class LearningGraph {
+        constructor() { this.adjacencyList = new Map(); }
+        addVertex(skill) { if (!this.adjacencyList.has(skill)) { this.adjacencyList.set(skill, []); } }
+        addEdge(prerequisite, skill) {
+            this.addVertex(prerequisite); this.addVertex(skill);
+            this.adjacencyList.get(prerequisite).push(skill);
+        }
+        topologicalSort(missingSkills) {
+            const visited = new Set(); const stack = [];
+            const dfs = (skill) => {
+                visited.add(skill);
+                const neighbors = this.adjacencyList.get(skill) || [];
+                for (const neighbor of neighbors) {
+                    if (missingSkills.includes(neighbor) && !visited.has(neighbor)) { dfs(neighbor); }
+                }
+                stack.push(skill);
+            };
+            const allSkillsInGraph = new Set(this.adjacencyList.keys());
+            missingSkills.forEach(skill => { if (allSkillsInGraph.has(skill)) { this.addVertex(skill); }});
+            const skillsToProcessForSort = missingSkills.filter(skill => allSkillsInGraph.has(skill));
+            for (const skill of skillsToProcessForSort) { if (!visited.has(skill)) { dfs(skill); } }
+            let sortedPath = stack.reverse();
+            const skillsInSortedPath = new Set(sortedPath);
+            missingSkills.forEach(skill => { if (!skillsInSortedPath.has(skill)) { sortedPath.push(skill); }});
+            return sortedPath;
+        }
+    }
+
+    const skillDatabase = {
+        frontend: { required: ['HTML', 'CSS', 'JavaScript', 'React', 'Responsive Design', 'Git', 'webpack', 'TypeScript'], optional: ['Vue.js', 'Angular', 'Sass/SCSS', 'Testing (Jest)', 'UI/UX Design']},
+        backend: { required: ['Node.js', 'Python', 'SQL', 'REST APIs', 'Git', 'Database Design', 'Authentication', 'Server Management'], optional: ['GraphQL', 'Docker', 'Redis', 'Microservices', 'AWS']},
+        fullstack: { required: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'SQL', 'REST APIs', 'Git', 'Database Design'], optional: ['TypeScript', 'Docker', 'AWS', 'Testing (Jest)', 'GraphQL']},
+        mobile: { required: ['React Native', 'JavaScript', 'Mobile UI/UX', 'API Integration', 'Git', 'App Store Deployment'], optional: ['Flutter', 'Swift', 'Kotlin', 'Push Notifications', 'Native Modules']},
+        devops: { required: ['Linux', 'Docker', 'Kubernetes', 'CI/CD', 'AWS', 'Git', 'Monitoring', 'Infrastructure as Code'], optional: ['Terraform', 'Jenkins', 'Ansible', 'Prometheus', 'ELK Stack']},
+        datascience: { required: ['Python', 'SQL', 'Statistics', 'Pandas', 'NumPy', 'Data Visualization', 'Machine Learning Basics'], optional: ['R', 'Tableau', 'Jupyter', 'Scikit-learn', 'TensorFlow']},
+        ml: { required: ['Python', 'Statistics', 'Machine Learning Basics', 'TensorFlow', 'PyTorch', 'Data Preprocessing', 'Model Deployment'], optional: ['Deep Learning', 'Computer Vision', 'NLP', 'MLOps', 'Kubernetes']},
+        cybersecurity: { required: ['Network Security', 'Linux', 'Penetration Testing', 'Security Frameworks', 'Incident Response', 'Risk Assessment'], optional: ['Ethical Hacking', 'Cryptography', 'SIEM Tools', 'Compliance', 'Cloud Security']}
+    };
+    const allSkills = [...new Set(Object.values(skillDatabase).flatMap(role => [...role.required, ...role.optional]))].sort();
+    const learningGraph = new LearningGraph();
+    learningGraph.addEdge('HTML', 'CSS'); learningGraph.addEdge('CSS', 'JavaScript');
+    learningGraph.addEdge('JavaScript', 'React'); learningGraph.addEdge('JavaScript', 'Vue.js'); learningGraph.addEdge('JavaScript', 'Angular');
+    learningGraph.addEdge('JavaScript', 'TypeScript'); learningGraph.addEdge('React', 'Testing (Jest)'); learningGraph.addEdge('CSS', 'Sass/SCSS');
+    learningGraph.addEdge('JavaScript', 'webpack'); learningGraph.addEdge('JavaScript', 'Node.js'); learningGraph.addEdge('Python', 'REST APIs');
+    learningGraph.addEdge('Node.js', 'REST APIs'); learningGraph.addEdge('SQL', 'Database Design'); learningGraph.addEdge('REST APIs', 'Authentication');
+    learningGraph.addEdge('Node.js', 'Microservices'); learningGraph.addEdge('Python', 'Microservices'); learningGraph.addEdge('Linux', 'Server Management');
+    learningGraph.addEdge('Linux', 'Docker'); learningGraph.addEdge('Docker', 'Kubernetes'); learningGraph.addEdge('Git', 'CI/CD');
+    learningGraph.addEdge('Docker', 'CI/CD'); learningGraph.addEdge('AWS', 'Infrastructure as Code'); learningGraph.addEdge('Infrastructure as Code', 'Terraform');
+    learningGraph.addEdge('Kubernetes', 'Monitoring'); learningGraph.addEdge('Monitoring', 'Prometheus'); learningGraph.addEdge('Monitoring', 'ELK Stack');
+    learningGraph.addEdge('Python', 'Pandas'); learningGraph.addEdge('Python', 'NumPy'); learningGraph.addEdge('Pandas', 'Data Visualization');
+    learningGraph.addEdge('NumPy', 'Data Visualization'); learningGraph.addEdge('Statistics', 'Machine Learning Basics'); learningGraph.addEdge('Python', 'Machine Learning Basics');
+    learningGraph.addEdge('Machine Learning Basics', 'Scikit-learn'); learningGraph.addEdge('Machine Learning Basics', 'TensorFlow');
+    learningGraph.addEdge('Machine Learning Basics', 'PyTorch'); learningGraph.addEdge('TensorFlow', 'Deep Learning'); learningGraph.addEdge('PyTorch', 'Deep Learning');
+    learningGraph.addEdge('Data Preprocessing', 'Machine Learning Basics'); learningGraph.addEdge('Machine Learning Basics', 'Model Deployment');
+    learningGraph.addEdge('Model Deployment', 'MLOps'); learningGraph.addEdge('Linux', 'Network Security'); learningGraph.addEdge('Network Security', 'Penetration Testing');
+    learningGraph.addEdge('Penetration Testing', 'Ethical Hacking'); learningGraph.addEdge('Security Frameworks', 'Risk Assessment');
+    learningGraph.addEdge('Security Frameworks', 'Compliance'); learningGraph.addEdge('Network Security', 'Incident Response');
+    learningGraph.addEdge('Network Security', 'SIEM Tools'); learningGraph.addEdge('AWS', 'Cloud Security');
+    allSkills.forEach(skill => learningGraph.addVertex(skill));
+
+    function initializeApp() {
+        populateSkills();
+        document.getElementById('goalSelect').addEventListener('change', populateSkills);
+    }
+
+    function populateSkills() {
+        const container = document.getElementById('skillsContainer');
+        const selectedGoal = document.getElementById('goalSelect').value;
+        
+        container.innerHTML = ''; // Clear previous skills
+        
+        if (!selectedGoal) { // This condition is crucial and correct
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = 'color: var(--text-light); font-style: italic; padding: 20px; text-align: center;';
+            placeholder.textContent = 'Please select a career goal first to see relevant skills';
+            container.appendChild(placeholder);
+            return;
+        }
+        
+        const goalSkills = skillDatabase[selectedGoal];
+        const relevantSkills = [...new Set([...goalSkills.required, ...goalSkills.optional])].sort();
+        
+        relevantSkills.forEach(skill => {
+            const skillTag = document.createElement('div');
+            skillTag.className = 'skill-tag';
+            
+            if (goalSkills.required.includes(skill)) {
+                skillTag.classList.add('required-skill');
+            } else {
+                skillTag.classList.add('optional-skill');
+            }
+            
+            skillTag.innerHTML = `
+                ${skill}
+                <span class="skill-type">${goalSkills.required.includes(skill) ? '⭐' : '💡'}</span>
+            `;
+            skillTag.dataset.skillName = skill; // Correctly storing skill name
+            skillTag.onclick = () => toggleSkill(skillTag); // Correctly attaching click handler
+            container.appendChild(skillTag);
+        });
+        
+        if (relevantSkills.length > 0) {
+            const legend = document.createElement('div');
+            legend.style.cssText = 'width: 100%; margin-top: 15px; font-size: 0.9rem; color: var(--text-light); text-align: center; padding-bottom: 5px;';
+            legend.innerHTML = '⭐ Required Skills     💡 Optional Skills';
+            container.appendChild(legend);
+        }
+    }
+
+    function toggleSkill(element) { 
+        element.classList.toggle('selected'); // Correctly toggles the .selected class
+    }
+
+    function getSelectedSkills() {
+        // Correctly gets all elements with .skill-tag and .selected classes
+        const selectedTags = document.querySelectorAll('.skill-tag.selected'); 
+        // Correctly extracts the skill name from the dataset
+        return Array.from(selectedTags).map(tag => tag.dataset.skillName); 
+    }
+
+    async function analyzeSkillGap() {
+        const goal = document.getElementById('goalSelect').value;
+        const knownSkills = getSelectedSkills(); // Gets the selected skills
+        
+        if (!goal) { 
+            alert('Please select a career goal first!'); 
+            return; 
+        }
+        
+        document.getElementById('progressSection').style.display = 'block';
+        document.getElementById('resultsSection').style.display = 'none';
+        document.getElementById('analyzeBtn').disabled = true;
+        
+        await simulateAnalysis();
+        // knownSkills are passed to the analysis function
+        const analysis = performSkillGapAnalysis(goal, knownSkills); 
+        displayResults(analysis);
+        document.getElementById('analyzeBtn').disabled = false;
+    }
+
+    function simulateAnalysis() {
+        return new Promise((resolve) => {
+            const progressFill = document.getElementById('progressFill');
+            const progressPercentageText = document.getElementById('progressPercentage');
+            let currentProgress = 0;
+            
+            progressFill.style.width = '0%';
+            progressPercentageText.textContent = '0%';
+
+            const interval = setInterval(() => {
+                currentProgress += Math.random() * 15;
+                if (currentProgress > 100) currentProgress = 100;
+                
+                progressFill.style.width = currentProgress + '%';
+                progressPercentageText.textContent = Math.round(currentProgress) + '%';
+                
+                if (currentProgress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(resolve, 500);
+                }
+            }, 200);
+        });
+    }
+
+    function performSkillGapAnalysis(goal, knownSkills) { // knownSkills is received here
+        const roleSkills = skillDatabase[goal];
+        const knownSkillsSet = new Set(knownSkills); // And used to create a Set for efficient lookup
+        
+        const missingRequired = roleSkills.required.filter(skill => !knownSkillsSet.has(skill));
+        const missingOptional = roleSkills.optional.filter(skill => !knownSkillsSet.has(skill));
+        
+        const priorityQueue = new PriorityQueue();
+        missingRequired.forEach(skill => priorityQueue.enqueue(skill, 3)); 
+        missingOptional.forEach(skill => priorityQueue.enqueue(skill, 1)); 
+        
+        const totalGoalSkills = roleSkills.required.length + roleSkills.optional.lengt
