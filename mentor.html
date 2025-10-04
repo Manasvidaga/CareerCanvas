@@ -1217,7 +1217,6 @@
     </style>
 </head>
 <body>
-    <!-- Animated Background for Entire Page -->
     <div class="animated-background">
         <div class="background-shape"></div>
         <div class="background-shape"></div>
@@ -1235,7 +1234,6 @@
         </div>
     </div>
 
-    <!-- Enhanced Navigation Bar -->
     <nav>
         <div class="nav-container">
             <a href="#" class="logo">
@@ -1244,12 +1242,11 @@
             </a>
             
             <div class="nav-links">
-                <a href="#" class="nav-link">Dashboard</a>
-                <a href="#" class="nav-link active">Mentor Mapper</a>
-                <a href="#" class="nav-link">About Us</a>
-                <a href="#" class="nav-link">Contact</a>
+                <a href="profile.html" class="nav-link">Dashboard</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="mentor.html" class="nav-link active">Mentor Mapper</a>
                 
-                <!-- Toggle Button -->
                 <div class="toggle-container">
                     <span class="toggle-label">Dark Mode</span>
                     <label class="toggle-switch">
@@ -1261,7 +1258,6 @@
         </div>
     </nav>
 
-    <!-- Enhanced Hero Section -->
     <section class="hero">
         <div class="hero-bg-shapes">
             <div class="shape shape-1"></div>
@@ -1279,7 +1275,6 @@
         </div>
     </section>
 
-    <!-- Enhanced Main Content -->
     <main class="main-content">
         <div class="container">
             <div class="section-title">
@@ -1333,12 +1328,10 @@
             </div>
 
             <div class="results-section" id="results">
-                <!-- Results will be injected here -->
             </div>
         </div>
     </main>
 
-    <!-- Light Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -1356,32 +1349,24 @@
                 <div class="footer-column">
                     <h3>Resources</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Career Guides</a></li>
-                        <li><a href="#">Skill Assessments</a></li>
-                        <li><a href="#">Industry Insights</a></li>
-                        <li><a href="#">Salary Data</a></li>
-                        <li><a href="#">Blog</a></li>
+                        <li><a href="resources1.html">Career Guides</a></li>
+                        <li><a href="blog.html">Blog</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-column">
                     <h3>Company</h3>
                     <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Press</a></li>
-                        <li><a href="#">Partners</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-column">
                     <h3>Legal</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                        <li><a href="#">GDPR</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="service.html">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
@@ -1402,7 +1387,6 @@
             }
 
             async initializeModel() {
-                // Create a simple neural network for compatibility scoring
                 this.model = tf.sequential({
                     layers: [
                         tf.layers.dense({ inputShape: [50], units: 32, activation: 'relu' }),
@@ -1437,7 +1421,6 @@
                     'Agile', 'Scrum', 'Project Management', 'Communication', 'Problem Solving', 'Leadership'
                 ];
 
-                // Create simple embeddings (in a real app, you'd use pre-trained embeddings)
                 commonSkills.forEach(skill => {
                     const embedding = Array.from({ length: 10 }, () => Math.random());
                     this.skillEmbeddings.set(skill.toLowerCase(), embedding);
@@ -1446,7 +1429,6 @@
             }
 
             getSkillEmbedding(skills) {
-                // Create a combined embedding for a set of skills
                 const embedding = new Array(10).fill(0);
                 let count = 0;
                 
@@ -1723,7 +1705,6 @@
                 alert('Please add at least one skill for better recommendations, or proceed to see general matches.');
             }
             
-            // Show loading state
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = `
                 <div class="loading">
@@ -1732,12 +1713,10 @@
                 </div>
             `;
             
-            // Wait for the recommender to be ready
             if (!recommender.model) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
             
-            // Calculate compatibility scores for all mentors
             const scoredMentors = [];
             for (const mentor of mentors) {
                 const userSkillsLower = userProfile.skills.map(s => s.toLowerCase());
@@ -1752,10 +1731,8 @@
                 });
             }
             
-            // Sort by compatibility score (descending)
             scoredMentors.sort((a, b) => b.compatibilityScore - a.compatibilityScore);
             
-            // Filter mentors with reasonable compatibility
             const recommendedMentors = scoredMentors.filter(mentor => mentor.compatibilityScore >= 30);
             
             displayResults(recommendedMentors, userProfile);
@@ -1834,11 +1811,9 @@
                 }
             });
             
-            // Dark mode toggle functionality
             const darkModeToggle = document.getElementById('darkModeToggle');
             const body = document.body;
 
-            // Check for saved theme preference or respect OS preference
             const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
             const currentTheme = localStorage.getItem('theme');
             
