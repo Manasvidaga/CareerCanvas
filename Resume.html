@@ -3,39 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Powered Resume Builder</title>
+    <title>Career Canvas - Resume Builder</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --secondary: #0ea5e9;
-            --accent: #06b6d4;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #0f172a;
-            --darker: #020617;
-            --light: #ffffff;
-            --gray: #64748b;
-            --light-gray: #f1f5f9;
+            /* Blue Theme Colors */
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #0ea5e9;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
             --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-            --gradient-primary: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
-            --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
-            --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
-            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --transition-fast: all 0.2s ease;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
-            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+            --hover-bg: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15);
-            --border-radius: 20px;
-            --border-radius-sm: 12px;
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Background variables */
+            --bg-color: #f0f9ff;
+            --gradient-1: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+        }
+
+        .dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --accent-color: #60a5fa;
+            --text-color: #f8fafc;
+            --text-light: #cbd5e1;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+            --border-color: #475569;
+            --bg-color: #0f172a;
         }
 
         * {
@@ -46,22 +55,128 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--light-gray);
-            color: var(--dark);
+            background: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            line-height: 1.2;
+        /* NAVIGATION BAR */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
 
-        /* Animated Background */
-        .animated-background {
+        .dark-mode nav {
+            background-color: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+          
+        .logo-img{
+            height: 50px;
+            width: 60px;
+        }
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* ANIMATED BACKGROUND */
+        .pinterest-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -69,55 +184,184 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
-            pointer-events: none;
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
         }
 
-        .background-shape {
+        .dark-mode .pinterest-bg {
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .particles-container {
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary-color);
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.03), rgba(14, 165, 233, 0.03));
-            animation: float 25s infinite ease-in-out;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite linear;
         }
 
-        .background-shape:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 5%;
-            animation-delay: 0s;
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
+            }
         }
 
-        .background-shape:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            left: 80%;
-            animation-delay: 5s;
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary-color) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent-color) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
         }
 
-        .background-shape:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            top: 20%;
-            left: 85%;
-            animation-delay: 10s;
-        }
-
-        @keyframes float {
+        @keyframes patternFloat {
             0%, 100% {
-                transform: translateY(0) rotate(0deg);
+                transform: translateY(0px) rotate(0deg);
             }
             33% {
-                transform: translateY(-20px) rotate(120deg);
+                transform: translateY(-10px) rotate(1deg);
             }
             66% {
-                transform: translateY(10px) rotate(240deg);
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
             }
         }
 
         /* Header */
         .header {
-            background: var(--gradient-primary);
+            background: var(--gradient-1);
             color: white;
             padding: 2rem 0;
             box-shadow: var(--shadow-lg);
@@ -151,7 +395,7 @@
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: var(--border-radius-sm);
+            border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
@@ -164,7 +408,7 @@
 
         .btn-primary {
             background: white;
-            color: var(--primary);
+            color: var(--primary-color);
         }
 
         .btn-primary:hover {
@@ -191,6 +435,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
+            flex: 1;
         }
 
         /* AI Insights Panel */
@@ -200,13 +445,13 @@
             padding: 2rem;
             box-shadow: var(--shadow-lg);
             margin-bottom: 2rem;
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border-color);
         }
 
         .ai-insights h2 {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            color: var(--dark);
+            color: var(--text-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -220,12 +465,12 @@
         }
 
         .score-card {
-            background: var(--light-gray);
+            background: var(--hover-bg);
             padding: 1.5rem;
-            border-radius: var(--border-radius-sm);
+            border-radius: 12px;
             text-align: center;
             transition: var(--transition);
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border-color);
         }
 
         .score-card:hover {
@@ -237,7 +482,7 @@
             font-size: 2.5rem;
             font-weight: 800;
             font-family: 'Outfit', sans-serif;
-            background: var(--gradient-primary);
+            background: var(--gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -245,26 +490,26 @@
 
         .score-label {
             font-size: 0.9rem;
-            color: var(--gray);
+            color: var(--text-light);
             margin-top: 0.5rem;
         }
 
         .suggestions {
-            background: var(--light-gray);
+            background: var(--hover-bg);
             padding: 1.5rem;
-            border-radius: var(--border-radius-sm);
-            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
         }
 
         .suggestions h3 {
             font-size: 1.1rem;
             margin-bottom: 1rem;
-            color: var(--dark);
+            color: var(--text-color);
         }
 
         .suggestion-item {
             padding: 0.75rem;
-            background: white;
+            background: var(--card-bg);
             border-radius: 8px;
             margin-bottom: 0.75rem;
             display: flex;
@@ -274,7 +519,7 @@
         }
 
         .suggestion-item i {
-            color: var(--primary);
+            color: var(--primary-color);
             margin-top: 0.25rem;
         }
 
@@ -285,18 +530,18 @@
             padding: 2rem;
             box-shadow: var(--shadow-lg);
             margin-bottom: 2rem;
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border-color);
         }
 
         .form-section h2 {
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
-            color: var(--dark);
+            color: var(--text-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid var(--light-gray);
+            border-bottom: 2px solid var(--hover-bg);
         }
 
         .form-group {
@@ -307,7 +552,7 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--text-color);
         }
 
         .form-group input,
@@ -315,18 +560,19 @@
         .form-group select {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid var(--card-border);
-            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: var(--transition-fast);
-            background: white;
+            transition: var(--transition);
+            background: var(--card-bg);
+            color: var(--text-color);
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
@@ -342,10 +588,20 @@
         }
 
         .btn-add {
-            background: var(--gradient-primary);
+            background: var(--gradient-1);
             color: white;
             width: 100%;
             margin-top: 1rem;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .btn-add:hover {
@@ -359,12 +615,12 @@
         }
 
         .item {
-            background: var(--light-gray);
+            background: var(--hover-bg);
             padding: 1.5rem;
-            border-radius: var(--border-radius-sm);
+            border-radius: 12px;
             margin-bottom: 1rem;
             position: relative;
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border-color);
             transition: var(--transition);
         }
 
@@ -373,12 +629,12 @@
         }
 
         .item h4 {
-            color: var(--dark);
+            color: var(--text-color);
             margin-bottom: 0.5rem;
         }
 
         .item p {
-            color: var(--gray);
+            color: var(--text-light);
             font-size: 0.9rem;
             margin-bottom: 0.25rem;
         }
@@ -387,7 +643,7 @@
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: var(--danger);
+            background: var(--warning-color);
             color: white;
             border: none;
             width: 32px;
@@ -414,7 +670,7 @@
         }
 
         .skill-tag {
-            background: var(--gradient-primary);
+            background: var(--gradient-1);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 20px;
@@ -438,7 +694,7 @@
             align-items: center;
             justify-content: center;
             font-size: 0.8rem;
-            transition: var(--transition-fast);
+            transition: var(--transition);
         }
 
         .skill-tag button:hover {
@@ -453,11 +709,11 @@
         }
 
         .resume-preview {
-            background: white;
+            background: var(--card-bg);
             border-radius: var(--border-radius);
             padding: 3rem;
             box-shadow: var(--shadow-2xl);
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border-color);
             max-height: calc(100vh - 8rem);
             overflow-y: auto;
         }
@@ -467,25 +723,25 @@
         }
 
         .resume-preview::-webkit-scrollbar-track {
-            background: var(--light-gray);
+            background: var(--hover-bg);
             border-radius: 4px;
         }
 
         .resume-preview::-webkit-scrollbar-thumb {
-            background: var(--primary);
+            background: var(--primary-color);
             border-radius: 4px;
         }
 
         .resume-header {
             text-align: center;
             padding-bottom: 2rem;
-            border-bottom: 3px solid var(--primary);
+            border-bottom: 3px solid var(--primary-color);
             margin-bottom: 2rem;
         }
 
         .resume-header h1 {
             font-size: 2.5rem;
-            color: var(--dark);
+            color: var(--text-color);
             margin-bottom: 0.5rem;
         }
 
@@ -494,7 +750,7 @@
             justify-content: center;
             gap: 1.5rem;
             flex-wrap: wrap;
-            color: var(--gray);
+            color: var(--text-light);
             font-size: 0.9rem;
             margin-top: 1rem;
         }
@@ -511,10 +767,10 @@
 
         .resume-section h2 {
             font-size: 1.5rem;
-            color: var(--primary);
+            color: var(--primary-color);
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--light-gray);
+            border-bottom: 2px solid var(--hover-bg);
         }
 
         .resume-item {
@@ -523,18 +779,18 @@
 
         .resume-item h3 {
             font-size: 1.2rem;
-            color: var(--dark);
+            color: var(--text-color);
             margin-bottom: 0.25rem;
         }
 
         .resume-item .meta {
-            color: var(--gray);
+            color: var(--text-light);
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
 
         .resume-item p {
-            color: var(--dark);
+            color: var(--text-color);
             line-height: 1.6;
         }
 
@@ -545,12 +801,181 @@
         }
 
         .resume-skill {
-            background: var(--light-gray);
-            color: var(--dark);
+            background: var(--hover-bg);
+            color: var(--text-color);
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 500;
+        }
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 5px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--hover-bg);
+            color: var(--text-color);
+            padding: 3rem 0 2rem;
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            #resumePreview, #resumePreview * {
+                visibility: visible;
+            }
+            
+            #resumePreview {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+                background: white;
+                color: black;
+            }
+            
+            .resume-preview {
+                max-height: none;
+                overflow: visible;
+            }
+            
+            .btn, .header, nav, footer, .form-column, .ai-insights {
+                display: none !important;
+            }
+            
+            .resume-header h1 {
+                color: black;
+                font-size: 28px;
+            }
+            
+            .resume-section h2 {
+                color: #2563eb;
+                font-size: 18px;
+            }
+            
+            .resume-item h3 {
+                color: black;
+                font-size: 16px;
+            }
+            
+            .resume-item .meta, .contact-info span {
+                color: #666;
+            }
+            
+            .resume-skill {
+                background: #f1f5f9;
+                color: black;
+            }
         }
 
         /* Responsive */
@@ -587,18 +1012,56 @@
             .resume-preview {
                 padding: 2rem;
             }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="animated-background">
-        <div class="background-shape"></div>
-        <div class="background-shape"></div>
-        <div class="background-shape"></div>
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="subtle-grid"></div>
     </div>
 
-    <!-- Header -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img class="logo-img" src="logo3.png">
+                <div class="logo-text">Career Canvas</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact Us</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="profile.html" class="nav-link">Dashboard</a>
+                <a href="Resume.html" class="nav-link active">Resume Builder</a>
+                <div class="toggle-container">
+                    <span class="toggle-label">Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </nav>
     <header class="header">
         <div class="header-content">
             <h1>
@@ -610,18 +1073,16 @@
                     <i class="fas fa-trash"></i>
                     Clear All
                 </button>
-                <button class="btn btn-primary" onclick="exportPDF()">
-                    <i class="fas fa-download"></i>
-                    Export PDF
+                <button class="btn btn-primary" onclick="printResume()">
+                    <i class="fas fa-print"></i>
+                    Print Resume
                 </button>
             </div>
         </div>
     </header>
 
     <div class="container">
-        <!-- Left Column: Form -->
         <div class="form-column">
-            <!-- AI Insights -->
             <div class="ai-insights">
                 <h2>
                     <i class="fas fa-brain"></i>
@@ -677,15 +1138,13 @@
                 <div class="form-group">
                     <label>Professional Summary</label>
                     <textarea id="summary" placeholder="Brief overview of your professional background and goals..." oninput="updateResume()"></textarea>
-                    <!-- Added AI-powered text improvement button -->
-                    <button class="btn btn-add" onclick="improveSummary()" style="margin-top: 0.75rem; background: var(--gradient-secondary);">
+                    <button class="btn-add" onclick="improveSummary()">
                         <i class="fas fa-magic"></i>
                         <span id="improveButtonText">Improve with AI</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Education -->
             <div class="form-section">
                 <h2><i class="fas fa-graduation-cap"></i> Education</h2>
                 <div class="form-group">
@@ -706,14 +1165,13 @@
                     <label>Details</label>
                     <textarea id="eduDetails" placeholder="GPA, honors, relevant coursework..."></textarea>
                 </div>
-                <button class="btn btn-add" onclick="addEducation()">
+                <button class="btn-add" onclick="addEducation()">
                     <i class="fas fa-plus"></i>
                     Add Education
                 </button>
                 <div class="items-list" id="educationList"></div>
             </div>
 
-            <!-- Experience -->
             <div class="form-section">
                 <h2><i class="fas fa-briefcase"></i> Work Experience</h2>
                 <div class="form-group">
@@ -734,28 +1192,26 @@
                     <label>Description</label>
                     <textarea id="jobDescription" placeholder="Key responsibilities and achievements..."></textarea>
                 </div>
-                <button class="btn btn-add" onclick="addExperience()">
+                <button class="btn-add" onclick="addExperience()">
                     <i class="fas fa-plus"></i>
                     Add Experience
                 </button>
                 <div class="items-list" id="experienceList"></div>
             </div>
 
-            <!-- Skills -->
             <div class="form-section">
                 <h2><i class="fas fa-code"></i> Skills</h2>
                 <div class="form-group">
                     <label>Add Skill</label>
                     <input type="text" id="skillInput" placeholder="e.g., JavaScript, Python, React" onkeypress="if(event.key==='Enter') addSkill()">
                 </div>
-                <button class="btn btn-add" onclick="addSkill()">
+                <button class="btn-add" onclick="addSkill()">
                     <i class="fas fa-plus"></i>
                     Add Skill
                 </button>
                 <div class="skills-container" id="skillsList"></div>
             </div>
 
-            <!-- Projects -->
             <div class="form-section">
                 <h2><i class="fas fa-project-diagram"></i> Projects</h2>
                 <div class="form-group">
@@ -770,7 +1226,7 @@
                     <label>Description</label>
                     <textarea id="projectDesc" placeholder="Project details and your contributions..."></textarea>
                 </div>
-                <button class="btn btn-add" onclick="addProject()">
+                <button class="btn-add" onclick="addProject()">
                     <i class="fas fa-plus"></i>
                     Add Project
                 </button>
@@ -778,7 +1234,6 @@
             </div>
         </div>
 
-        <!-- Right Column: Preview -->
         <div class="preview-section">
             <div class="resume-preview" id="resumePreview">
                 <div class="resume-header">
@@ -819,7 +1274,101 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Career Canvas</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="resources1.html">Career Guides</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 5 and 15px
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration between 10 and 20s
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles
+        createParticles();
+
+        // Dark mode toggle functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or respect OS preference
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Toggle dark mode
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
         // ML-Powered Resume Data Structure
         let resumeData = {
             personal: {},
@@ -1306,83 +1855,32 @@
             updateResume();
         }
 
-        // Export to PDF
-        function exportPDF() {
-            console.log('[v0] exportPDF called');
-            
-            const element = document.getElementById('resumePreview');
-            
-            if (!element) {
-                console.error('[v0] Resume preview element not found');
-                alert('Error: Resume preview not found');
-                return;
-            }
-            
-            console.log('[v0] Element found:', element);
-            console.log('[v0] Element content length:', element.innerHTML.length);
+        // Print Resume - NEW FUNCTION
+        function printResume() {
+            console.log('printResume called');
             
             // Check if resume has content
             if (!resumeData.personal.name && resumeData.education.length === 0 && 
                 resumeData.experience.length === 0 && resumeData.skills.length === 0) {
-                alert('Please add some content to your resume before exporting');
+                alert('Please add some content to your resume before printing');
                 return;
             }
             
             // Show loading indicator
-            const originalButton = event.target.closest('.btn');
+            const originalButton = document.querySelector('.btn-primary');
             const originalContent = originalButton.innerHTML;
-            originalButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+            originalButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
             originalButton.disabled = true;
             
-            console.log('[v0] Starting PDF generation...');
-            
-            const opt = {
-                margin: [0.5, 0.5, 0.5, 0.5],
-                filename: `${resumeData.personal.name || 'resume'}.pdf`,
-                image: { 
-                    type: 'jpeg', 
-                    quality: 0.98 
-                },
-                html2canvas: { 
-                    scale: 2,
-                    useCORS: true,
-                    logging: true,
-                    letterRendering: true,
-                    allowTaint: false,
-                    backgroundColor: '#ffffff'
-                },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'letter', 
-                    orientation: 'portrait',
-                    compress: true
-                },
-                pagebreak: { 
-                    mode: ['avoid-all', 'css', 'legacy'] 
-                }
-            };
-            
-            console.log('[v0] PDF options:', opt);
-            
-            // Generate PDF with error handling
-            html2pdf()
-                .set(opt)
-                .from(element)
-                .save()
-                .then(() => {
-                    console.log('[v0] PDF generated successfully');
-                    originalButton.innerHTML = '<i class="fas fa-check"></i> PDF Downloaded!';
-                    setTimeout(() => {
-                        originalButton.innerHTML = originalContent;
-                        originalButton.disabled = false;
-                    }, 2000);
-                })
-                .catch(error => {
-                    console.error('[v0] PDF generation error:', error);
-                    alert('Error generating PDF. Please try again.');
-                    originalButton.innerHTML = originalContent;
-                    originalButton.disabled = false;
-                });
+            // Give a small delay to show the loading state
+            setTimeout(() => {
+                // Open print dialog
+                window.print();
+                
+                // Restore button
+                originalButton.innerHTML = originalContent;
+                originalButton.disabled = false;
+            }, 500);
         }
 
         // Clear Resume
@@ -1433,8 +1931,8 @@
             const buttonText = document.getElementById('improveButtonText');
             const originalText = summaryTextarea.value.trim();
             
-            console.log('[v0] improveSummary called');
-            console.log('[v0] Original text:', originalText.substring(0, 50) + '...');
+            console.log('improveSummary called');
+            console.log('Original text:', originalText.substring(0, 50) + '...');
             
             if (!originalText) {
                 alert('Please write a summary first before improving it.');
@@ -1446,64 +1944,21 @@
             buttonText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Improving...';
             
             try {
-                console.log('[v0] Calling API endpoint...');
+                console.log('Using client-side ML enhancement');
                 
-                // ML Algorithm: Text Enhancement using NLP-inspired techniques
-                const response = await fetch('/api/improve-summary', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ summary: originalText })
-                });
-                
-                console.log('[v0] API response status:', response.status);
-                console.log('[v0] API response ok:', response.ok);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('[v0] API error response:', errorText);
-                    throw new Error('Failed to improve summary');
-                }
-                
-                const data = await response.json();
-                console.log('[v0] API data received:', data);
-                
-                if (data.error) {
-                    console.error('[v0] API returned error:', data.error);
-                    throw new Error(data.error);
-                }
-                
-                console.log('[v0] Improved summary:', data.improvedSummary?.substring(0, 50) + '...');
-                
-                // Update textarea with AI-improved text
-                summaryTextarea.value = data.improvedSummary;
+                const improvedText = enhanceTextWithML(originalText);
+                console.log('Client-side improved text:', improvedText.substring(0, 50) + '...');
+                summaryTextarea.value = improvedText;
                 updateResume();
                 
-                // Success feedback
                 buttonText.textContent = '✓ Improved!';
                 setTimeout(() => {
                     buttonText.innerHTML = originalButtonContent;
                 }, 2000);
             } catch (error) {
-                console.error('[v0] Error improving text:', error);
-                console.log('[v0] Falling back to client-side ML enhancement');
-                
-                try {
-                    const improvedText = enhanceTextWithML(originalText);
-                    console.log('[v0] Client-side improved text:', improvedText.substring(0, 50) + '...');
-                    summaryTextarea.value = improvedText;
-                    updateResume();
-                    
-                    buttonText.textContent = '✓ Improved!';
-                    setTimeout(() => {
-                        buttonText.innerHTML = originalButtonContent;
-                    }, 2000);
-                } catch (fallbackError) {
-                    console.error('[v0] Fallback enhancement failed:', fallbackError);
-                    buttonText.innerHTML = originalButtonContent;
-                    alert('Failed to improve text. Please try again.');
-                }
+                console.error('Error improving text:', error);
+                buttonText.innerHTML = originalButtonContent;
+                alert('Failed to improve text. Please try again.');
             }
         }
 
@@ -1531,7 +1986,7 @@
                 
                 return enhanced.trim();
             } catch (error) {
-                console.error('[v0] Error in ML enhancement:', error);
+                console.error('Error in ML enhancement:', error);
                 return text; // Return original text if enhancement fails
             }
         }
@@ -1543,7 +1998,7 @@
                 
                 // Fix spacing around punctuation
                 corrected = corrected.replace(/\s+([.,!?;:])/g, '$1');
-                corrected = corrected.replace(/([.,!?;:])\s*([a-z])/g, (match, punct, letter) => punct + ' ' + letter.toUpperCase());
+                corrected = corrected.replace(/([.,!?;:])([A-Za-z])/g, '$1 $2');
                 corrected = corrected.replace(/\s{2,}/g, ' ');
                 
                 // Fix common typos
@@ -1551,20 +2006,31 @@
                 corrected = corrected.replace(/\brecieve\b/gi, 'receive');
                 corrected = corrected.replace(/\boccured\b/gi, 'occurred');
                 corrected = corrected.replace(/\bseperate\b/gi, 'separate');
+                corrected = corrected.replace(/\balot\b/gi, 'a lot');
+                corrected = corrected.replace(/\bcould of\b/gi, 'could have');
+                corrected = corrected.replace(/\bshould of\b/gi, 'should have');
+                corrected = corrected.replace(/\bwould of\b/gi, 'would have');
+                
+                // Fix subject-verb agreement
+                corrected = corrected.replace(/\bthey is\b/gi, 'they are');
+                corrected = corrected.replace(/\bhe are\b/gi, 'he is');
+                corrected = corrected.replace(/\bshe are\b/gi, 'she is');
+                corrected = corrected.replace(/\bit are\b/gi, 'it is');
                 
                 // Ensure first letter is capitalized
                 if (corrected.length > 0) {
                     corrected = corrected.charAt(0).toUpperCase() + corrected.slice(1);
                 }
                 
-                // Ensure ends with period
-                if (corrected.length > 0 && !/[.!?]$/.test(corrected)) {
-                    corrected += '.';
+                // Ensure ends with period if it's a complete sentence
+                const sentences = corrected.split(/[.!?]+/).filter(s => s.trim());
+                if (sentences.length > 0 && !/[.!?]$/.test(corrected.trim())) {
+                    corrected = corrected.trim() + '.';
                 }
                 
                 return corrected;
             } catch (error) {
-                console.error('[v0] Error in grammar correction:', error);
+                console.error('Error in grammar correction:', error);
                 return text;
             }
         }
@@ -1581,13 +2047,32 @@
                     
                     if (sentence.length === 0) continue;
                     
-                    // Break overly long sentences (>30 words)
+                    // Break overly long sentences (>25 words) into two
                     const words = sentence.split(/\s+/);
-                    if (words.length > 30) {
+                    if (words.length > 25) {
                         const midpoint = Math.floor(words.length / 2);
                         const part1 = words.slice(0, midpoint).join(' ');
                         const part2 = words.slice(midpoint).join(' ');
-                        optimized.push(part1 + '.', ' ' + part2 + punctuation);
+                        
+                        // Find a good breaking point (after a comma or conjunction)
+                        const breakPoints = [', and', ', but', ', however', ', although', ', while'];
+                        let breakIndex = -1;
+                        
+                        for (const point of breakPoints) {
+                            const index = part1.lastIndexOf(point);
+                            if (index > part1.length / 2) {
+                                breakIndex = index + point.length;
+                                break;
+                            }
+                        }
+                        
+                        if (breakIndex > 0) {
+                            const newPart1 = part1.substring(0, breakIndex);
+                            const newPart2 = part1.substring(breakIndex) + ' ' + part2;
+                            optimized.push(newPart1 + '.', newPart2 + punctuation);
+                        } else {
+                            optimized.push(part1 + '.', part2 + punctuation);
+                        }
                     } else {
                         optimized.push(sentence + punctuation);
                     }
@@ -1595,7 +2080,7 @@
                 
                 return optimized.join(' ').replace(/\s+/g, ' ').trim();
             } catch (error) {
-                console.error('[v0] Error in sentence optimization:', error);
+                console.error('Error in sentence optimization:', error);
                 return text;
             }
         }
@@ -1618,6 +2103,16 @@
                     [/\bhelped with\b/gi, 'contributed to'],
                     [/\bworked on\b/gi, 'developed'],
                     [/\bused\b/gi, 'utilized'],
+                    [/\bmade\b/gi, 'created'],
+                    [/\bfixed\b/gi, 'resolved'],
+                    [/\bdid\b/gi, 'performed'],
+                    [/\bbig\b/gi, 'significant'],
+                    [/\bsmall\b/gi, 'modest'],
+                    [/\bgood\b/gi, 'effective'],
+                    [/\bbad\b/gi, 'ineffective'],
+                    [/\bnice\b/gi, 'favorable'],
+                    [/\beasy\b/gi, 'straightforward'],
+                    [/\bhard\b/gi, 'challenging'],
                 ];
                 
                 replacements.forEach(([pattern, replacement]) => {
@@ -1626,7 +2121,7 @@
                 
                 return enhanced;
             } catch (error) {
-                console.error('[v0] Error in tone enhancement:', error);
+                console.error('Error in tone enhancement:', error);
                 return text;
             }
         }
@@ -1637,7 +2132,11 @@
                 const actionVerbs = [
                     'achieved', 'improved', 'trained', 'managed', 'created',
                     'designed', 'developed', 'implemented', 'increased', 'reduced',
-                    'led', 'established', 'optimized', 'streamlined', 'enhanced'
+                    'led', 'established', 'optimized', 'streamlined', 'enhanced',
+                    'coordinated', 'facilitated', 'generated', 'initiated', 'launched',
+                    'negotiated', 'organized', 'oversaw', 'performed', 'planned',
+                    'produced', 'recommended', 'reorganized', 'resolved', 'revised',
+                    'strengthened', 'supervised', 'transformed'
                 ];
                 
                 // Check if text already has action verbs
@@ -1646,12 +2145,14 @@
                 );
                 
                 if (!hasActionVerb) {
-                    // Add a strong opening
+                    // Add a strong opening with a random action verb
+                    const randomVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
                     const sentences = text.split(/\.\s+/);
                     if (sentences.length > 0 && sentences[0].length > 0) {
                         const firstSentence = sentences[0];
                         if (!/^(experienced|seasoned|accomplished|skilled)/i.test(firstSentence)) {
-                            sentences[0] = 'Experienced professional with ' + firstSentence.charAt(0).toLowerCase() + firstSentence.slice(1);
+                            sentences[0] = `${randomVerb.charAt(0).toUpperCase() + randomVerb.slice(1)} professional with ` + 
+                                firstSentence.charAt(0).toLowerCase() + firstSentence.slice(1);
                         }
                     }
                     return sentences.join('. ') + (text.endsWith('.') ? '' : '.');
@@ -1659,7 +2160,7 @@
                 
                 return text;
             } catch (error) {
-                console.error('[v0] Error in action verb injection:', error);
+                console.error('Error in action verb injection:', error);
                 return text;
             }
         }
@@ -1668,7 +2169,7 @@
         function removeRedundancy(text) {
             try {
                 // Remove repeated consecutive words
-                const words = text.split(/\s+/);
+                let words = text.split(/\s+/);
                 const filtered = [];
                 
                 for (let i = 0; i < words.length; i++) {
@@ -1683,9 +2184,30 @@
                     }
                 }
                 
-                return filtered.join(' ');
+                // Remove common redundant phrases
+                let result = filtered.join(' ');
+                const redundantPhrases = [
+                    [/basic fundamentals/gi, 'fundamentals'],
+                    [/end result/gi, 'result'],
+                    [/past history/gi, 'history'],
+                    [/future plans/gi, 'plans'],
+                    [/true facts/gi, 'facts'],
+                    [/unexpected surprise/gi, 'surprise'],
+                    [/advance planning/gi, 'planning'],
+                    [/consensus of opinion/gi, 'consensus'],
+                    [/close proximity/gi, 'proximity'],
+                    [/exactly the same/gi, 'identical'],
+                    [/repeat again/gi, 'repeat'],
+                    [/combined together/gi, 'combined']
+                ];
+                
+                redundantPhrases.forEach(([pattern, replacement]) => {
+                    result = result.replace(pattern, replacement);
+                });
+                
+                return result;
             } catch (error) {
-                console.error('[v0] Error in redundancy removal:', error);
+                console.error('Error in redundancy removal:', error);
                 return text;
             }
         }
@@ -1728,7 +2250,7 @@
                 
                 return capitalized;
             } catch (error) {
-                console.error('[v0] Error in capitalization:', error);
+                console.error('Error in capitalization:', error);
                 return text;
             }
         }
