@@ -3,8 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentor Mapper</title>
+    <title>Career Canvas | Mentor Mapper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #0ea5e9;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #ffffff;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --gradient-primary: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-fast: all 0.2s ease;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --border-radius: 20px;
+            --border-radius-sm: 12px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,289 +42,533 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(100deg, #141E30 , #243B55); /* Dark theme gradient */
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 20px;
-            color: #e0e0e0; /* Default light text color for dark theme */
-            position: relative; /* For z-index context of animated icons */
-            overflow-x: hidden; /* Prevent horizontal scroll from icons */
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* Animated Background Styling from Resume Builder */
-        .animated-bg {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 0;
-          overflow: hidden;
-          pointer-events: none;
-        }
-        .animated-bg span.icon-float {
-            position: absolute;
-            bottom: -30px;
-            color: rgba(255, 255, 255, 0.4); /* Default color for icons */
-            font-size: 20px;
-            opacity: 0;
-            animation: floatUpCareer 15s linear infinite;
-            user-select: none;
-        }
-        .icon-float.icon-lightbulb::before { content: "💡"; } .icon-float.icon-gear::before { content: "⚙️"; } .icon-float.icon-briefcase::before { content: "💼"; } .icon-float.icon-arrow::before { content: "📈"; } .icon-float.icon-cap::before { content: "🎓"; } .icon-float.icon-speech::before { content: "💬"; } .icon-float.icon-star::before { content: "⭐"; } .icon-float.icon-network::before { content: "🌐"; } .icon-float.icon-puzzle::before { content: "🧩"; } .icon-float.icon-target::before { content: "🎯"; } .icon-float.icon-pencil::before { content: "✏️"; } .icon-float.icon-rocket::before { content: "🚀"; }
-
-        @keyframes floatUpCareer {
-          0% { transform: translateY(0vh) translateX(0vw); opacity: 0; }
-          10%, 90% { opacity: 0.8; }
-          100% { transform: translateY(-110vh) translateX(calc(var(--drift-x, 0) * 2vw)); opacity: 0; }
-        }
-
-        .animated-bg span:nth-child(1) { left: 8%; animation-delay: 0s; font-size: 38px; --drift-x: -1.2; color: rgba(255,255,255,0.44);}
-        .animated-bg span:nth-child(2) { left: 18%; animation-delay: 2.5s; font-size: 30px; --drift-x: 1; animation-duration: 18s; }
-        .animated-bg span:nth-child(3) { left: 28%; animation-delay: 4s; font-size: 42px; --drift-x: -1.5; color: rgba(255,255,255,0.50);}
-        .animated-bg span:nth-child(4) { left: 38%; animation-delay: 1s; font-size: 32px; --drift-x: 0.5; animation-duration: 13s; }
-        .animated-bg span:nth-child(5) { left: 48%; animation-delay: 5s; font-size: 40px; --drift-x: -0.8; animation-duration: 20s; color: rgba(255,255,255,0.35);}
-        .animated-bg span:nth-child(6) { left: 58%; animation-delay: 3s; font-size: 30px; --drift-x: 1.2; animation-duration: 16s; }
-        .animated-bg span:nth-child(7) { left: 68%; animation-delay: 0.8s; font-size: 45px; --drift-x: -0.8; color: rgba(255,255,255,0.55);}
-        .animated-bg span:nth-child(8) { left: 78%; animation-delay: 4.5s; font-size: 28px; --drift-x: 0.8; animation-duration: 14s; }
-        .animated-bg span:nth-child(9) { left: 88%; animation-delay: 1.5s; font-size: 36px; --drift-x: -1.2; animation-duration: 19s; color: rgba(255,255,255,0.48);}
-        .animated-bg span:nth-child(10) { left: 3%; animation-delay: 3.5s; font-size: 35px; --drift-x: 1.1; animation-duration: 17s; }
-        .animated-bg span:nth-child(11) { left: 13%; animation-delay: 6s; font-size: 28px; --drift-x: -0.7; color: rgba(255,255,255,0.42);}
-        .animated-bg span:nth-child(12) { left: 83%; animation-delay: 2s; font-size: 38px; --drift-x: 0.7; animation-duration: 15s; }
-        /* End of Animated Background Styling from Resume Builder */
-
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(44, 47, 54, 0.5); /* Dark container background */
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            position: relative; /* To ensure it's above the animated icons */
-            z-index: 1;
+        /* Typography Hierarchy */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
         }
 
         h1 {
-            text-align: center;
-          background: linear-gradient(#0d4297, #2e65be);
-          -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-               font-weight: bold; 
-            margin-bottom: 30px;
-            font-size: 2.5em;
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }
-/*.back-button {
 
-            background: linear-gradient(135deg, #2b5876, #4e4376);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-bottom: 30px;
-            display: inline-flex;
+        h2 {
+            font-size: 2.8rem;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+        }
+
+        p, .subtitle, .card-description, .feature-text p, .footer-links a {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        .card-description, .feature-text p {
+            font-size: 1.1rem;
+        }
+
+        .nav-link, .btn-card {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+        }
+
+        /* Animated Background for Entire Page */
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .background-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.03), rgba(14, 165, 233, 0.03));
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .background-shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .background-shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 5s;
+        }
+
+        .background-shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 20%;
+            left: 85%;
+            animation-delay: 10s;
+        }
+
+        .background-shape:nth-child(4) {
+            width: 250px;
+            height: 250px;
+            top: 70%;
+            left: 10%;
+            animation-delay: 15s;
+        }
+
+        .background-shape:nth-child(5) {
+            width: 180px;
+            height: 180px;
+            top: 40%;
+            left: 70%;
+            animation-delay: 20s;
+        }
+
+        .background-shape:nth-child(6) {
+            width: 220px;
+            height: 220px;
+            top: 80%;
+            left: 30%;
+            animation-delay: 25s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-20px) rotate(120deg);
+            }
+            66% {
+                transform: translateY(10px) rotate(240deg);
+            }
+        }
+
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.05);
+            animation: particleFloat 20s infinite linear;
+        }
+
+        .particle:nth-child(1) {
+            width: 8px;
+            height: 8px;
+            top: 20%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 6px;
+            height: 6px;
+            top: 60%;
+            left: 25%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(3) {
+            width: 10px;
+            height: 10px;
+            top: 40%;
+            left: 75%;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(4) {
+            width: 7px;
+            height: 7px;
+            top: 80%;
+            left: 60%;
+            animation-delay: 6s;
+        }
+
+        .particle:nth-child(5) {
+            width: 9px;
+            height: 9px;
+            top: 30%;
+            left: 50%;
+            animation-delay: 8s;
+        }
+
+        .particle:nth-child(6) {
+            width: 5px;
+            height: 5px;
+            top: 70%;
+            left: 40%;
+            animation-delay: 10s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced Navigation Bar */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             text-decoration: none;
-            padding-left: 30px;
-            padding-right: 30px;
+            transition: var(--transition);
         }
 
-        .back-button:hover {
+        .logo:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(4, 2, 116, 0.3);
         }
-*/
-/* From Uiverse.io by satyamchaudharydev */ 
-.back-button {
-  position: relative;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-  padding-block: 0.5rem;
-  padding-inline: 1.25rem;
-   background: linear-gradient(to right, #2b5876, #4e4376);
-  border-radius: 20px;
-  display: inline;
-  align-items: center;
-  justify-content: center;
-  color: #ffff;
-  gap: 10px;
-  font-weight: bold;
-  border: 3px solid #bbaeaea4;
-  outline: none;
-  overflow: hidden;
-  font-size: 20px;
-  cursor: pointer;
-  margin-bottom: 30px;
-  padding-left: 30px;
-  padding-right: 30px;
-  margin-left: 50px;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-}
 
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
 
-.back-button:hover {
-  transform: scale(1.05);
-  border-color: #fff9;
-}
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-.back-button:hover .icon {
-  transform: translate(4px);
-}
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
 
-.back-button:hover::before {
-  animation: shine 1.5s ease-out infinite;
-}
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
 
-.back-button::before {
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 100%;
-  background-image: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.8),
-    rgba(255, 255, 255, 0) 70%
-  );
-  top: 0;
-  left: -100px;
-  opacity: 0.6;
-}
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+        }
 
-@keyframes shine {
-  0% {
-    left: -100px;
-  }
+        .nav-link:hover {
+            color: var(--primary);
+        }
 
-  60% {
-    left: 100%;
-  }
+        .nav-link:hover::after {
+            width: 100%;
+        }
 
-  to {
-    left: 100%;
-  }
-}
-.Btn1 {
-  position: relative;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-  padding-block: 0.5rem;
-  padding-inline: 1.25rem;
-   background: linear-gradient(to right, #2b5876, #4e4376);
-  border-radius: 20px;
-  display: inline;
-  align-items: center;
-  justify-content: center;
-  color: #ffff;
-  gap: 10px;
-  font-weight: bold;
-  border: 3px solid #bbaeaea4;
-  outline: none;
-  overflow: hidden;
-  font-size: 20px;
-  cursor: pointer;
-  margin-bottom: 30px;
-  padding-left: 30px;
-  padding-right: 30px;
-  margin-left: 580px;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-}
+        .nav-link.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
 
+        .nav-link.active::after {
+            width: 100%;
+        }
 
-.Btn1:hover {
-  transform: scale(1.05);
-  border-color: #fff9;
-}
+        /* Enhanced Hero Section */
+        .hero {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(14, 165, 233, 0.03) 50%, rgba(6, 182, 212, 0.03) 100%);
+            position: relative;
+            overflow: hidden;
+        }
 
-.Btn1:hover .icon {
-  transform: translate(4px);
-}
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
 
-.Btn1:hover::before {
-  animation: shine 1.5s ease-out infinite;
-}
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
 
-.Btn1::before {
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 100%;
-  background-image: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.8),
-    rgba(255, 255, 255, 0) 70%
-  );
-  top: 0;
-  left: -100px;
-  opacity: 0.6;
-}
+        .typewriter-container {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
 
-@keyframes shine {
-  0% {
-    left: -100px;
-  }
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--dark);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            overflow: hidden;
+            border-right: 3px solid var(--primary);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: -0.02em;
+            animation: typewriter 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
 
-  60% {
-    left: 100%;
-  }
+        @keyframes typewriter {
+            from { width: 0 }
+            to { width: 100% }
+        }
 
-  to {
-    left: 100%;
-  }
-}
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
+        }
 
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 3.5s both;
+        }
 
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            animation: float 20s infinite linear;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -80px;
+            left: -80px;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            top: 20%;
+            left: 10%;
+            animation-delay: -10s;
+        }
+
+        .shape-4 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            right: 15%;
+            animation-delay: -15s;
+        }
+
+        /* Enhanced Main Content */
+        .main-content {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            display: inline-block;
+            position: relative;
+            color: var(--dark);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        /* Mentor Mapper Specific Styles */
         .input-section {
-            background: #353941;
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 2px solid #4a4e57;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+        }
+
+        .input-section:hover {
+            box-shadow: var(--shadow-xl);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 0.8rem;
             font-weight: 600;
-            color: #b0b8c4;
+            color: var(--dark);
+            font-family: 'Outfit', sans-serif;
         }
 
         input, select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #4a4e57;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            background-color: #25272c;
-            color: #e0e0e0;
+            padding: 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--light);
+            color: var(--dark);
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: #7a8eea;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         select option {
-            background: #25272c;
-            color: #e0e0e0;
+            background: var(--light);
+            color: var(--dark);
         }
-
 
         .skills-input {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
         .skills-input input {
@@ -302,37 +576,39 @@
         }
 
         .add-skill-btn {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background: var(--gradient-primary);
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-sm);
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: var(--transition);
+            font-family: 'Outfit', sans-serif;
         }
 
         .add-skill-btn:hover {
-           background: linear-gradient(135deg, #43cea2, #185a9d);
-
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .skills-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
+            gap: 0.8rem;
+            margin-top: 1rem;
         }
 
         .skill-tag {
-            background: linear-gradient(135deg, #0d4297, #2e65be);
+            background: var(--gradient-primary);
             color: white;
-            padding: 6px 12px;
+            padding: 0.5rem 1rem;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
             gap: 5px;
+            box-shadow: var(--shadow-sm);
         }
 
         .remove-skill {
@@ -341,77 +617,76 @@
             color: white;
             cursor: pointer;
             font-weight: bold;
+            margin-left: 5px;
         }
 
-      /*  .find-btn {
-            background: linear-gradient(45deg, #7a8eea, #8e63c4);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: transform 0.3s, background 0.3s;
-        }
-
-        .find-btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(45deg, #6a7ee0, #7e53b4);
-        }*/
         .find-btn {
-            background: linear-gradient(135deg, #0d4297, #2e65be); /* Dark Blue gradient button */
+            background: var(--gradient-primary);
             color: white;
-            padding: 15px 40px;
+            padding: 1.2rem 2.5rem;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
+            border-radius: var(--border-radius-sm);
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-left: 330px;
-            margin-top: 20px;
+            display: block;
+            margin: 2rem auto 0;
+            font-family: 'Outfit', sans-serif;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
         }
 
         .find-btn:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(46, 101, 190, 0.5); /* Dark Blue glow (using lighter end of gradient) */
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
         }
 
-        .find-btn:active {
-            transform: translateY(0) scale(1);
+        .find-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
         }
 
+        .find-btn:hover::before {
+            left: 100%;
+        }
 
         .results-section {
-            margin-top: 30px;
+            margin-top: 3rem;
         }
 
         .results-section h2 {
             text-align: center;
-            color: #cbd5e0;
-            margin-bottom: 25px;
-            font-size: 2em;
+            color: var(--dark);
+            margin-bottom: 2.5rem;
+            font-size: 2.2rem;
         }
 
         .mentor-card {
-            background: #353941;
-            border: 2px solid #4a4e57;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
         }
 
         .mentor-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-            border-color: #7a8eea;
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--primary-light);
         }
 
         .mentor-card::before {
@@ -419,406 +694,747 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(45deg, #7a8eea, #8e63c4);
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .mentor-card:hover::before {
+            transform: scaleX(1);
         }
 
         .mentor-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
         }
 
         .mentor-name {
-            font-size: 1.4em;
-            font-weight: 600;
-            color: #e0e0e0;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--dark);
+            font-family: 'Outfit', sans-serif;
         }
 
         .compatibility-score {
-            background: linear-gradient(45deg, #28a745, #20c997);
+            background: var(--gradient-accent);
             color: white;
-            padding: 8px 15px;
+            padding: 0.5rem 1.2rem;
             border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .mentor-specialty {
-            background: linear-gradient(45deg, #8e63c4, #7a8eea);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-weight: 500;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: inline-block;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-sm);
         }
 
+        .mentor-specialty {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
 
         .mentor-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .detail-item {
-            color: #b0b8c4;
+            color: var(--gray);
+            font-size: 1rem;
         }
 
         .detail-label {
             font-weight: 600;
-            color: #d0d8e0;
+            color: var(--dark);
+            font-family: 'Outfit', sans-serif;
         }
 
         .mentor-skills {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 5px;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
         }
 
         .mentor-skill {
-            background: #40444c;
-            color: #b0bac9;
-            padding: 4px 10px;
+            background: var(--light-gray);
+            color: var(--gray);
+            padding: 0.4rem 0.8rem;
             border-radius: 12px;
-            font-size: 12px;
-            border: 1px solid #5a5e67;
+            font-size: 0.8rem;
+            border: 1px solid var(--card-border);
         }
 
         .matched-skill {
-            background: #1c4b27;
-            border-color: #28a745;
-            color: #a3e9b6;
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+            color: #10b981;
         }
 
         .contact-btn {
-            background: linear-gradient(45deg, #28a745, #20c997);
+            background: var(--gradient-accent);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius-sm);
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 15px;
+            transition: var(--transition);
+            margin-top: 1.5rem;
             text-decoration: none;
             display: inline-block;
+            font-family: 'Outfit', sans-serif;
+            box-shadow: var(--shadow-sm);
         }
 
         .contact-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+            box-shadow: var(--shadow-md);
         }
 
         .contact-info {
             display: flex;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 1rem;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
         }
 
         .contact-method {
-            background: #40444c;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #b0b8c4;
-            border: 1px solid #5a5e67;
+            background: var(--light-gray);
+            padding: 0.7rem 1rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+            color: var(--gray);
+            border: 1px solid var(--card-border);
         }
+
         .contact-method a {
-            color: #82aaff;
+            color: var(--primary);
             text-decoration: none;
+            transition: var(--transition-fast);
         }
+
         .contact-method a:hover {
+            color: var(--primary-dark);
             text-decoration: underline;
         }
 
-
         .no-results {
             text-align: center;
-            color: #a0a8b4;
-            font-size: 18px;
-            margin-top: 30px;
-            background-color: #353941;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .no-results h3{
-            color: #e0e0e0;
-            margin-bottom: 10px;
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-top: 3rem;
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
         }
 
+        .no-results h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(37, 99, 235, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Button Styles */
+        .back-button, .Btn1 {
+            position: relative;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            padding: 0.8rem 1.8rem;
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius-sm);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            gap: 10px;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            overflow: hidden;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            font-family: 'Outfit', sans-serif;
+            text-decoration: none;
+        }
+
+        .back-button:hover, .Btn1:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .back-button::before, .Btn1::before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100%;
+            background-image: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0) 30%,
+                rgba(255, 255, 255, 0.8),
+                rgba(255, 255, 255, 0) 70%
+            );
+            top: 0;
+            left: -100px;
+            opacity: 0.6;
+        }
+
+        .back-button:hover::before, .Btn1:hover::before {
+            animation: shine 1.5s ease-out infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100px;
+            }
+            60% {
+                left: 100%;
+            }
+            to {
+                left: 100%;
+            }
+        }
+
+        /* Light Footer */
+        footer {
+            background: var(--light-gray);
+            color: var(--dark);
+            padding: 4rem 0 2rem;
+            margin-top: 6rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition-fast);
+            font-size: 1rem;
+            display: inline-block;
+            position: relative;
+            padding-left: 0;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(8px);
+            padding-left: 8px;
+        }
+
+        .footer-links a::before {
+            content: '→';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: -10px;
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--card-border);
+        }
+
+        .social-link:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.4rem;
+            }
+        }
 
         @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .nav-links {
+                gap: 2rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .input-section {
+                padding: 2rem;
+            }
+            
             .mentor-details {
                 grid-template-columns: 1fr;
             }
-
+            
             .mentor-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 1rem;
             }
-            /* Removed old .animated-background-icons media query styles */
+            
+            .skills-input {
+                flex-direction: column;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .input-section {
+                padding: 1.5rem;
+            }
+            
+            .mentor-card {
+                padding: 1.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+            
+            .container, .nav-container {
+                padding: 0 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="animated-bg">
-        <span class="icon-float icon-lightbulb"></span>
-        <span class="icon-float icon-gear"></span>
-        <span class="icon-float icon-briefcase"></span>
-        <span class="icon-float icon-arrow"></span>
-        <span class="icon-float icon-cap"></span>
-        <span class="icon-float icon-speech"></span>
-        <span class="icon-float icon-star"></span>
-        <span class="icon-float icon-network"></span>
-        <span class="icon-float icon-puzzle"></span>
-        <span class="icon-float icon-target"></span>
-        <span class="icon-float icon-pencil"></span>
-        <span class="icon-float icon-rocket"></span>
+    <!-- Animated Background for Entire Page -->
+    <div class="animated-background">
+        <div class="background-shape"></div>
+        <div class="background-shape"></div>
+        <div class="background-shape"></div>
+        <div class="background-shape"></div>
+        <div class="background-shape"></div>
+        <div class="background-shape"></div>
+        <div class="floating-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
     </div>
 
-    <div class="container">
-        <h1> 🎯 Map Your Mentor</h1>
-           <button class="back-button" onclick="window.location.href='profile.html'">← Back to Profile</button>
-            <button class="Btn1" onclick="window.location.href='JobTrends.html'">
-   <span class="logoIcon">📈</span>
-   <span class="tooltip">Job Trends</span>
-</button>
-        <div class="input-section">
-            <div class="form-group">
-                <label for="experience">Your Experience Level:</label>
-                <select id="experience">
-                    <option value="beginner">Beginner (0-2 years)</option>
-                    <option value="intermediate">Intermediate (2-5 years)</option>
-                    <option value="advanced">Advanced (5+ years)</option>
-                </select>
+    <!-- Enhanced Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">CC</div>
+                <div class="logo-text">Career Canvas</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link active">Mentor Mapper</a>
+                <a href="#" class="nav-link">About Us</a>
+                <a href="#" class="nav-link">Contact</a>
             </div>
+        </div>
+    </nav>
 
-            <div class="form-group">
-                <label for="field">Field of Interest:</label>
-                <select id="field">
-                    <option value="web-development">Web Development</option>
-                    <option value="mobile-development">Mobile Development</option>
-                    <option value="data-science">Data Science</option>
-                    <option value="machine-learning">Machine Learning</option>
-                    <option value="cybersecurity">Cybersecurity</option>
-                    <option value="devops">DevOps</option>
-                    <option value="ui-ux">UI/UX Design</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Your Skills:</label>
-                <div class="skills-input">
-                    <input type="text" id="skillInput" placeholder="Enter a skill (e.g., JavaScript, Python)">
-                    <button class="add-skill-btn" onclick="addSkill()">Add Skill</button>
+    <!-- Enhanced Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="typewriter-container">
+                    <h1>Find Your Perfect Mentor</h1>
                 </div>
-                <div class="skills-list" id="skillsList"></div>
+                <p class="subtitle">Connect with industry experts who can guide your career journey with personalized mentorship and AI-powered matching.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="section-title">
+                <h2>AI-Powered Mentor Matching</h2>
             </div>
 
-            <div class="form-group">
-                <label for="location">Preferred Location:</label>
-                <select id="location">
-                    <option value="any">Any Location</option>
-                    <option value="north-america">North America</option>
-                    <option value="europe">Europe</option>
-                    <option value="asia">Asia</option>
-                    <option value="remote">Remote Only</option>
-                </select>
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="experience">Your Experience Level:</label>
+                    <select id="experience">
+                        <option value="beginner">Beginner (0-2 years)</option>
+                        <option value="intermediate">Intermediate (2-5 years)</option>
+                        <option value="advanced">Advanced (5+ years)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="field">Field of Interest:</label>
+                    <select id="field">
+                        <option value="web-development">Web Development</option>
+                        <option value="mobile-development">Mobile Development</option>
+                        <option value="data-science">Data Science</option>
+                        <option value="machine-learning">Machine Learning</option>
+                        <option value="cybersecurity">Cybersecurity</option>
+                        <option value="devops">DevOps</option>
+                        <option value="ui-ux">UI/UX Design</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Skills:</label>
+                    <div class="skills-input">
+                        <input type="text" id="skillInput" placeholder="Enter a skill (e.g., JavaScript, Python)">
+                        <button class="add-skill-btn" onclick="addSkill()">Add Skill</button>
+                    </div>
+                    <div class="skills-list" id="skillsList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Preferred Location:</label>
+                    <select id="location">
+                        <option value="any">Any Location</option>
+                        <option value="north-america">North America</option>
+                        <option value="europe">Europe</option>
+                        <option value="asia">Asia</option>
+                        <option value="remote">Remote Only</option>
+                    </select>
+                </div>
+
+                <button class="find-btn" onclick="findMentors()">Find My Perfect Mentor</button>
             </div>
 
-            <button class="find-btn" onclick="findMentors()">Find My Perfect Mentor</button>
+            <div class="results-section" id="results">
+                <!-- Results will be injected here -->
+            </div>
         </div>
+    </main>
 
-        <div class="results-section" id="results">
-            <!-- Results will be injected here -->
+    <!-- Light Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Career Canvas</h3>
+                    <p style="color: var(--gray); margin-bottom: 2rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Career Guides</a></li>
+                        <li><a href="#">Skill Assessments</a></li>
+                        <li><a href="#">Industry Insights</a></li>
+                        <li><a href="#">Salary Data</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+            </div>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // DSA Implementation: Hash Map for efficient lookups
-        class HashMap {
+        class MentorRecommender {
             constructor() {
-                this.buckets = new Array(16);
-                this.size = 0;
+                this.model = null;
+                this.skillEmbeddings = new Map();
+                this.allSkills = new Set();
+                this.initializeModel();
             }
 
-            hash(key) {
-                let hash = 0;
-                for (let i = 0; i < key.length; i++) {
-                    hash = (hash + key.charCodeAt(i) * i) % this.buckets.length;
-                }
-                return hash;
+            async initializeModel() {
+                // Create a simple neural network for compatibility scoring
+                this.model = tf.sequential({
+                    layers: [
+                        tf.layers.dense({ inputShape: [50], units: 32, activation: 'relu' }),
+                        tf.layers.dropout({ rate: 0.2 }),
+                        tf.layers.dense({ units: 16, activation: 'relu' }),
+                        tf.layers.dense({ units: 1, activation: 'sigmoid' })
+                    ]
+                });
+
+                // Compile the model
+                this.model.compile({
+                    optimizer: 'adam',
+                    loss: 'binaryCrossentropy',
+                    metrics: ['accuracy']
+                });
+
+                // Initialize skill embeddings
+                await this.initializeSkillEmbeddings();
             }
 
-            set(key, value) {
-                const index = this.hash(key);
-                if (!this.buckets[index]) {
-                    this.buckets[index] = [];
-                }
+            async initializeSkillEmbeddings() {
+                // Create embeddings for common skills
+                const commonSkills = [
+                    'JavaScript', 'Python', 'Java', 'C++', 'C#', 'PHP', 'Ruby', 'Go', 'Swift', 'Kotlin',
+                    'React', 'Angular', 'Vue', 'Node.js', 'Express', 'Django', 'Flask', 'Spring', 'Laravel',
+                    'HTML', 'CSS', 'SASS', 'LESS', 'Bootstrap', 'Tailwind', 'Material-UI',
+                    'SQL', 'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Firebase',
+                    'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Jenkins', 'Git',
+                    'Machine Learning', 'Deep Learning', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'NLP', 'Computer Vision',
+                    'Data Analysis', 'Data Visualization', 'Pandas', 'NumPy', 'Tableau', 'Power BI',
+                    'UI/UX Design', 'Figma', 'Adobe XD', 'Sketch', 'Wireframing', 'Prototyping',
+                    'Agile', 'Scrum', 'Project Management', 'Communication', 'Problem Solving', 'Leadership'
+                ];
 
-                const bucket = this.buckets[index];
-                const existingPair = bucket.find(pair => pair[0] === key);
-
-                if (existingPair) {
-                    existingPair[1] = value;
-                } else {
-                    bucket.push([key, value]);
-                    this.size++;
-                    // Dynamic resizing if load factor > 0.7
-                    if (this.size / this.buckets.length > 0.7) {
-                        this.resize(this.buckets.length * 2);
-                    }
-                }
+                // Create simple embeddings (in a real app, you'd use pre-trained embeddings)
+                commonSkills.forEach(skill => {
+                    const embedding = Array.from({ length: 10 }, () => Math.random());
+                    this.skillEmbeddings.set(skill.toLowerCase(), embedding);
+                    this.allSkills.add(skill.toLowerCase());
+                });
             }
 
-            get(key) {
-                const index = this.hash(key);
-                const bucket = this.buckets[index];
-                if (bucket) {
-                    const pair = bucket.find(pair => pair[0] === key);
-                    return pair ? pair[1] : undefined;
-                }
-                return undefined;
-            }
-
-            resize(newCapacity) {
-                const oldBuckets = this.buckets;
-                this.buckets = new Array(newCapacity);
-                this.size = 0;
-                for (const bucket of oldBuckets) {
-                    if (bucket) {
-                        for (const [key, value] of bucket) {
-                            this.set(key, value);
+            getSkillEmbedding(skills) {
+                // Create a combined embedding for a set of skills
+                const embedding = new Array(10).fill(0);
+                let count = 0;
+                
+                skills.forEach(skill => {
+                    const skillLower = skill.toLowerCase();
+                    if (this.skillEmbeddings.has(skillLower)) {
+                        const skillEmbedding = this.skillEmbeddings.get(skillLower);
+                        for (let i = 0; i < embedding.length; i++) {
+                            embedding[i] += skillEmbedding[i];
                         }
+                        count++;
+                    }
+                });
+
+                // Average the embeddings
+                if (count > 0) {
+                    for (let i = 0; i < embedding.length; i++) {
+                        embedding[i] /= count;
                     }
                 }
+
+                return embedding;
+            }
+
+            calculateSkillSimilarity(userSkills, mentorSkills) {
+                // Calculate cosine similarity between user and mentor skill embeddings
+                const userEmbedding = this.getSkillEmbedding(userSkills);
+                const mentorEmbedding = this.getSkillEmbedding(mentorSkills);
+
+                let dotProduct = 0;
+                let userMagnitude = 0;
+                let mentorMagnitude = 0;
+
+                for (let i = 0; i < userEmbedding.length; i++) {
+                    dotProduct += userEmbedding[i] * mentorEmbedding[i];
+                    userMagnitude += userEmbedding[i] * userEmbedding[i];
+                    mentorMagnitude += mentorEmbedding[i] * mentorEmbedding[i];
+                }
+
+                userMagnitude = Math.sqrt(userMagnitude);
+                mentorMagnitude = Math.sqrt(mentorMagnitude);
+
+                if (userMagnitude === 0 || mentorMagnitude === 0) {
+                    return 0;
+                }
+
+                return dotProduct / (userMagnitude * mentorMagnitude);
+            }
+
+            async predictCompatibility(userProfile, mentor) {
+                // Create feature vector
+                const features = [];
+                
+                // Skill similarity (0-1)
+                const skillSimilarity = this.calculateSkillSimilarity(userProfile.skills, mentor.skills);
+                features.push(skillSimilarity);
+                
+                // Field match (0 or 1)
+                const fieldMatch = userProfile.field === mentor.field ? 1 : 0;
+                features.push(fieldMatch);
+                
+                // Experience compatibility (0-1)
+                const expLevels = { beginner: 0, intermediate: 1, advanced: 2, senior: 3, expert: 4 };
+                const userExpLevel = expLevels[userProfile.experience] || 0;
+                const mentorExpLevel = expLevels[mentor.experience] || 0;
+                const expCompatibility = 1 - Math.min(1, Math.abs(userExpLevel - mentorExpLevel) / 4);
+                features.push(expCompatibility);
+                
+                // Location match (0 or 1)
+                const locationMatch = userProfile.location === 'any' || 
+                                    mentor.location === userProfile.location || 
+                                    mentor.location === 'remote' ? 1 : 0;
+                features.push(locationMatch);
+                
+                // Mentor rating (normalized 0-1)
+                const normalizedRating = mentor.rating / 5;
+                features.push(normalizedRating);
+                
+                // Pad features to match model input size
+                while (features.length < 50) {
+                    features.push(0);
+                }
+                
+                // Make prediction
+                const input = tf.tensor2d([features]);
+                const prediction = this.model.predict(input);
+                const score = await prediction.data();
+                input.dispose();
+                prediction.dispose();
+                
+                return Math.round(score[0] * 100);
             }
         }
 
-        // DSA Implementation: Priority Queue (Min Heap)
-        class PriorityQueue {
-            constructor() {
-                this.heap = [];
-            }
-
-            enqueue(element, priority) {
-                this.heap.push({ element, priority });
-                this.heapifyUp();
-            }
-
-            dequeue() {
-                if (this.heap.length === 0) return null;
-                if (this.heap.length === 1) return this.heap.pop();
-
-                const root = this.heap[0];
-                this.heap[0] = this.heap.pop();
-                this.heapifyDown();
-                return root;
-            }
-
-            heapifyUp() {
-                let index = this.heap.length - 1;
-                while (index > 0) {
-                    const parentIndex = Math.floor((index - 1) / 2);
-                    if (this.heap[parentIndex].priority <= this.heap[index].priority) break;
-
-                    [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
-                    index = parentIndex;
-                }
-            }
-
-            heapifyDown() {
-                let index = 0;
-                const length = this.heap.length;
-                const element = this.heap[0];
-
-                while (true) {
-                    let leftChildIdx = 2 * index + 1;
-                    let rightChildIdx = 2 * index + 2;
-                    let leftChild, rightChild;
-                    let swap = null;
-
-                    if (leftChildIdx < length) {
-                        leftChild = this.heap[leftChildIdx];
-                        if (leftChild.priority < element.priority) {
-                            swap = leftChildIdx;
-                        }
-                    }
-                    if (rightChildIdx < length) {
-                        rightChild = this.heap[rightChildIdx];
-                        if (
-                            (swap === null && rightChild.priority < element.priority) ||
-                            (swap !== null && rightChild.priority < leftChild.priority)
-                        ) {
-                            swap = rightChildIdx;
-                        }
-                    }
-                    if (swap === null) break;
-                    this.heap[index] = this.heap[swap];
-                    this.heap[swap] = element;
-                    index = swap;
-                }
-            }
-
-            isEmpty() {
-                return this.heap.length === 0;
-            }
-        }
-
-        // DSA Implementation: Graph for mentor connections
-        class Graph {
-            constructor() {
-                this.adjacencyList = new HashMap(); // Using the custom HashMap
-            }
-
-            addVertex(vertex) {
-                if (!this.adjacencyList.get(vertex)) {
-                    this.adjacencyList.set(vertex, []);
-                }
-            }
-
-            addEdge(v1, v2, weight = 1) {
-                this.addVertex(v1);
-                this.addVertex(v2);
-                this.adjacencyList.get(v1).push({ node: v2, weight });
-                this.adjacencyList.get(v2).push({ node: v1, weight });
-            }
-
-            findConnections(startVertex, maxDepth = 2) {
-                const visited = new Set();
-                const queue = [{ vertex: startVertex, depth: 0 }];
-                const connections = [];
-
-                if (!this.adjacencyList.get(startVertex)) return connections;
-
-                while (queue.length > 0) {
-                    const { vertex, depth } = queue.shift();
-
-                    if (visited.has(vertex) || depth > maxDepth) continue;
-                    visited.add(vertex);
-
-                    if (depth > 0) {
-                        connections.push({ vertex, depth });
-                    }
-
-                    const neighbors = this.adjacencyList.get(vertex);
-                    for (const neighbor of neighbors) {
-                        if (!visited.has(neighbor.node)) {
-                            queue.push({ vertex: neighbor.node, depth: depth + 1 });
-                        }
-                    }
-                }
-                return connections;
-            }
-        }
-        
         // Sample mentor data
         const mentors = [
             {
@@ -941,7 +1557,7 @@
                 linkedin: "linkedin.com/in/michaelbrown",
                 calendly: "calendly.com/michaelbrown"
             },
-             {
+            {
                 id: 9,
                 name: "Kenji Tanaka",
                 experience: "intermediate", 
@@ -959,30 +1575,7 @@
         ];
 
         let userSkills = [];
-        let mentorGraph = new Graph();
-
-        function initializeMentorNetwork() {
-            mentors.forEach(mentor => {
-                mentorGraph.addVertex(mentor.id);
-            });
-            
-            for (let i = 0; i < mentors.length; i++) {
-                for (let j = i + 1; j < mentors.length; j++) {
-                    const sharedSkills = mentors[i].skills.filter(skill => 
-                        mentors[j].skills.map(s => s.toLowerCase()).includes(skill.toLowerCase())
-                    ).length;
-                    
-                    const sameField = mentors[i].field === mentors[j].field;
-                    
-                    if (sharedSkills > 0 || sameField) {
-                        const weight = (sharedSkills * 2) + (sameField ? 3 : 0); 
-                        if (weight > 0) {
-                           mentorGraph.addEdge(mentors[i].id, mentors[j].id, weight);
-                        }
-                    }
-                }
-            }
-        }
+        let recommender = new MentorRecommender();
 
         function addSkill() {
             const skillInput = document.getElementById('skillInput');
@@ -1012,83 +1605,7 @@
             ).join('');
         }
 
-        function calculateCompatibilityScore(mentor, userProfile) {
-            let score = 0;
-            const weights = {
-                skillMatch: 45, 
-                fieldMatch: 25,
-                experienceMatch: 20,
-                locationMatch: 5, 
-                rating: 5
-            };
-            
-            const userSkillsLower = userProfile.skills.map(s => s.toLowerCase());
-            const mentorSkillsLower = mentor.skills.map(s => s.toLowerCase());
-            
-            const commonSkills = userSkillsLower.filter(skill => mentorSkillsLower.includes(skill));
-            
-            let skillMatchScore = 0;
-            if (userSkillsLower.length > 0) {
-                skillMatchScore = (commonSkills.length / userSkillsLower.length) * 100;
-            } else {
-                skillMatchScore = 20; 
-            }
-            score += (skillMatchScore * weights.skillMatch) / 100;
-            
-            if (mentor.field === userProfile.field) {
-                score += weights.fieldMatch;
-            }
-            
-            const experienceBonus = getExperienceBonus(mentor.experience, userProfile.experience);
-            score += experienceBonus * weights.experienceMatch / 100;
-            
-            if (userProfile.location === 'any' || mentor.location === userProfile.location || 
-                mentor.location === 'remote' || userProfile.location === 'remote' && mentor.location !== 'any') {
-                score += weights.locationMatch;
-            }
-            
-            score += (mentor.rating / 5) * weights.rating; 
-            
-            return Math.min(100, Math.round(score));
-        }
-
-        function getExperienceBonus(mentorExpStr, userExpStr) {
-            const expLevels = { beginner: 0, intermediate: 1, advanced: 2, senior: 3, expert: 4 };
-            const mentorLevelNum = expLevels[mentorExpStr.toLowerCase()] !== undefined ? expLevels[mentorExpStr.toLowerCase()] : expLevels[mentor.experience] ; 
-            const userLevelNum = expLevels[userExpStr];
-
-            if (mentorLevelNum < userLevelNum) return 20; 
-            if (mentorLevelNum === userLevelNum) return 80; 
-            
-            const diff = mentorLevelNum - userLevelNum;
-            if (diff === 1) return 100; 
-            if (diff === 2) return 90;  
-            return 70; 
-        }
-
-        function quickSort(arr, compareFunc) {
-            if (arr.length <= 1) return arr;
-            
-            const pivotIndex = Math.floor(arr.length / 2);
-            const pivot = arr[pivotIndex];
-            const left = [];
-            const middle = [];
-            const right = [];
-
-            for (let i = 0; i < arr.length; i++) {
-                const comparison = compareFunc(arr[i], pivot);
-                if (comparison > 0) {
-                    left.push(arr[i]);
-                } else if (comparison < 0) {
-                    right.push(arr[i]);
-                } else {
-                    middle.push(arr[i]);
-                }
-            }
-            return [...quickSort(left, compareFunc), ...middle, ...quickSort(right, compareFunc)];
-        }
-
-        function findMentors() {
+        async function findMentors() {
             const userProfile = {
                 experience: document.getElementById('experience').value,
                 field: document.getElementById('field').value,
@@ -1100,27 +1617,47 @@
                 alert('Please add at least one skill for better recommendations, or proceed to see general matches.');
             }
             
-            const scoredMentors = mentors.map(mentor => {
+            // Show loading state
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Analyzing mentor compatibility using AI...</p>
+                </div>
+            `;
+            
+            // Wait for the recommender to be ready
+            if (!recommender.model) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            
+            // Calculate compatibility scores for all mentors
+            const scoredMentors = [];
+            for (const mentor of mentors) {
                 const userSkillsLower = userProfile.skills.map(s => s.toLowerCase());
-                return {
+                const compatibilityScore = await recommender.predictCompatibility(userProfile, mentor);
+                
+                scoredMentors.push({
                     ...mentor,
-                    compatibilityScore: calculateCompatibilityScore(mentor, userProfile),
+                    compatibilityScore: compatibilityScore,
                     matchedSkills: mentor.skills.filter(skill => 
                         userSkillsLower.includes(skill.toLowerCase())
                     )
-                };
-            });
+                });
+            }
             
-            const sortedMentors = quickSort(scoredMentors, (a, b) => a.compatibilityScore - b.compatibilityScore);
+            // Sort by compatibility score (descending)
+            scoredMentors.sort((a, b) => b.compatibilityScore - a.compatibilityScore);
             
-            const recommendedMentors = sortedMentors.filter(mentor => mentor.compatibilityScore >= 30); 
+            // Filter mentors with reasonable compatibility
+            const recommendedMentors = scoredMentors.filter(mentor => mentor.compatibilityScore >= 30);
             
             displayResults(recommendedMentors, userProfile);
         }
 
         function displayResults(mentorsToDisplay, userProfile) {
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ''; 
+            resultsDiv.innerHTML = '';
 
             if (mentorsToDisplay.length === 0) {
                 resultsDiv.innerHTML = `
@@ -1190,7 +1727,6 @@
                     addSkill();
                 }
             });
-            initializeMentorNetwork();
         });
     </script>
 </body>
