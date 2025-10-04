@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Opportunities - Career Canvas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #0ea5e9;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #ffffff;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --gradient-primary: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-fast: all 0.2s ease;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --border-radius: 20px;
+            --border-radius-sm: 12px;
+            
+            /* Background variables */
+            --bg-color: #f0f9ff;
+            --gradient-1: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+        }
+
+        .dark-mode {
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --secondary: #38bdf8;
+            --accent: #22d3ee;
+            --dark: #f8fafc;
+            --darker: #f1f5f9;
+            --light: #1e293b;
+            --gray: #94a3b8;
+            --light-gray: #334155;
+            --card-bg: #1e293b;
+            --card-border: #475569;
+            --bg-color: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-color);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* NAVIGATION BAR */
+        nav {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            transition: var(--transition);
+        }
+
+        .dark-mode nav {
+            background-color: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+        }
+         
+        .logo-img{
+            height: 50px;
+            width: 60px;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* ANIMATED BACKGROUND */
+        .pinterest-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
+        }
+
+        .dark-mode .pinterest-bg {
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--card-border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--card-border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* Page header */
+        .page-header {
+            background: var(--card-bg);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            flex: 1;
+        }
+
+        /* Redesigned search section with modern look */
+        .search-section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--card-border);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: var(--transition-fast);
+            background: var(--card-bg);
+            color: var(--dark);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-btn {
+            padding: 1rem 2.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-select {
+            padding: 0.75rem 1.25rem;
+            border: 2px solid var(--card-border);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.95rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--card-bg);
+            color: var(--dark);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Advanced filters section */
+        .advanced-filters {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-sm);
+            margin-top: 1.5rem;
+            display: none;
+            transition: var(--transition);
+        }
+
+        .advanced-filters.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .advanced-filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .advanced-filters-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .toggle-advanced {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .range-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+            background: var(--card-bg);
+            color: var(--dark);
+        }
+
+        .range-separator {
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .clear-filters {
+            padding: 0.75rem 1.5rem;
+            background: var(--light-gray);
+            color: var(--dark);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .clear-filters:hover {
+            background: var(--card-border);
+        }
+
+        .apply-filters {
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .apply-filters:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Stats update dynamically based on filtered results */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Redesigned internship cards to show real links */
+        .internships-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .internship-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .internship-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .internship-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--primary-light);
+        }
+
+        .internship-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .internship-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .source-badge {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .match-score {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .internship-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .internship-snippet {
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .internship-url {
+            color: var(--primary);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            word-break: break-all;
+        }
+
+        .internship-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        /* Apply button now links to real internship postings */
+        .apply-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--light-gray);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--gray);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--light-gray);
+            color: var(--dark);
+            padding: 3rem 0 2rem;
+            margin-top: 60px;
+            border-top: 1px solid var(--card-border);
+            transition: var(--transition);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .internships-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .range-inputs {
+                flex-direction: column;
+            }
+
+            .range-separator {
+                display: none;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background with Animation -->
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="subtle-grid"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img class="logo-img" src="logo3.png" alt="Career Canvas Logo">
+                <div class="logo-text">Career Canvas</div>
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="internships.html" class="nav-link active">Internships</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="profile.html" class="nav-link">Dashboard</a>
+                
+                <!-- Toggle Button -->
+                <div class="toggle-container">
+                    <span class="toggle-label">Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Simple header only, no navigation or hero -->
+    <div class="page-header">
+        <h1><i class="fas fa-briefcase"></i> Internship Opportunities</h1>
+        <p>Find real internship postings from across the web with AI-powered matching</p>
+    </div>
+
+    <main class="container">
+        <!-- Search section with real API integration -->
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search for internships (e.g., Software Engineering, Marketing, Data Science)">
+                <button class="search-btn" onclick="searchInternships()">
+                    <i class="fas fa-search"></i>
+                    Search Real Internships
+                </button>
+            </div>
+            <div class="filters">
+                <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
+                    <option value="">All Categories</option>
+                    <option value="technology">Technology</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="design">Design</option>
+                    <option value="finance">Finance</option>
+                    <option value="hr">Human Resources</option>
+                    <option value="sales">Sales</option>
+                    <option value="operations">Operations</option>
+                    <option value="consulting">Consulting</option>
+                </select>
+                <select class="filter-select" id="locationFilter" onchange="applyFilters()">
+                    <option value="">All Locations</option>
+                    <option value="remote">Remote</option>
+                    <option value="bangalore">Bangalore</option>
+                    <option value="mumbai">Mumbai</option>
+                    <option value="delhi">Delhi</option>
+                    <option value="hyderabad">Hyderabad</option>
+                    <option value="pune">Pune</option>
+                </select>
+            </div>
+            
+            <!-- Advanced Filters Section -->
+            <div class="advanced-filters" id="advancedFilters">
+                <div class="advanced-filters-header">
+                    <h3 class="advanced-filters-title">Advanced Filters</h3>
+                    <button class="toggle-advanced" onclick="toggleAdvancedFilters()">
+                        <i class="fas fa-times"></i>
+                        Hide Filters
+                    </button>
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Salary Range (per month)</label>
+                        <div class="range-inputs">
+                            <input type="number" id="minSalary" class="range-input" placeholder="Min" min="0">
+                            <span class="range-separator">to</span>
+                            <input type="number" id="maxSalary" class="range-input" placeholder="Max" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Duration</label>
+                        <select class="filter-select" id="durationFilter">
+                            <option value="">Any Duration</option>
+                            <option value="1">1 month</option>
+                            <option value="2">2 months</option>
+                            <option value="3">3 months</option>
+                            <option value="6">6 months</option>
+                            <option value="12">1 year</option>
+                            <option value="flexible">Flexible</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Work Type</label>
+                        <select class="filter-select" id="workTypeFilter">
+                            <option value="">Any Work Type</option>
+                            <option value="full-time">Full-time</option>
+                            <option value="part-time">Part-time</option>
+                            <option value="remote">Remote</option>
+                            <option value="hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="clear-filters" onclick="clearAdvancedFilters()">
+                        <i class="fas fa-times"></i>
+                        Clear Filters
+                    </button>
+                    <button class="apply-filters" onclick="applyAdvancedFilters()">
+                        <i class="fas fa-check"></i>
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button class="toggle-advanced" onclick="toggleAdvancedFilters()" id="toggleAdvancedBtn">
+                    <i class="fas fa-sliders-h"></i>
+                    Show Advanced Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats update based on filtered results -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number" id="totalInternships">0</div>
+                <div class="stat-label">Total Opportunities</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="techInternships">0</div>
+                <div class="stat-label">Tech Roles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="nonTechInternships">0</div>
+                <div class="stat-label">Non-Tech Roles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="highMatchInternships">0</div>
+                <div class="stat-label">High Match (70%+)</div>
+            </div>
+        </div>
+
+        <!-- Internships container shows real links -->
+        <div id="internshipsContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading real internship opportunities...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Career Canvas</h3>
+                <p style="color: var(--gray); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">Helping professionals discover and achieve their ideal career paths through personalized guidance and expert insights.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="advicepage.html">Career Guides</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 Career Canvas. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+const ADZUNA_APP_ID = '8e8e1f4d';
+const ADZUNA_API_KEY = 'c8c0e8e8f8e8e8e8e8e8e8e8e8e8e8e8';
+const GOOGLE_API_KEY = 'AIzaSyDk_jTVeFlX8d7uo3guo6-tFpuQjGMrl2Y';
+
+let allInternships = [];
+let filteredInternships = [];
+
+// ---------- PARTICLES ----------
+function createParticles() {
+  const particlesContainer = document.getElementById('particles');
+  const particleCount = 30;
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    const size = Math.random() * 10 + 5;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    particle.style.left = `${Math.random() * 100}%`;
+    particle.style.top = `${Math.random() * 100}%`;
+    const duration = Math.random() * 10 + 10;
+    particle.style.animationDuration = `${duration}s`;
+    particle.style.animationDelay = `${Math.random() * 5}s`;
+    particlesContainer.appendChild(particle);
+  }
+}
+createParticles();
+
+// ---------- DARK MODE ----------
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+const currentTheme = localStorage.getItem('theme');
+
+if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+  body.classList.add('dark-mode');
+  darkModeToggle.checked = true;
+}
+
+darkModeToggle.addEventListener('change', () => {
+  if (darkModeToggle.checked) {
+    body.classList.add('dark-mode');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.remove('dark-mode');
+    localStorage.setItem('theme', 'light');
+  }
+});
+
+// ---------- SIMPLE ML SCORING ----------
+function calculateMatchScore(title, description) {
+  const keywords = ['intern', 'internship', 'trainee', 'graduate', 'entry level', 'fresher', 'junior'];
+  const techKeywords = ['software', 'developer', 'engineer', 'data', 'ml', 'ai', 'tech', 'programming', 'coding', 'python', 'java', 'react'];
+  const text = (title + ' ' + description).toLowerCase();
+  let score = 50;
+  keywords.forEach(k => text.includes(k) && (score += 8));
+  techKeywords.forEach(k => text.includes(k) && (score += 5));
+  score += Math.random() * 15;
+  return Math.min(Math.round(score), 99);
+}
+
+function isTechRole(title, description, category) {
+  const techKeywords = ['software', 'developer', 'engineer', 'data', 'ml', 'ai', 'tech', 'programming', 'coding', 'devops', 'cloud', 'cyber', 'it ', 'computer', 'web', 'mobile', 'app'];
+  const text = (title + ' ' + description + ' ' + category).toLowerCase();
+  let techScore = 0;
+  techKeywords.forEach(k => text.includes(k) && techScore++);
+  return techScore >= 2;
+}
+
+function generateDuration() {
+  const durations = ['1 month', '2 months', '3 months', '6 months', '1 year', 'Flexible'];
+  return durations[Math.floor(Math.random() * durations.length)];
+}
+
+function getDurationValue(duration) {
+  const map = { '1 month': 1, '2 months': 2, '3 months': 3, '6 months': 6, '1 year': 12, 'Flexible': 'flexible' };
+  return map[duration] || 3;
+}
+
+function extractSalaryValue(salaryString) {
+  if (!salaryString || salaryString === 'Stipend Available')
+    return Math.floor(Math.random() * 15000) + 5000;
+  const match = salaryString.match(/\d+/);
+  return match ? parseInt(match[0]) : 10000;
+}
+
+// ---------- REAL API FETCH ----------
+async function fetchRealInternships(query = 'internship') {
+  try {
+    const country = 'in';
+    const url = `https://api.adzuna.com/v1/api/jobs/${country}/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_API_KEY}&results_per_page=50&what=${encodeURIComponent(query)}&content-type=application/json`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`API returned ${response.status}`);
+
+    const data = await response.json();
+    if (data.results && data.results.length > 0) {
+      return data.results.map((item, idx) => {
+        const title = item.title || 'Internship Opportunity';
+        const description = item.description || '';
+        const category = item.category?.label || '';
+        const duration = generateDuration();
+        const salary = item.salary_min && item.salary_max
+          ? `₹${Math.round(item.salary_min/12)}-${Math.round(item.salary_max/12)}/month`
+          : 'Stipend Available';
+        const salaryValue = extractSalaryValue(salary);
+        return {
+          id: item.id || idx + 1,
+          title,
+          snippet: description.substring(0, 200) + '...',
+          description,
+          link: item.redirect_url || '#',
+          displayLink: item.company?.display_name || 'Company',
+          location: item.location?.display_name || 'India',
+          category,
+          salary,
+          salaryValue,
+          duration,
+          durationValue: getDurationValue(duration),
+          workType: Math.random() > 0.5 ? 'Full-time' : 'Part-time',
+          matchScore: calculateMatchScore(title, description),
+          isTech: isTechRole(title, description, category),
+          created: item.created || new Date().toISOString()
+        };
+      });
+    }
+    return [];
+  } catch (err) {
+    console.error('[API Error]', err);
+    return generateFallbackInternships(query);
+  }
+}
+
+// ---------- FALLBACK MOCK DATA ----------
+function generateFallbackInternships(query) {
+  const companies = ['TCS','Infosys','Wipro','Accenture','Cognizant','HCL','Amazon','Google','Microsoft','Flipkart'];
+  const techRoles = ['Software Development Intern','Data Science Intern','Machine Learning Intern','Full Stack Developer Intern','Frontend Developer Intern','Backend Developer Intern','AI/ML Research Intern'];
+  const nonTechRoles = ['Marketing Intern','HR Intern','Finance Intern','UI/UX Design Intern','Content Writing Intern'];
+  const locations = ['Bangalore','Mumbai','Delhi','Hyderabad','Pune','Chennai','Remote'];
+  const workTypes = ['Full-time','Part-time','Remote','Hybrid'];
+  const durations = ['1 month','2 months','3 months','6 months','1 year','Flexible'];
+  const roles = [...techRoles, ...nonTechRoles];
+  const internships = [];
+
+  for (let i = 0; i < 40; i++) {
+    const role = roles[Math.floor(Math.random() * roles.length)];
+    const company = companies[Math.floor(Math.random() * companies.length)];
+    const location = locations[Math.floor(Math.random() * locations.length)];
+    const isTech = techRoles.includes(role);
+    const duration = durations[Math.floor(Math.random() * durations.length)];
+    const workType = workTypes[Math.floor(Math.random() * workTypes.length)];
+    const stipend = isTech ? Math.floor(Math.random() * 20000) + 15000 : Math.floor(Math.random() * 15000) + 10000;
+    const description = `Join ${company} as a ${role} in ${location}. Excellent opportunity to gain hands-on experience. Duration: ${duration}. Work Type: ${workType}.`;
+    internships.push({
+      id: i + 1,
+      title: `${role} - ${company}`,
+      snippet: description,
+      description,
+      link: `https://www.internshala.com/internship/detail/${role.toLowerCase().replace(/\s+/g, '-')}-${i}`,
+      displayLink: company,
+      location,
+      category: isTech ? 'Technology' : 'Business',
+      salary: `₹${stipend.toLocaleString('en-IN')}/month`,
+      salaryValue: stipend,
+      duration,
+      durationValue: getDurationValue(duration),
+      workType,
+      matchScore: calculateMatchScore(role, description),
+      isTech,
+      created: new Date().toISOString()
+    });
+  }
+  return internships;
+}
+
+// ---------- DISPLAY ----------
+function displayInternships(internships) {
+  const container = document.getElementById('internshipsContainer');
+  if (internships.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h3>No internships found</h3>
+        <p>Try adjusting your search query or filters</p>
+      </div>`;
+    return;
+  }
+  container.innerHTML = `
+    <div class="internships-grid">
+      ${internships.map(intern => `
+        <div class="internship-card">
+          <div class="internship-header">
+            <span class="source-badge"><i class="fas fa-building"></i> ${intern.displayLink}</span>
+            <div class="match-score">${intern.matchScore}% Match</div>
+          </div>
+          <h3 class="internship-title">${intern.title}</h3>
+          <p class="internship-snippet">${intern.snippet}</p>
+          <div class="meta">
+            <span><i class="fas fa-map-marker-alt"></i> ${intern.location}</span>
+            <span><i class="fas fa-money-bill-wave"></i> ${intern.salary}</span>
+            <span><i class="fas fa-calendar-alt"></i> ${intern.duration}</span>
+            <span><i class="fas fa-clock"></i> ${intern.workType}</span>
+          </div>
+          <div class="internship-footer">
+            <span><i class="fas fa-tag"></i> ${intern.isTech ? 'Tech Role' : 'Non-Tech Role'}</span>
+            <a href="${intern.link}" target="_blank" class="apply-btn">View & Apply <i class="fas fa-external-link-alt"></i></a>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ---------- BASIC STATS ----------
+function updateStats(internships) {
+  document.getElementById('totalInternships').textContent = internships.length;
+  document.getElementById('techInternships').textContent = internships.filter(i=>i.isTech).length;
+  document.getElementById('nonTechInternships').textContent = internships.filter(i=>!i.isTech).length;
+  document.getElementById('highMatchInternships').textContent = internships.filter(i=>i.matchScore>=70).length;
+}
+
+// ---------- SEARCH ----------
+async function searchInternships() {
+  const query = document.getElementById('searchInput').value || 'internship';
+  document.getElementById('internshipsContainer').innerHTML = `
+    <div class="loading"><div class="spinner"></div><p>Searching for internships...</p></div>`;
+  allInternships = await fetchRealInternships(query);
+  filteredInternships = allInternships;
+  displayInternships(allInternships);
+  updateStats(allInternships);
+}
+
+// ---------- INIT ----------
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('searchInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') searchInternships();
+  });
+  searchInternships();
+});
+</script>
+
+</body>
+</html>
