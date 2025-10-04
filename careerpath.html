@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Path Explorer | Smart Career Matching</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Updated CSS variables to match template design system */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #0ea5e9;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --card-bg: #ffffff;
+            --hover-bg: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Background variables */
+            --bg-color: #f0f9ff;
+            --gradient-1: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            --gradient-2: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+        }
+
+        .dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --accent-color: #60a5fa;
+            --text-color: #f8fafc;
+            --text-light: #cbd5e1;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+            --border-color: #475569;
+            --bg-color: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Updated body styling with template fonts and background */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            padding: 20px;
+        }
+
+        /* ANIMATED BACKGROUND */
+        .pinterest-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
+        }
+
+        .dark-mode .pinterest-bg {
+            background: 
+                radial-gradient(circle at 15% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(37, 99, 235, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(0) translateX(20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(20px) translateX(10px) rotate(270deg);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        .geometric-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--primary-color) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, var(--secondary-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 10%, var(--accent-color) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 40px 40px;
+            animation: patternFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            animation: elementFloat 15s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-element:nth-child(1) {
+            width: 120px;
+            height: 80px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            border-radius: 20px 20px 5px 20px;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+            border-radius: 5px 20px 20px 20px;
+            background: var(--gradient-2);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 120px;
+            top: 25%;
+            left: 85%;
+            animation-delay: 6s;
+            border-radius: 20px 5px 20px 20px;
+            background: var(--gradient-3);
+        }
+
+        .floating-element:nth-child(4) {
+            width: 140px;
+            height: 60px;
+            top: 70%;
+            left: 15%;
+            animation-delay: 9s;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        @keyframes elementFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translateY(10px) rotate(-3deg) scale(0.95);
+            }
+            75% {
+                transform: translateY(-15px) rotate(2deg) scale(1.02);
+            }
+        }
+
+        .subtle-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Updated typography to match template hierarchy */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+        }
+
+        /* Updated container with template styling */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Updated heading with template gradient text */
+        h1 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, var(--text-color) 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Updated badge with template gradient */
+        .ai-badge {
+            display: inline-block;
+            background: var(--gradient-1);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 10px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Updated label styling */
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        /* Updated form inputs with template styling */
+        select, input, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            background: var(--card-bg);
+            transition: var(--transition);
+        }
+
+        /* Updated button with template gradient and styling */
+        button {
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 16px 32px;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 1.05rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        button:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-2px);
+        }
+
+        /* Updated focus states */
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .skills-section {
+            margin-bottom: 25px;
+        }
+
+        /* Updated skills container with template styling */
+        .skills-container {
+            max-height: 400px;
+            overflow-y: auto;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .skill-category-group {
+            margin-bottom: 28px;
+        }
+
+        .skill-category-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Updated category title with template gradient */
+        .category-title {
+            background: var(--gradient-1);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .category-title i {
+            font-size: 16px;
+        }
+
+        .category-skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        /* Updated skill items with template card styling */
+        .skill-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-color);
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .skill-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Updated selected skill state with template gradient */
+        .skill-item.selected {
+            background: var(--gradient-1);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        /* Updated spinner with template colors */
+        .spinner {
+            border: 4px solid var(--hover-bg);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 20px;
+        }
+
+        /* Kept only functional animation for spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        /* Updated path container with template styling */
+        .path-container {
+            background: var(--hover-bg);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Updated path title with template gradient */
+        .path-title {
+            font-size: 2.2rem;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-color) 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .path-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        /* Updated step cards with template styling */
+        .step {
+            background: var(--card-bg);
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            border-left: 5px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .step:hover {
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Updated step number with template gradient */
+        .step-number {
+            background: var(--gradient-1);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            font-size: 1.5rem;
+        }
+
+        .step-description {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .step-duration {
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-resources {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* Updated CTA section with template gradient */
+        .resources-cta {
+            margin-top: 35px;
+            text-align: center;
+            padding: 3rem;
+            background: var(--gradient-1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .resources-cta h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .resources-cta p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        /* Updated CTA link styling */
+        .resources-cta a {
+            display: inline-block;
+            background: white;
+            color: var(--primary-color);
+            padding: 16px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .resources-cta a:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-2px);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            padding: 40px;
+        }
+
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-top: 5px;
+            justify-content: center;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-1);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Updated responsive breakpoints */
+        @media (max-width: 768px) {
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .path-title {
+                font-size: 1.8rem;
+            }
+            
+            .skills-container {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .category-skills-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .step {
+                padding: 20px;
+            }
+
+            .step-number {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background with Animation -->
+    <div class="pinterest-bg">
+        <div class="particles-container" id="particles"></div>
+        <div class="geometric-pattern"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="subtle-grid"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Dark Mode Toggle -->
+            <div class="toggle-container">
+                <span class="toggle-label">Dark Mode</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <h1>🧠 Career Path Explorer</h1>
+        
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="currentLevel">Current Experience Level:</label>
+                    <select id="currentLevel">
+                        <option value="">Select your current level</option>
+                        <option value="beginner">Beginner (0-1 years)</option>
+                        <option value="intermediate">Intermediate (1-3 years)</option>
+                        <option value="advanced">Advanced (3+ years)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="education">Education Level:</label>
+                    <select id="education">
+                        <option value="">Select education level</option>
+                        <option value="high-school">High School</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="bootcamp">Bootcamp/Certification</option>
+                    </select>
+                </div>
+                
+                <div class="input-group full-width">
+                    <label for="targetRole">Target Career Role:</label>
+                    <select id="targetRole">
+                        <option value="">Select target role</option>
+                        
+                        <optgroup label="Software Development">
+                            <option value="frontend-developer">Frontend Developer</option>
+                            <option value="backend-developer">Backend Developer</option>
+                            <option value="fullstack-developer">Full Stack Developer</option>
+                            <option value="mobile-developer">Mobile Developer</option>
+                            <option value="devops-engineer">DevOps Engineer</option>
+                        </optgroup>
+                        
+                        <optgroup label="Data & AI">
+                            <option value="data-scientist">Data Scientist</option>
+                            <option value="ml-engineer">Machine Learning Engineer</option>
+                            <option value="data-analyst">Data Analyst</option>
+                        </optgroup>
+                        
+                        <optgroup label="Design & Product">
+                            <option value="ui-ux-designer">UI/UX Designer</option>
+                            <option value="graphic-designer">Graphic Designer</option>
+                            <option value="product-manager">Product Manager</option>
+                        </optgroup>
+                        
+                        <optgroup label="Marketing & Content">
+                            <option value="digital-marketing-manager">Digital Marketing Manager</option>
+                            <option value="content-strategist">Content Strategist</option>
+                            <option value="social-media-manager">Social Media Manager</option>
+                            <option value="seo-specialist">SEO Specialist</option>
+                        </optgroup>
+                        
+                        <optgroup label="Business & Finance">
+                            <option value="business-analyst">Business Analyst</option>
+                            <option value="financial-analyst">Financial Analyst</option>
+                            <option value="project-manager">Project Manager</option>
+                        </optgroup>
+                        
+                        <optgroup label="Sales & HR">
+                            <option value="sales-manager">Sales Manager</option>
+                            <option value="hr-manager">HR Manager</option>
+                        </optgroup>
+                        
+                        <optgroup label="Healthcare">
+                            <option value="registered-nurse">Registered Nurse</option>
+                            <option value="medical-assistant">Medical Assistant</option>
+                            <option value="healthcare-administrator">Healthcare Administrator</option>
+                            <option value="pharmacist">Pharmacist</option>
+                            <option value="physical-therapist">Physical Therapist</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="skills-section">
+                <label>Select Your Skills (Click to select/deselect):</label>
+                <div class="skills-container" id="skillsContainer">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="interests">Career Interests & Goals:</label>
+                <textarea id="interests" rows="3" placeholder="Describe your career interests, goals, and what motivates you in your career..."></textarea>
+            </div>
+
+            <button onclick="analyzeCareerPath()">🚀 Generate Career Path</button>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Neural Network is analyzing your profile and generating personalized learning path...</p>
+            </div>
+
+            <div class="results-section" id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 5 and 15px
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration between 10 and 20s
+                const duration = Math.random() * 10 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles
+        createParticles();
+
+        // Dark mode toggle functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or respect OS preference
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        // Toggle dark mode
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Original JavaScript code for Career Path Explorer
+        const skillsByCategory = {
+            'Programming Languages': [
+                'JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'Go', 'Rust', 'Node.js'
+            ],
+            'Frontend Development': [
+                'HTML/CSS', 'React', 'Vue.js', 'Angular', 'UI Design', 'UX Research', 
+                'Figma', 'Prototyping', 'User Testing'
+            ],
+            'Backend Development': [
+                'REST APIs', 'Microservices', 'GraphQL', 'SQL', 'MongoDB', 
+                'PostgreSQL', 'Redis'
+            ],
+            'Cloud & DevOps': [
+                'Docker', 'Kubernetes', 'AWS', 'Azure', 'GCP', 'CI/CD', 
+                'Git', 'Agile', 'Scrum'
+            ],
+            'Data Science & ML': [
+                'Machine Learning', 'Deep Learning', 'TensorFlow', 'PyTorch', 
+                'Scikit-learn', 'Data Analysis', 'Statistics', 'Data Visualization', 
+                'Pandas', 'NumPy'
+            ],
+            'Design & Creative': [
+                'Graphic Design', 'Adobe Photoshop', 'Adobe Illustrator', 'Branding',
+                'Typography', 'Color Theory', 'Layout Design', 'Print Design'
+            ],
+            'Marketing & Content': [
+                'SEO', 'Content Marketing', 'Social Media Marketing', 'Email Marketing', 
+                'Google Analytics', 'Marketing Strategy', 'Brand Management', 'Copywriting',
+                'Content Strategy', 'Technical Writing', 'Blogging', 'Video Marketing'
+            ],
+            'Business & Finance': [
+                'Business Strategy', 'Financial Analysis', 'Project Management', 
+                'Stakeholder Management', 'Negotiation', 'Market Research', 'Competitive Analysis',
+                'Business Development', 'Strategic Planning', 'Product Strategy',
+                'Accounting', 'Financial Modeling', 'Budgeting', 'Investment Analysis',
+                'Excel Advanced', 'QuickBooks', 'Financial Reporting', 'Tax Planning'
+            ],
+            'Sales & Customer Relations': [
+                'Sales Strategy', 'CRM', 'Lead Generation', 'Customer Relations',
+                'Account Management', 'Sales Forecasting', 'Presentation Skills',
+                'Customer Service', 'Client Relations'
+            ],
+            'HR & People Management': [
+                'Recruitment', 'Employee Relations', 'Training & Development', 
+                'Performance Management', 'HR Analytics', 'Compensation & Benefits'
+            ],
+            'Healthcare & Medical': [
+                'Patient Care', 'Medical Terminology', 'Healthcare Compliance', 'EMR Systems',
+                'Clinical Skills', 'Pharmacology', 'Anatomy & Physiology', 'Medical Coding',
+                'HIPAA Compliance', 'Vital Signs Monitoring', 'CPR & First Aid', 'Patient Assessment',
+                'Healthcare Administration', 'Medical Records Management', 'Healthcare Quality'
+            ],
+            'Soft Skills': [
+                'Communication', 'Problem Solving', 'Leadership', 'Teamwork', 
+                'Critical Thinking', 'Time Management', 'Adaptability'
+            ]
+        };
+        
+        const skillsByRole = {
+            'frontend-developer': ['HTML/CSS', 'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Angular', 'UI Design', 'UX Research', 'Figma', 'Prototyping', 'User Testing', 'Git', 'CI/CD', 'Agile', 'Communication', 'Problem Solving', 'Teamwork'],
+            'backend-developer': ['Python', 'Java', 'Node.js', 'Go', 'Rust', 'REST APIs', 'Microservices', 'GraphQL', 'SQL', 'MongoDB', 'PostgreSQL', 'Redis', 'Docker', 'Kubernetes', 'AWS', 'Azure', 'GCP', 'Git', 'CI/CD', 'Problem Solving', 'Critical Thinking'],
+            'fullstack-developer': ['HTML/CSS', 'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Python', 'Node.js', 'REST APIs', 'SQL', 'MongoDB', 'PostgreSQL', 'Docker', 'AWS', 'Git', 'CI/CD', 'Agile', 'Communication', 'Problem Solving', 'Time Management'],
+            'mobile-developer': ['JavaScript', 'TypeScript', 'React', 'Java', 'UI Design', 'UX Research', 'REST APIs', 'SQL', 'MongoDB', 'Git', 'CI/CD', 'Agile', 'Problem Solving', 'Communication'],
+            'devops-engineer': ['Python', 'Docker', 'Kubernetes', 'AWS', 'Azure', 'GCP', 'CI/CD', 'Git', 'Microservices', 'REST APIs', 'SQL', 'MongoDB', 'Problem Solving', 'Critical Thinking', 'Communication'],
+            'data-scientist': ['Python', 'Machine Learning', 'Deep Learning', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Data Analysis', 'Statistics', 'Data Visualization', 'Pandas', 'NumPy', 'SQL', 'Git', 'Problem Solving', 'Critical Thinking', 'Communication'],
+            'ml-engineer': ['Python', 'Machine Learning', 'Deep Learning', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Docker', 'Kubernetes', 'AWS', 'CI/CD', 'Git', 'REST APIs', 'SQL', 'Problem Solving', 'Critical Thinking'],
+            'data-analyst': ['Python', 'SQL', 'Data Analysis', 'Statistics', 'Data Visualization', 'Pandas', 'NumPy', 'Excel Advanced', 'Business Strategy', 'Communication', 'Problem Solving', 'Critical Thinking'],
+            'ui-ux-designer': ['UI Design', 'UX Research', 'Figma', 'Prototyping', 'User Testing', 'Graphic Design', 'Adobe Photoshop', 'Adobe Illustrator', 'Typography', 'Color Theory', 'Layout Design', 'Communication', 'Creativity', 'Problem Solving'],
+            'graphic-designer': ['Graphic Design', 'Adobe Photoshop', 'Adobe Illustrator', 'Branding', 'Typography', 'Color Theory', 'Layout Design', 'Print Design', 'Creativity', 'Communication', 'Time Management'],
+            'product-manager': ['Product Strategy', 'Project Management', 'Agile', 'Scrum', 'UX Research', 'Data Analysis', 'Business Strategy', 'Market Research', 'Stakeholder Management', 'Communication', 'Leadership', 'Problem Solving', 'Critical Thinking'],
+            'digital-marketing-manager': ['SEO', 'Content Marketing', 'Social Media Marketing', 'Email Marketing', 'Google Analytics', 'Marketing Strategy', 'Brand Management', 'Copywriting', 'Data Analysis', 'Communication', 'Creativity', 'Leadership'],
+            'content-strategist': ['Content Strategy', 'Copywriting', 'SEO', 'Content Marketing', 'Technical Writing', 'Blogging', 'Social Media Marketing', 'Communication', 'Creativity', 'Problem Solving'],
+            'social-media-manager': ['Social Media Marketing', 'Content Marketing', 'Copywriting', 'Graphic Design', 'Video Marketing', 'Google Analytics', 'Brand Management', 'Communication', 'Creativity', 'Time Management'],
+            'seo-specialist': ['SEO', 'Content Marketing', 'Google Analytics', 'Technical Writing', 'Data Analysis', 'Problem Solving', 'Critical Thinking', 'Communication'],
+            'business-analyst': ['Business Strategy', 'Data Analysis', 'SQL', 'Excel Advanced', 'Project Management', 'Stakeholder Management', 'Problem Solving', 'Critical Thinking', 'Communication'],
+            'financial-analyst': ['Financial Analysis', 'Financial Modeling', 'Budgeting', 'Investment Analysis', 'Excel Advanced', 'Accounting', 'Financial Reporting', 'Data Analysis', 'Problem Solving', 'Critical Thinking'],
+            'project-manager': ['Project Management', 'Agile', 'Scrum', 'Stakeholder Management', 'Business Strategy', 'Leadership', 'Communication', 'Problem Solving', 'Time Management', 'Teamwork'],
+            'sales-manager': ['Sales Strategy', 'CRM', 'Lead Generation', 'Customer Relations', 'Account Management', 'Sales Forecasting', 'Presentation Skills', 'Leadership', 'Communication', 'Negotiation'],
+            'hr-manager': ['Recruitment', 'Employee Relations', 'Training & Development', 'Performance Management', 'HR Analytics', 'Leadership', 'Communication', 'Problem Solving', 'Teamwork'],
+            'registered-nurse': ['Patient Care', 'Medical Terminology', 'Clinical Skills', 'Pharmacology', 'Anatomy & Physiology', 'Vital Signs Monitoring', 'CPR & First Aid', 'Patient Assessment', 'HIPAA Compliance', 'EMR Systems', 'Communication', 'Critical Thinking', 'Teamwork'],
+            'medical-assistant': ['Patient Care', 'Medical Terminology', 'Clinical Skills', 'Vital Signs Monitoring', 'CPR & First Aid', 'EMR Systems', 'Medical Coding', 'Medical Records Management', 'HIPAA Compliance', 'Communication', 'Time Management'],
+            'healthcare-administrator': ['Healthcare Administration', 'Healthcare Compliance', 'Medical Records Management', 'Healthcare Quality', 'Business Strategy', 'Financial Analysis', 'Project Management', 'Leadership', 'Communication', 'Problem Solving'],
+            'pharmacist': ['Pharmacology', 'Patient Care', 'Medical Terminology', 'Healthcare Compliance', 'HIPAA Compliance', 'Clinical Skills', 'Communication', 'Critical Thinking', 'Problem Solving'],
+            'physical-therapist': ['Patient Care', 'Clinical Skills', 'Anatomy & Physiology', 'Patient Assessment', 'Medical Terminology', 'EMR Systems', 'HIPAA Compliance', 'Communication', 'Problem Solving', 'Teamwork']
+        };
+        
+        const allSkills = [
+            'HTML/CSS', 'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Angular',
+            'Node.js', 'Python', 'Java', 'C++', 'Go', 'Rust',
+            'SQL', 'MongoDB', 'PostgreSQL', 'Redis', 'GraphQL',
+            'REST APIs', 'Microservices', 'Docker', 'Kubernetes', 'AWS', 'Azure', 'GCP',
+            'Machine Learning', 'Deep Learning', 'TensorFlow', 'PyTorch', 'Scikit-learn',
+            'Data Analysis', 'Statistics', 'Data Visualization', 'Pandas', 'NumPy',
+            'UI Design', 'UX Research', 'Figma', 'Prototyping', 'User Testing',
+            'Git', 'CI/CD', 'Agile', 'Scrum',
+            'SEO', 'Content Marketing', 'Social Media Marketing', 'Email Marketing', 
+            'Google Analytics', 'Marketing Strategy', 'Brand Management', 'Copywriting',
+            'Content Strategy', 'Technical Writing', 'Blogging', 'Video Marketing',
+            'Graphic Design', 'Adobe Photoshop', 'Adobe Illustrator', 'Branding',
+            'Typography', 'Color Theory', 'Layout Design', 'Print Design',
+            'Business Strategy', 'Financial Analysis', 'Project Management', 
+            'Stakeholder Management', 'Negotiation', 'Market Research', 'Competitive Analysis',
+            'Business Development', 'Strategic Planning', 'Product Strategy',
+            'Sales Strategy', 'CRM', 'Lead Generation', 'Customer Relations',
+            'Account Management', 'Sales Forecasting', 'Presentation Skills',
+            'Accounting', 'Financial Modeling', 'Budgeting', 'Investment Analysis',
+            'Excel Advanced', 'QuickBooks', 'Financial Reporting', 'Tax Planning',
+            'Recruitment', 'Employee Relations', 'Training & Development', 
+            'Performance Management', 'HR Analytics', 'Compensation & Benefits',
+            'Patient Care', 'Medical Terminology', 'Healthcare Compliance', 'EMR Systems',
+            'Clinical Skills', 'Pharmacology', 'Anatomy & Physiology', 'Medical Coding',
+            'HIPAA Compliance', 'Vital Signs Monitoring', 'CPR & First Aid', 'Patient Assessment',
+            'Healthcare Administration', 'Medical Records Management', 'Healthcare Quality',
+            'Communication', 'Problem Solving', 'Leadership', 'Teamwork', 
+            'Critical Thinking', 'Time Management', 'Creativity', 'Adaptability'
+        ];
+
+        let selectedSkills = [];
+
+        const categoryIcons = {
+            'Programming Languages': 'fa-code',
+            'Frontend Development': 'fa-laptop-code',
+            'Backend Development': 'fa-server',
+            'Cloud & DevOps': 'fa-cloud',
+            'Data Science & ML': 'fa-brain',
+            'Design & Creative': 'fa-palette',
+            'Marketing & Content': 'fa-bullhorn',
+            'Business & Finance': 'fa-chart-line',
+            'Sales & Customer Relations': 'fa-handshake',
+            'HR & People Management': 'fa-users',
+            'Healthcare & Medical': 'fa-heartbeat',
+            'Soft Skills': 'fa-comments'
+        };
+
+        function initializeSkills(targetRole = null) {
+            const container = document.getElementById('skillsContainer');
+            
+            if (!targetRole) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <i class="fas fa-arrow-up" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <p style="font-size: 18px; font-weight: 500;">Please select your target career role above to see relevant skills</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const relevantSkills = skillsByRole[targetRole] || [];
+            
+            if (relevantSkills.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <p style="font-size: 18px;">No specific skills mapped for this role yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const relevantSkillsByCategory = {};
+            
+            Object.keys(skillsByCategory).forEach(category => {
+                const categorySkills = skillsByCategory[category].filter(skill => 
+                    relevantSkills.includes(skill)
+                );
+                
+                if (categorySkills.length > 0) {
+                    relevantSkillsByCategory[category] = categorySkills;
+                }
+            });
+            
+            let html = '';
+
+            Object.keys(relevantSkillsByCategory).forEach(category => {
+                const icon = categoryIcons[category] || 'fa-star';
+                html += `
+                    <div class="skill-category-group">
+                        <div class="category-title">
+                            <i class="fas ${icon}"></i>
+                            ${category}
+                        </div>
+                        <div class="category-skills-grid">
+                `;
+
+                relevantSkillsByCategory[category].forEach(skill => {
+                    const isSelected = selectedSkills.includes(skill) ? 'selected' : '';
+                    html += `
+                        <div class="skill-item ${isSelected}" onclick="toggleSkill('${skill}')" data-skill="${skill}">
+                            ${skill}
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function toggleSkill(skill) {
+            const skillElement = document.querySelector(`[data-skill="${skill}"]`);
+            
+            if (selectedSkills.includes(skill)) {
+                selectedSkills = selectedSkills.filter(s => s !== skill);
+                skillElement.classList.remove('selected');
+            } else {
+                selectedSkills.push(skill);
+                skillElement.classList.add('selected');
+            }
+        }
+
+        class NeuralCareerAdvisor {
+            constructor() {
+                this.modelWeights = this.initializeModel();
+                this.learningRate = 0.01;
+            }
+
+            initializeModel() {
+                return {
+                    experience: Math.random() * 0.5 + 0.5,
+                    education: Math.random() * 0.3 + 0.3,
+                    skills: Math.random() * 0.7 + 0.3,
+                    interests: Math.random() * 0.2 + 0.1
+                };
+            }
+
+            predictCareerFit(userProfile, targetRole) {
+                const inputFeatures = this.extractFeatures(userProfile, targetRole);
+                const weightedSum = this.calculateWeightedSum(inputFeatures);
+                
+                const fitScore = 1 / (1 + Math.exp(-weightedSum));
+                
+                return Math.min(1, Math.max(0.1, fitScore));
+            }
+
+            extractFeatures(userProfile, targetRole) {
+                const experienceLevels = { beginner: 0.2, intermediate: 0.5, advanced: 0.8 };
+                const educationLevels = { 'high-school': 0.3, bootcamp: 0.4, bachelor: 0.6, master: 0.8 };
+                
+                return {
+                    experience: experienceLevels[userProfile.experience] || 0.3,
+                    education: educationLevels[userProfile.education] || 0.4,
+                    skills: Math.min(userProfile.skills.length / 15, 1),
+                    interests: Math.min(userProfile.interests.length / 100, 1)
+                };
+            }
+
+            calculateWeightedSum(features) {
+                return (
+                    features.experience * this.modelWeights.experience +
+                    features.education * this.modelWeights.education +
+                    features.skills * this.modelWeights.skills +
+                    features.interests * this.modelWeights.interests
+                );
+            }
+
+            generateDetailedLearningPath(userProfile, targetRole) {
+                return rolePaths[targetRole] || [];
+            }
+        }
+
+        const neuralAdvisor = new NeuralCareerAdvisor();
+
+        function analyzeCareerPath() {
+            const currentLevel = document.getElementById('currentLevel').value;
+            const education = document.getElementById('education').value;
+            const targetRole = document.getElementById('targetRole').value;
+            const interests = document.getElementById('interests').value;
+
+            if (!currentLevel || !education || !targetRole) {
+                alert('Please fill in all required fields (Experience Level, Education, and Target Role)');
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').innerHTML = '';
+
+            setTimeout(() => {
+                try {
+                    const userProfile = {
+                        experience: currentLevel,
+                        education: education,
+                        skills: selectedSkills,
+                        interests: interests
+                    };
+
+                    const careerFit = neuralAdvisor.predictCareerFit(userProfile, targetRole);
+                    const detailedPath = neuralAdvisor.generateDetailedLearningPath(userProfile, targetRole);
+
+                    displayDetailedPath(targetRole, careerFit, detailedPath);
+                    
+                } catch (error) {
+                    console.error('AI analysis error:', error);
+                    document.getElementById('results').innerHTML = `
+                        <div class="no-results">
+                            Neural network analysis encountered an error. Please try again.
+                        </div>
+                    `;
+                } finally {
+                    document.getElementById('loading').style.display = 'none';
+                }
+            }, 2000);
+        }
+
+        function displayDetailedPath(targetRole, careerFit, learningPath) {
+            const roleTitle = roleTitles[targetRole] || targetRole;
+            
+            let html = `
+                <div class="path-container">
+                    <div class="path-title">
+                        🚀 Your Personalized Path to ${roleTitle}
+                    </div>
+                    
+                    <div class="path-steps">
+            `;
+
+            learningPath.forEach((step, index) => {
+                html += `
+                    <div class="step">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-title">${step.title}</div>
+                        <div class="step-description">${step.description}</div>
+                        <div class="step-duration">⏱️ Estimated Duration: ${step.duration}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                    
+                    <div class="resources-cta">
+                        <h3>📚 Need Learning Resources?</h3>
+                        <p>Explore our AI-curated collection of courses, tutorials, and tools</p>
+                        <a href="resources1.html">View All Resources →</a>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('results').innerHTML = html;
+            
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSkills();
+            
+            document.getElementById('targetRole').addEventListener('change', function(e) {
+                const selectedRole = e.target.value;
+                selectedSkills = [];
+                initializeSkills(selectedRole);
+            });
+        });
+
+        const rolePaths = {
+            'frontend-developer': [
+                {
+                    title: 'Master HTML & CSS Fundamentals',
+                    description: 'Build a strong foundation in web structure and styling. Learn semantic HTML5, CSS Grid, Flexbox, and responsive design principles. Create 5-10 static websites to practice.',
+                    duration: '3-4 weeks',
+                    resources: 'freeCodeCamp, MDN Web Docs, CSS-Tricks'
+                },
+                {
+                    title: 'JavaScript Core Concepts',
+                    description: 'Deep dive into JavaScript fundamentals including ES6+ features, DOM manipulation, event handling, async/await, promises, and closures. Build interactive web applications.',
+                    duration: '4-6 weeks',
+                    resources: 'JavaScript.info, Eloquent JavaScript, Frontend Masters'
+                },
+                {
+                    title: 'Modern Frontend Framework (React)',
+                    description: 'Learn React fundamentals: components, props, state, hooks, context API, and React Router. Build 3-5 real-world projects like a todo app, weather app, and e-commerce site.',
+                    duration: '6-8 weeks',
+                    resources: 'React Official Docs, Scrimba, Full Stack Open'
+                },
+                {
+                    title: 'State Management & Advanced Patterns',
+                    description: 'Master state management with Redux or Zustand, learn performance optimization, code splitting, lazy loading, and advanced React patterns like HOCs and render props.',
+                    duration: '3-4 weeks',
+                    resources: 'Redux Toolkit Docs, React Performance Course'
+                },
+                {
+                    title: 'Build Portfolio & Real Projects',
+                    description: 'Create a professional portfolio website showcasing 5+ projects. Contribute to open source, deploy projects on Vercel/Netlify, and prepare for technical interviews.',
+                    duration: '4-6 weeks',
+                    resources: 'GitHub, Vercel, LeetCode Frontend Questions'
+                }
+            ],
+            'backend-developer': [
+                {
+                    title: 'Programming Language Mastery',
+                    description: 'Choose and master a backend language (Python/Node.js/Java). Learn OOP principles, data structures, algorithms, and best coding practices. Solve 50+ coding problems.',
+                    duration: '4-6 weeks',
+                    resources: 'Python.org, Node.js Docs, LeetCode, HackerRank'
+                },
+                {
+                    title: 'Database Design & SQL',
+                    description: 'Master relational databases (PostgreSQL/MySQL), learn SQL queries, joins, indexing, normalization, and database design patterns. Build a complete database schema for a real application.',
+                    duration: '3-4 weeks',
+                    resources: 'PostgreSQL Tutorial, SQL Zoo, Database Design Course'
+                },
+                {
+                    title: 'RESTful API Development',
+                    description: 'Build RESTful APIs using Express.js/Flask/Spring Boot. Learn HTTP methods, status codes, authentication (JWT), authorization, middleware, and API best practices.',
+                    duration: '5-6 weeks',
+                    resources: 'Express.js Guide, REST API Tutorial, Postman'
+                },
+                {
+                    title: 'Advanced Backend Concepts',
+                    description: 'Learn caching (Redis), message queues, microservices architecture, Docker containerization, and API security. Implement rate limiting, logging, and error handling.',
+                    duration: '4-5 weeks',
+                    resources: 'Docker Docs, Redis University, System Design Primer'
+                },
+                {
+                    title: 'Deploy & Scale Applications',
+                    description: 'Deploy applications to cloud platforms (AWS/GCP/Azure), set up CI/CD pipelines, implement monitoring and logging, and learn about load balancing and scaling strategies.',
+                    duration: '3-4 weeks',
+                    resources: 'AWS Free Tier, GitHub Actions, Kubernetes Basics'
+                }
+            ],
+            'data-scientist': [
+                {
+                    title: 'Python for Data Science',
+                    description: 'Master Python programming with focus on NumPy, Pandas, and data manipulation. Learn to clean, transform, and analyze datasets. Complete 10+ data analysis projects.',
+                    duration: '4-5 weeks',
+                    resources: 'Python Data Science Handbook, Kaggle Learn, DataCamp'
+                },
+                {
+                    title: 'Statistics & Probability',
+                    description: 'Deep dive into descriptive statistics, probability distributions, hypothesis testing, A/B testing, and statistical inference. Apply concepts to real-world datasets.',
+                    duration: '5-6 weeks',
+                    resources: 'Khan Academy Statistics, StatQuest, Think Stats'
+                },
+                {
+                    title: 'Data Visualization & EDA',
+                    description: 'Master data visualization using Matplotlib, Seaborn, and Plotly. Learn exploratory data analysis techniques, storytelling with data, and creating insightful dashboards.',
+                    duration: '3-4 weeks',
+                    resources: 'Matplotlib Docs, Seaborn Tutorial, Tableau Public'
+                },
+                {
+                    title: 'Machine Learning Fundamentals',
+                    description: 'Learn supervised and unsupervised learning algorithms: linear regression, logistic regression, decision trees, random forests, clustering, and dimensionality reduction using Scikit-learn.',
+                    duration: '6-8 weeks',
+                    resources: 'Scikit-learn Docs, Andrew Ng ML Course, Hands-On ML'
+                },
+                {
+                    title: 'Real-World Projects & Portfolio',
+                    description: 'Build end-to-end data science projects: predictive modeling, customer segmentation, recommendation systems. Participate in Kaggle competitions and create a portfolio on GitHub.',
+                    duration: '6-8 weeks',
+                    resources: 'Kaggle Competitions, GitHub, Medium Blog'
+                }
+            ],
+            'ml-engineer': [
+                {
+                    title: 'Advanced Python & Software Engineering',
+                    description: 'Master Python programming, OOP, design patterns, testing (pytest), version control (Git), and software engineering best practices for ML systems.',
+                    duration: '3-4 weeks',
+                    resources: 'Python Official Docs, Clean Code, Git Documentation'
+                },
+                {
+                    title: 'Machine Learning Algorithms Deep Dive',
+                    description: 'Understand ML algorithms from scratch: gradient descent, backpropagation, regularization, ensemble methods. Implement algorithms without libraries to understand internals.',
+                    duration: '5-6 weeks',
+                    resources: 'Pattern Recognition & ML, Scikit-learn Source Code'
+                },
+                {
+                    title: 'Deep Learning & Neural Networks',
+                    description: 'Master deep learning with TensorFlow/PyTorch: CNNs, RNNs, LSTMs, transformers, attention mechanisms. Build image classification, NLP, and sequence models.',
+                    duration: '8-10 weeks',
+                    resources: 'Deep Learning Specialization, PyTorch Tutorials, fast.ai'
+                },
+                {
+                    title: 'MLOps & Model Deployment',
+                    description: 'Learn to deploy ML models in production: Docker, Kubernetes, model serving (TensorFlow Serving, FastAPI), monitoring, A/B testing, and CI/CD for ML.',
+                    duration: '4-5 weeks',
+                    resources: 'MLOps Course, Kubeflow, MLflow Documentation'
+                },
+                {
+                    title: 'Build Production ML Systems',
+                    description: 'Create end-to-end ML pipelines: data ingestion, feature engineering, model training, deployment, monitoring. Build scalable ML systems and contribute to open source ML projects.',
+                    duration: '6-8 weeks',
+                    resources: 'TensorFlow Extended, Airflow, Real ML Projects'
+                }
+            ]
+        };
+        
+        const roleTitles = {
+            'frontend-developer': 'Frontend Developer',
+            'backend-developer': 'Backend Developer',
+            'fullstack-developer': 'Full Stack Developer',
+            'data-scientist': 'Data Scientist',
+            'ml-engineer': 'Machine Learning Engineer',
+            'data-analyst': 'Data Analyst',
+            'ui-ux-designer': 'UI/UX Designer',
+            'product-manager': 'Product Manager',
+            'devops-engineer': 'DevOps Engineer',
+            'mobile-developer': 'Mobile Developer',
+            'digital-marketing-manager': 'Digital Marketing Manager',
+            'content-strategist': 'Content Strategist',
+            'graphic-designer': 'Graphic Designer',
+            'business-analyst': 'Business Analyst',
+            'financial-analyst': 'Financial Analyst',
+            'social-media-manager': 'Social Media Manager',
+            'seo-specialist': 'SEO Specialist',
+            'project-manager': 'Project Manager',
+            'sales-manager': 'Sales Manager',
+            'hr-manager': 'HR Manager',
+            'registered-nurse': 'Registered Nurse (RN)',
+            'medical-assistant': 'Medical Assistant',
+            'healthcare-administrator': 'Healthcare Administrator',
+            'pharmacist': 'Pharmacist',
+            'physical-therapist': 'Physical Therapist'
+        };
+    </script>
+</body>
+</html>

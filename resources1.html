@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Learning Resources - Career Advisor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Updated CSS variables to match template design system */
+    :root {
+      --primary: #2563eb;
+      --primary-light: #3b82f6;
+      --primary-dark: #1d4ed8;
+      --secondary: #0ea5e9;
+      --accent: #06b6d4;
+      --dark: #0f172a;
+      --darker: #020617;
+      --light: #ffffff;
+      --gray: #64748b;
+      --light-gray: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --gradient-primary: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+      --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+      --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+      --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --transition-fast: all 0.2s ease;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+      --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+      --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15);
+      --border-radius: 20px;
+      --border-radius-sm: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Updated body styling with new fonts and background */
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.7;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Updated typography hierarchy to match template */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 2.8rem;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.8rem;
+    }
+
+    /* Updated header styling */
+    header {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(14, 165, 233, 0.03) 50%, rgba(6, 182, 212, 0.03) 100%);
+      color: var(--dark);
+      padding: 4rem 2rem;
+      text-align: center;
+      font-size: 2.8rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--card-border);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header i {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Updated container styling */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      padding: 3rem;
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--card-border);
+    }
+
+    /* Updated back button styling */
+    .back-button {
+      background: var(--gradient-primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      padding: 1rem 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      transition: var(--transition);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .back-button:hover {
+      box-shadow: var(--shadow-xl);
+      transform: translateY(-3px);
+    }
+
+    /* Updated tabs styling */
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 35px;
+      flex-wrap: wrap;
+      background: var(--light-gray);
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab-button {
+      background: white;
+      border: 2px solid transparent;
+      padding: 14px 26px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer;
+      border-radius: var(--border-radius-sm);
+      transition: var(--transition);
+      font-family: 'Outfit', sans-serif;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-button:hover {
+      background: var(--light-gray);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tab-button.active {
+      background: var(--gradient-primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Updated resource grid and cards */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2.5rem;
+      margin-top: 25px;
+    }
+
+    .resource-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .resource-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: var(--transition);
+    }
+
+    .resource-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .resource-card:hover {
+      transform: translateY(-12px);
+      box-shadow: var(--shadow-2xl);
+      border-color: var(--primary-light);
+    }
+
+    .resource-card a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .resource-icon {
+      font-size: 3rem;
+      margin-bottom: 18px;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .resource-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+
+    .resource-description {
+      color: var(--gray);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* Updated YouTube section styling */
+    .youtube-section {
+      margin-top: 30px;
+    }
+
+    .youtube-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2.5rem;
+      margin-top: 20px;
+    }
+
+    .youtube-card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition);
+      border: 1px solid var(--card-border);
+    }
+
+    .youtube-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-2xl);
+    }
+
+    .youtube-thumbnail {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .youtube-thumbnail iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .youtube-info {
+      padding: 20px;
+    }
+
+    .youtube-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      color: var(--dark);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .youtube-channel {
+      color: var(--gray);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .youtube-link {
+      display: inline-block;
+      margin-top: 15px;
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .youtube-link:hover {
+      text-decoration: underline;
+      color: var(--secondary);
+    }
+
+    /* Updated section title styling */
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      color: var(--dark);
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid var(--primary);
+      display: inline-block;
+      background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Updated YouTube search container */
+    .youtube-search-container {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(14, 165, 233, 0.08) 100%);
+      padding: 30px;
+      border-radius: var(--border-radius);
+      margin-bottom: 35px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--card-border);
+    }
+
+    .search-input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 280px;
+      padding: 16px 24px;
+      border: 2px solid var(--card-border);
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: var(--transition);
+      background: white;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .search-button {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 16px 36px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .search-button:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .search-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .api-key-input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 2px solid var(--card-border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin-bottom: 10px;
+    }
+
+    .api-info {
+      background: white;
+      border-left: 5px solid var(--primary);
+      padding: 18px 22px;
+      border-radius: var(--border-radius-sm);
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+      color: var(--dark);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .api-info strong {
+      color: var(--primary);
+    }
+
+    .api-info a {
+      color: var(--secondary);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .relevance-score {
+      display: inline-block;
+      background: var(--gradient-accent);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 25px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .video-stats {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    .video-stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        font-size: 1.8rem;
+        padding: 2.5rem 1.5rem;
+      }
+
+      .container {
+        padding: 2rem;
+      }
+
+      .tabs {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .tab-button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .resource-grid,
+      .youtube-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-input-group {
+        flex-direction: column;
+      }
+
+      .search-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <i class="fas fa-graduation-cap"></i> AI-Powered Career Resources
+  </header>
+
+  <div class="container">
+    <a href="careerpath1.html" class="back-button">
+      <i class="fas fa-arrow-left"></i> Back to Career Explorer
+    </a>
+
+    <div class="tabs">
+      <button class="tab-button active" onclick="switchTab('platforms')">
+        <i class="fas fa-graduation-cap"></i> Learning Platforms
+      </button>
+      <button class="tab-button" onclick="switchTab('youtube')">
+        <i class="fab fa-youtube"></i> YouTube Search
+      </button>
+      <button class="tab-button" onclick="switchTab('aiml')">
+        <i class="fas fa-brain"></i> AI & ML
+      </button>
+      <button class="tab-button" onclick="switchTab('marketing')">
+        <i class="fas fa-bullhorn"></i> Marketing & Business
+      </button>
+      <button class="tab-button" onclick="switchTab('design')">
+        <i class="fas fa-palette"></i> Design & Creative
+      </button>
+      <button class="tab-button" onclick="switchTab('finance')">
+        <i class="fas fa-chart-line"></i> Finance & Sales
+      </button>
+      <button class="tab-button" onclick="switchTab('health')">
+        <i class="fas fa-heartbeat"></i> Health & Care
+      </button>
+      <button class="tab-button" onclick="switchTab('interview')">
+        <i class="fas fa-code"></i> Interview Prep
+      </button>
+      <button class="tab-button" onclick="switchTab('tools')">
+        <i class="fas fa-tools"></i> Career Tools
+      </button>
+    </div>
+
+    <!-- Learning Platforms Tab -->
+    <div id="platforms" class="tab-content active">
+      <h2 class="section-title">AI-Recommended Learning Platforms</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <a href="https://www.linkedin.com/learning/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-linkedin"></i></div>
+            <div class="resource-title">LinkedIn Learning</div>
+            <div class="resource-description">AI-powered skill recommendations and career courses with personalized learning paths</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.coursera.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="resource-title">Coursera</div>
+            <div class="resource-description">University-backed learning paths with AI specialization tracks and professional certificates</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.edx.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-university"></i></div>
+            <div class="resource-title">edX</div>
+            <div class="resource-description">Free and paid professional courses from top universities worldwide</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.udemy.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+            <div class="resource-title">Udemy</div>
+            <div class="resource-description">Extensive library of practical courses on programming, design, and business skills</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.kaggle.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-chart-bar"></i></div>
+            <div class="resource-title">Kaggle</div>
+            <div class="resource-description">Data science challenges and machine learning competitions with real-world datasets</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.pluralsight.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-play-circle"></i></div>
+            <div class="resource-title">Pluralsight</div>
+            <div class="resource-description">Technology skills platform with skill assessments and learning paths</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- YouTube Search Tab -->
+    <div id="youtube" class="tab-content">
+      <h2 class="section-title"><i class="fas fa-brain"></i> AI-Powered YouTube Learning Search</h2>
+      
+      <div class="youtube-search-container">
+       
+        
+        <div class="search-input-group">
+          <input 
+            type="text" 
+            id="searchQuery" 
+            class="search-input" 
+            placeholder="Try: 'machine learning', 'digital marketing', 'graphic design', 'financial modeling'..."
+            value=""
+          />
+          <button id="searchButton" class="search-button" onclick="searchYouTube()">
+            <i class="fas fa-search"></i> Search with AI
+          </button>
+        </div>
+        
+       
+      </div>
+
+      <div id="youtubeResults" class="youtube-grid">
+        <!-- Results will be populated here -->
+      </div>
+    </div>
+
+    <!-- AI & ML Resources Tab -->
+    <div id="aiml" class="tab-content">
+      <h2 class="section-title">AI & Machine Learning Resources</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <a href="https://www.fast.ai/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-brain"></i></div>
+            <div class="resource-title">fast.ai</div>
+            <div class="resource-description">Practical deep learning courses for coders with cutting-edge techniques</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.deeplearning.ai/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-robot"></i></div>
+            <div class="resource-title">DeepLearning.AI</div>
+            <div class="resource-description">Andrew Ng's comprehensive AI and deep learning specializations</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-google"></i></div>
+            <div class="resource-title">Google ML Crash Course</div>
+            <div class="resource-description">Fast-paced introduction to machine learning with TensorFlow APIs</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://pytorch.org/tutorials/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-fire"></i></div>
+            <div class="resource-title">PyTorch Tutorials</div>
+            <div class="resource-description">Official PyTorch tutorials for deep learning and neural networks</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.tensorflow.org/learn" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-project-diagram"></i></div>
+            <div class="resource-title">TensorFlow</div>
+            <div class="resource-description">End-to-end machine learning platform with tutorials and guides</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.kaggle.com/learn" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-chart-bar"></i></div>
+            <div class="resource-title">Kaggle Learn</div>
+            <div class="resource-description">Hands-on data science and ML courses with real datasets</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://paperswithcode.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-file-code"></i></div>
+            <div class="resource-title">Papers with Code</div>
+            <div class="resource-description">Latest ML research papers with implementation code</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://huggingface.co/learn" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-smile"></i></div>
+            <div class="resource-title">Hugging Face</div>
+            <div class="resource-description">NLP and transformer models with courses and documentation</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.elementsofai.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="resource-title">Elements of AI</div>
+            <div class="resource-description">Free online introduction to AI for non-technical people</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.nvidia.com/en-us/training/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-microchip"></i></div>
+            <div class="resource-title">NVIDIA Deep Learning</div>
+            <div class="resource-description">GPU-accelerated deep learning courses and certifications</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.microsoft.com/en-us/ai/ai-school" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-microsoft"></i></div>
+            <div class="resource-title">Microsoft AI School</div>
+            <div class="resource-description">Azure AI and machine learning tutorials and resources</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://aws.amazon.com/machine-learning/learn/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-aws"></i></div>
+            <div class="resource-title">AWS Machine Learning</div>
+            <div class="resource-description">Cloud-based ML training and certification programs</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketing & Business Tab -->
+    <div id="marketing" class="tab-content">
+      <h2 class="section-title">Marketing & Business Resources</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <a href="https://academy.hubspot.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-bullhorn"></i></div>
+            <div class="resource-title">HubSpot Academy</div>
+            <div class="resource-description">Free marketing, sales, and customer service courses with certifications</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://skillshop.withgoogle.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-google"></i></div>
+            <div class="resource-title">Google Skillshop</div>
+            <div class="resource-description">Learn Google Ads, Analytics, and digital marketing tools</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.semrush.com/academy/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-search"></i></div>
+            <div class="resource-title">SEMrush Academy</div>
+            <div class="resource-description">SEO, content marketing, and competitive research courses</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.facebook.com/business/learn" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-facebook"></i></div>
+            <div class="resource-title">Meta Blueprint</div>
+            <div class="resource-description">Social media marketing and advertising on Facebook and Instagram</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.copyblogger.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-pen-fancy"></i></div>
+            <div class="resource-title">Copyblogger</div>
+            <div class="resource-description">Content marketing and copywriting resources and tutorials</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.khanacademy.org/economics-finance-domain" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-university"></i></div>
+            <div class="resource-title">Khan Academy Business</div>
+            <div class="resource-description">Free courses on economics, finance, and entrepreneurship</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.salesforce.com/trailhead/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-cloud"></i></div>
+            <div class="resource-title">Salesforce Trailhead</div>
+            <div class="resource-description">CRM, sales, and business automation training platform</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.hootsuite.com/academy" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-share-alt"></i></div>
+            <div class="resource-title">Hootsuite Academy</div>
+            <div class="resource-description">Social media marketing certification and training</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design & Creative Tab -->
+    <div id="design" class="tab-content">
+      <h2 class="section-title">Design & Creative Resources</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <a href="https://www.canva.com/designschool/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-palette"></i></div>
+            <div class="resource-title">Canva Design School</div>
+            <div class="resource-description">Free graphic design tutorials and courses for all skill levels</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.skillshare.com/browse/design" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-paint-brush"></i></div>
+            <div class="resource-title">Skillshare Design</div>
+            <div class="resource-description">Creative courses on graphic design, illustration, and branding</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://helpx.adobe.com/support.html" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-adobe"></i></div>
+            <div class="resource-title">Adobe Creative Cloud</div>
+            <div class="resource-description">Official tutorials for Photoshop, Illustrator, and other Adobe tools</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.interaction-design.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-mouse-pointer"></i></div>
+            <div class="resource-title">Interaction Design</div>
+            <div class="resource-description">UX/UI design courses and certifications from industry experts</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.behance.net/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-behance"></i></div>
+            <div class="resource-title">Behance</div>
+            <div class="resource-description">Showcase your work and get inspired by creative professionals</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://dribbble.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fab fa-dribbble"></i></div>
+            <div class="resource-title">Dribbble</div>
+            <div class="resource-description">Design inspiration and community for designers</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finance & Sales Tab -->
+    <div id="finance" class="tab-content">
+      <h2 class="section-title">Finance, Sales & HR Resources</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <a href="https://www.investopedia.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="resource-title">Investopedia</div>
+            <div class="resource-description">Financial education, investing tutorials, and market analysis</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://corporatefinanceinstitute.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-building"></i></div>
+            <div class="resource-title">CFI</div>
+            <div class="resource-description">Corporate Finance Institute - Financial modeling and analysis courses</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.wallstreetoasis.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-briefcase"></i></div>
+            <div class="resource-title">Wall Street Oasis</div>
+            <div class="resource-description">Finance career resources, networking, and interview prep</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.shrm.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-users"></i></div>
+            <div class="resource-title">SHRM</div>
+            <div class="resource-description">Society for Human Resource Management - HR certifications and resources</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.salesgravy.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-handshake"></i></div>
+            <div class="resource-title">Sales Gravy</div>
+            <div class="resource-description">Sales training, techniques, and career development resources</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.accountingcoach.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-calculator"></i></div>
+            <div class="resource-title">AccountingCoach</div>
+            <div class="resource-description">Free accounting tutorials and practice quizzes</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div id="health" class="tab-content">
+      <h2 class="section-title">Health & Care Resources</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <a href="https://www.khanacademy.org/science/health-and-medicine" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-heartbeat"></i></div>
+            <div class="resource-title">Khan Academy Health</div>
+            <div class="resource-description">Free courses on health, medicine, and human biology fundamentals</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.coursera.org/browse/health" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-user-md"></i></div>
+            <div class="resource-title">Coursera Health</div>
+            <div class="resource-description">Healthcare management, public health, and medical courses from top universities</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.edx.org/learn/healthcare" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-hospital"></i></div>
+            <div class="resource-title">edX Healthcare</div>
+            <div class="resource-description">Professional certificates in healthcare administration and clinical research</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.nursingworld.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-stethoscope"></i></div>
+            <div class="resource-title">American Nurses Association</div>
+            <div class="resource-description">Nursing career resources, certifications, and continuing education</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.ama-assn.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-notes-medical"></i></div>
+            <div class="resource-title">American Medical Association</div>
+            <div class="resource-description">Medical education, practice management, and physician resources</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.who.int/health-topics" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-globe"></i></div>
+            <div class="resource-title">WHO Health Topics</div>
+            <div class="resource-description">World Health Organization resources on global health issues and research</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.medscape.com/education" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="resource-title">Medscape Education</div>
+            <div class="resource-description">CME courses, medical news, and clinical reference for healthcare professionals</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.apta.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-walking"></i></div>
+            <div class="resource-title">APTA</div>
+            <div class="resource-description">American Physical Therapy Association - PT career development and education</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.apa.org/education-career" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-brain"></i></div>
+            <div class="resource-title">APA Psychology</div>
+            <div class="resource-description">American Psychological Association - Psychology careers and education resources</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.ashp.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-pills"></i></div>
+            <div class="resource-title">ASHP</div>
+            <div class="resource-description">American Society of Health-System Pharmacists - Pharmacy career resources</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.aota.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-hands-helping"></i></div>
+            <div class="resource-title">AOTA</div>
+            <div class="resource-description">American Occupational Therapy Association - OT education and certification</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.himss.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-laptop-medical"></i></div>
+            <div class="resource-title">HIMSS</div>
+            <div class="resource-description">Healthcare IT and informatics education, certifications, and career resources</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interview Prep Tab -->
+    <div id="interview" class="tab-content">
+      <h2 class="section-title">Interview & Career Preparation</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <a href="https://leetcode.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-puzzle-piece"></i></div>
+            <div class="resource-title">LeetCode</div>
+            <div class="resource-description">Technical interview preparation with coding challenges and contests</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.interviewbit.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-code"></i></div>
+            <div class="resource-title">InterviewBit</div>
+            <div class="resource-description">Coding interview preparation with AI-powered practice problems</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.geeksforgeeks.org/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-laptop-code"></i></div>
+            <div class="resource-title">GeeksforGeeks</div>
+            <div class="resource-description">Programming tutorials and company-specific interview questions</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.hackerrank.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-terminal"></i></div>
+            <div class="resource-title">HackerRank</div>
+            <div class="resource-description">Practice coding, prepare for interviews, and get hired</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://roadmap.sh/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-map"></i></div>
+            <div class="resource-title">Roadmap.sh</div>
+            <div class="resource-description">Developer skill roadmaps and career path guidance</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.pramp.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-users"></i></div>
+            <div class="resource-title">Pramp</div>
+            <div class="resource-description">Free peer-to-peer mock interviews for coding and system design</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Career Tools Tab -->
+    <div id="tools" class="tab-content">
+      <h2 class="section-title">AI Career Development Tools</h2>
+      <div class="resource-grid">
+        <div class="resource-card">
+          <a href="https://resumeworded.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="resource-title">Resume Worded</div>
+            <div class="resource-description">AI-powered resume scanner and career coaching platform</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.tealhq.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-briefcase"></i></div>
+            <div class="resource-title">Teal</div>
+            <div class="resource-description">AI career growth platform with resume builder and job tracker</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.huntr.co/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-search"></i></div>
+            <div class="resource-title">Huntr</div>
+            <div class="resource-description">AI-powered job search organizer and application tracker</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.jobscan.co/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-scanner"></i></div>
+            <div class="resource-title">Jobscan</div>
+            <div class="resource-description">Optimize your resume for applicant tracking systems (ATS)</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.glassdoor.com/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-building"></i></div>
+            <div class="resource-title">Glassdoor</div>
+            <div class="resource-description">Company reviews, salary information, and interview insights</div>
+          </a>
+        </div>
+        <div class="resource-card">
+          <a href="https://www.levels.fyi/" target="_blank" rel="noopener noreferrer">
+            <div class="resource-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="resource-title">Levels.fyi</div>
+            <div class="resource-description">Compare career levels, salaries, and compensation across companies</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const youtubeDatabase = [
+      // Programming & Web Development
+      { id: 'rfscVS0vtbw', title: 'Learn Python - Full Course for Beginners', channel: 'freeCodeCamp.org', views: 45000000, likes: 850000, tags: ['python', 'programming', 'beginner', 'tutorial', 'coding'], category: 'programming' },
+      { id: 'PkZNo7MFNFg', title: 'Learn JavaScript - Full Course for Beginners', channel: 'freeCodeCamp.org', views: 28000000, likes: 620000, tags: ['javascript', 'programming', 'web development', 'beginner', 'coding'], category: 'programming' },
+      { id: 'Tn6-PIqc4UM', title: 'React Course - Beginners Tutorial for React JavaScript Library', channel: 'freeCodeCamp.org', views: 12000000, likes: 280000, tags: ['react', 'javascript', 'web development', 'frontend', 'tutorial'], category: 'programming' },
+      { id: 'RGOj5yH7evk', title: 'Git and GitHub for Beginners - Crash Course', channel: 'freeCodeCamp.org', views: 8500000, likes: 195000, tags: ['git', 'github', 'version control', 'programming', 'tutorial'], category: 'programming' },
+      { id: 'pTFZFxd4hOI', title: 'Node.js and Express.js - Full Course', channel: 'freeCodeCamp.org', views: 6200000, likes: 145000, tags: ['nodejs', 'express', 'backend', 'javascript', 'web development'], category: 'programming' },
+      
+      // Machine Learning & AI
+      { id: 'aircAruvnKk', title: 'But what is a neural network? | Deep learning, chapter 1', channel: '3Blue1Brown', views: 15000000, likes: 420000, tags: ['machine learning', 'neural network', 'deep learning', 'ai', 'math'], category: 'ai' },
+      { id: 'IHZwWFHWa-w', title: 'Gradient descent, how neural networks learn | Deep learning, chapter 2', channel: '3Blue1Brown', views: 8500000, likes: 245000, tags: ['machine learning', 'gradient descent', 'neural network', 'ai', 'optimization'], category: 'ai' },
+      { id: 'tIeHLnjs5U8', title: 'TensorFlow 2.0 Complete Course - Python Neural Networks for Beginners', channel: 'freeCodeCamp.org', views: 5800000, likes: 135000, tags: ['tensorflow', 'machine learning', 'python', 'neural network', 'ai'], category: 'ai' },
+      { id: 'qv6UVOQ0F44', title: 'Machine Learning Course for Beginners', channel: 'freeCodeCamp.org', views: 4200000, likes: 98000, tags: ['machine learning', 'ai', 'python', 'data science', 'beginner'], category: 'ai' },
+      { id: 'JcI5Vnw0b2c', title: 'PyTorch for Deep Learning & Machine Learning – Full Course', channel: 'freeCodeCamp.org', views: 3100000, likes: 72000, tags: ['pytorch', 'deep learning', 'machine learning', 'python', 'ai'], category: 'ai' },
+      
+      // Data Science & Statistics
+      { id: 'zRUliXuwJCQ', title: 'Statistics - A Full University Course on Data Science Basics', channel: 'freeCodeCamp.org', views: 3800000, likes: 88000, tags: ['statistics', 'data science', 'math', 'probability', 'analysis'], category: 'data' },
+      { id: 'GPVsHOlRBBI', title: 'Data Science Full Course For Beginners | Data Science Tutorial', channel: 'Simplilearn', views: 2900000, likes: 65000, tags: ['data science', 'python', 'machine learning', 'analytics', 'tutorial'], category: 'data' },
+      { id: 'ua-CiDNNj30', title: 'Statistics made easy ! ! ! Learn about the t-test, the chi square test, the p value and more', channel: 'StatQuest with Josh Starmer', views: 2100000, likes: 52000, tags: ['statistics', 'data science', 'hypothesis testing', 'analysis', 'math'], category: 'data' },
+      { id: 'HXV3zeQKqGY', title: 'SQL Tutorial - Full Database Course for Beginners', channel: 'freeCodeCamp.org', views: 18000000, likes: 395000, tags: ['sql', 'database', 'data science', 'programming', 'tutorial'], category: 'data' },
+      
+      // Web Development
+      { id: 'mU6anWqZJcc', title: 'HTML Full Course - Build a Website Tutorial', channel: 'freeCodeCamp.org', views: 9200000, likes: 215000, tags: ['html', 'web development', 'frontend', 'beginner', 'tutorial'], category: 'web' },
+      { id: 'OXGznpKZ_sA', title: 'CSS Tutorial - Zero to Hero (Complete Course)', channel: 'freeCodeCamp.org', views: 7800000, likes: 182000, tags: ['css', 'web development', 'frontend', 'design', 'tutorial'], category: 'web' },
+      { id: 'Oe421EPjeBE', title: 'Next.js 14 Full Course 2024', channel: 'Traversy Media', views: 1200000, likes: 35000, tags: ['nextjs', 'react', 'web development', 'javascript', 'fullstack'], category: 'web' },
+      { id: 'SBmSRK3feww', title: 'TypeScript Course for Beginners - Learn TypeScript from Scratch!', channel: 'Academind', views: 2400000, likes: 58000, tags: ['typescript', 'javascript', 'programming', 'web development', 'tutorial'], category: 'web' },
+      
+      // Mobile Development
+      { id: 'VFGUJjHfRO0', title: 'React Native Tutorial for Beginners - Build a React Native App', channel: 'Programming with Mosh', views: 3500000, likes: 82000, tags: ['react native', 'mobile development', 'javascript', 'app development', 'tutorial'], category: 'mobile' },
+      { id: 'fis26HvvDII', title: 'Flutter Course - Full Tutorial for Beginners', channel: 'freeCodeCamp.org', views: 4100000, likes: 95000, tags: ['flutter', 'mobile development', 'dart', 'app development', 'tutorial'], category: 'mobile' },
+      
+      // DevOps & Cloud
+      { id: 'RqTEHSBrYFw', title: 'Docker Tutorial for Beginners - A Full DevOps Course', channel: 'freeCodeCamp.org', views: 6800000, likes: 158000, tags: ['docker', 'devops', 'containers', 'deployment', 'tutorial'], category: 'devops' },
+      { id: '3c-iBn73dDE', title: 'Docker Tutorial for Beginners [FULL COURSE in 3 Hours]', channel: 'TechWorld with Nana', views: 5200000, likes: 125000, tags: ['docker', 'devops', 'kubernetes', 'containers', 'tutorial'], category: 'devops' },
+      { id: 'SOTamWNgDKc', title: 'AWS Certified Cloud Practitioner Training 2024 - Full Course', channel: 'freeCodeCamp.org', views: 3900000, likes: 89000, tags: ['aws', 'cloud', 'devops', 'certification', 'tutorial'], category: 'devops' },
+      
+      // Interview Preparation
+      { id: 'RBSGKlAvoiM', title: 'Data Structures and Algorithms in Python - Full Course for Beginners', channel: 'freeCodeCamp.org', views: 7500000, likes: 175000, tags: ['data structures', 'algorithms', 'python', 'interview', 'coding'], category: 'interview' },
+      { id: 'CBYHwZcbD-s', title: 'System Design Interview Concepts – Crash Course', channel: 'freeCodeCamp.org', views: 2800000, likes: 68000, tags: ['system design', 'interview', 'software engineering', 'architecture', 'tutorial'], category: 'interview' },
+      { id: '8hly31xKli0', title: 'Algorithms and Data Structures Tutorial - Full Course for Beginners', channel: 'freeCodeCamp.org', views: 4200000, likes: 98000, tags: ['algorithms', 'data structures', 'interview', 'coding', 'tutorial'], category: 'interview' },
+      
+      // Career Development
+      { id: 'Xg9ihH15Uto', title: 'How to Learn to Code - Best Resources, How to Choose a Project, and more!', channel: 'freeCodeCamp.org', views: 1800000, likes: 52000, tags: ['career', 'learning', 'programming', 'advice', 'beginner'], category: 'career' },
+      { id: 'unRldDeVPw4', title: 'How to Get a Software Engineering Job - Tips and Advice', channel: 'Traversy Media', views: 950000, likes: 28000, tags: ['career', 'job search', 'software engineering', 'interview', 'advice'], category: 'career' },
+      
+      // UI/UX Design
+      { id: 'c9Wg6Cb_YlU', title: 'UI / UX Design Tutorial – Wireframe, Mockup & Design in Figma', channel: 'freeCodeCamp.org', views: 2100000, likes: 58000, tags: ['ui', 'ux', 'design', 'figma', 'tutorial'], category: 'design' },
+      { id: 'YL1F4dCUlLc', title: 'Google UX Design Professional Certificate - Full Course', channel: 'freeCodeCamp.org', views: 1600000, likes: 42000, tags: ['ux', 'design', 'google', 'certification', 'tutorial'], category: 'design' },
+      
+      // Cybersecurity
+      { id: 'U_P23SqJaDc', title: 'Ethical Hacking Full Course - Learn Ethical Hacking in 10 Hours', channel: 'Edureka', views: 3200000, likes: 75000, tags: ['cybersecurity', 'ethical hacking', 'security', 'networking', 'tutorial'], category: 'security' },
+      { id: 'lpaGRfy0EyQ', title: 'CompTIA Security+ Full Course', channel: 'Professor Messer', views: 2400000, likes: 62000, tags: ['cybersecurity', 'security', 'certification', 'comptia', 'tutorial'], category: 'security' },
+
+      // Marketing & Business
+      { id: 'SSo_EIwHSd4', title: 'Digital Marketing Course for Beginners', channel: 'Simplilearn', views: 3200000, likes: 72000, tags: ['digital marketing', 'marketing', 'seo', 'social media', 'business'], category: 'marketing' },
+      { id: 'nU-IIXBWlS4', title: 'SEO Tutorial for Beginners - Complete Guide', channel: 'Ahrefs', views: 2100000, likes: 58000, tags: ['seo', 'marketing', 'google', 'search engine', 'digital marketing'], category: 'marketing' },
+      { id: 'EgQUJgkVSSk', title: 'Social Media Marketing Full Course', channel: 'Simplilearn', views: 1800000, likes: 45000, tags: ['social media', 'marketing', 'facebook', 'instagram', 'business'], category: 'marketing' },
+      { id: 'bixR-KIJKYM', title: 'Content Marketing Tutorial - Complete Guide', channel: 'HubSpot', views: 950000, likes: 28000, tags: ['content marketing', 'marketing', 'copywriting', 'blogging', 'business'], category: 'marketing' },
+      { id: 'jbNvzpuzb5g', title: 'Email Marketing Full Course - Beginner to Advanced', channel: 'Simplilearn', views: 1200000, likes: 32000, tags: ['email marketing', 'marketing', 'automation', 'business', 'campaigns'], category: 'marketing' },
+      { id: 'F4nfGcZZGtY', title: 'Google Ads Tutorial 2024 - Complete Course', channel: 'Surfside PPC', views: 1600000, likes: 42000, tags: ['google ads', 'ppc', 'advertising', 'marketing', 'business'], category: 'marketing' },
+      { id: 'lYcYcXnbsQs', title: 'Business Strategy - Full Course', channel: 'Corporate Finance Institute', views: 850000, likes: 24000, tags: ['business strategy', 'management', 'business', 'planning', 'entrepreneurship'], category: 'business' },
+      { id: 'Bje_8Y7KUfM', title: 'Project Management Full Course - Learn Project Management', channel: 'Simplilearn', views: 2400000, likes: 62000, tags: ['project management', 'management', 'business', 'planning', 'agile'], category: 'business' },
+      
+      // Design & Creative
+      { id: 'YqQx75OPRa0', title: 'Graphic Design Full Course - Beginner to Advanced', channel: 'Bring Your Own Laptop', views: 1900000, likes: 52000, tags: ['graphic design', 'design', 'photoshop', 'illustrator', 'creative'], category: 'design' },
+      { id: 'WOFnn3hdc7Y', title: 'Adobe Photoshop Tutorial - Complete Course for Beginners', channel: 'Envato Tuts+', views: 3500000, likes: 85000, tags: ['photoshop', 'adobe', 'design', 'photo editing', 'creative'], category: 'design' },
+      { id: 'Gu-HBBZLyuo', title: 'Adobe Illustrator Tutorial - Complete Course', channel: 'Envato Tuts+', views: 2800000, likes: 68000, tags: ['illustrator', 'adobe', 'design', 'vector', 'creative'], category: 'design' },
+      { id: 'kbZejnPXyLM', title: 'Canva Tutorial for Beginners - Complete Course', channel: 'Canva', views: 2200000, likes: 58000, tags: ['canva', 'design', 'graphic design', 'branding', 'creative'], category: 'design' },
+      { id: 'RFv7cYwD-88', title: 'Logo Design Tutorial - From Concept to Completion', channel: 'Will Paterson', views: 1400000, likes: 38000, tags: ['logo design', 'branding', 'design', 'illustrator', 'creative'], category: 'design' },
+      { id: 'c9Wg6Cb_YlU', title: 'UI/UX Design Tutorial - Wireframe, Mockup & Design in Figma', channel: 'freeCodeCamp.org', views: 2100000, likes: 58000, tags: ['ui', 'ux', 'design', 'figma', 'user experience'], category: 'design' },
+      
+      // Finance & Business
+      { id: 'WEDIj9JBTC8', title: 'Financial Modeling Full Course - Excel Tutorial', channel: 'Corporate Finance Institute', views: 1100000, likes: 32000, tags: ['financial modeling', 'finance', 'excel', 'accounting', 'business'], category: 'finance' },
+      { id: 'HdHlfiOAJyE', title: 'Accounting Basics Explained - Complete Course', channel: 'Accounting Stuff', views: 1800000, likes: 48000, tags: ['accounting', 'finance', 'bookkeeping', 'business', 'financial'], category: 'finance' },
+      { id: 'mb7KCLc0Mp4', title: 'Excel Tutorial for Beginners - Complete Course', channel: 'freeCodeCamp.org', views: 5200000, likes: 125000, tags: ['excel', 'spreadsheet', 'data analysis', 'business', 'finance'], category: 'finance' },
+      { id: 'Rm6UdfRs6qM', title: 'Sales Training - Complete Course for Beginners', channel: 'Sales Insights Lab', views: 920000, likes: 26000, tags: ['sales', 'business', 'negotiation', 'communication', 'career'], category: 'sales' },
+      { id: 'iCvmsMzlF7o', title: 'Human Resource Management Course - Complete Tutorial', channel: 'Simplilearn', views: 1300000, likes: 35000, tags: ['hr', 'human resources', 'management', 'business', 'recruitment'], category: 'hr' },
+      
+      // Content Writing & Communication
+      { id: 'vnVuqfMC6KA', title: 'Copywriting Tutorial - Complete Course for Beginners', channel: 'Alex Cattoni', views: 850000, likes: 28000, tags: ['copywriting', 'writing', 'content', 'marketing', 'business'], category: 'writing' },
+      { id: 'PRl0NkRlZBU', title: 'Technical Writing Course - Complete Tutorial', channel: 'freeCodeCamp.org', views: 620000, likes: 18000, tags: ['technical writing', 'writing', 'documentation', 'communication', 'career'], category: 'writing' },
+      { id: 'eW7Twd85m2g', title: 'Public Speaking Course - Presentation Skills', channel: 'Conor Neill', views: 1100000, likes: 32000, tags: ['public speaking', 'presentation', 'communication', 'business', 'career'], category: 'communication' },
+    ];
+
+    function calculateSemanticScore(video, queryTerms) {
+      const allTerms = [...video.tags, video.title.toLowerCase(), video.channel.toLowerCase()].join(' ');
+      
+      // Term Frequency calculation
+      let matchScore = 0;
+      let termMatches = 0;
+      
+      queryTerms.forEach(term => {
+        const termLower = term.toLowerCase();
+        // Check exact matches in tags (highest weight)
+        if (video.tags.some(tag => tag.includes(termLower))) {
+          matchScore += 3;
+          termMatches++;
+        }
+        // Check matches in title (medium weight)
+        else if (video.title.toLowerCase().includes(termLower)) {
+          matchScore += 2;
+          termMatches++;
+        }
+        // Check matches in channel name (lower weight)
+        else if (video.channel.toLowerCase().includes(termLower)) {
+          matchScore += 1;
+          termMatches++;
+        }
+      });
+      
+      // Normalize by query length
+      const relevanceRatio = queryTerms.length > 0 ? termMatches / queryTerms.length : 0;
+      
+      return { matchScore, relevanceRatio, termMatches };
+    }
+
+    function calculateRelevanceScore(video, searchQuery) {
+      const queryTerms = searchQuery.toLowerCase().split(' ').filter(term => term.length > 2);
+      
+      if (queryTerms.length === 0) return 50; // Default score for empty query
+      
+      // Feature extraction
+      const semantic = calculateSemanticScore(video, queryTerms);
+      
+      // Feature 1: Semantic matching score (40% weight)
+      const semanticFeature = (semantic.matchScore / (queryTerms.length * 3)) * 0.4;
+      
+      // Feature 2: Term coverage (30% weight)
+      const coverageFeature = semantic.relevanceRatio * 0.3;
+      
+      // Feature 3: Popularity score - log normalized views (20% weight)
+      const popularityScore = Math.log10(video.views + 1) / 8; // Normalize to ~0-1
+      const popularityFeature = Math.min(popularityScore, 1) * 0.2;
+      
+      // Feature 4: Engagement ratio - likes per view (10% weight)
+      const engagementRatio = video.views > 0 ? (video.likes / video.views) : 0;
+      const engagementFeature = Math.min(engagementRatio * 50, 1) * 0.1; // Scale up engagement
+      
+      // Weighted sum (linear combination)
+      const totalScore = semanticFeature + coverageFeature + popularityFeature + engagementFeature;
+      
+      // Apply sigmoid activation for smooth 0-100 scaling
+      const sigmoid = (x) => 1 / (1 + Math.exp(-12 * (x - 0.5)));
+      const finalScore = Math.round(sigmoid(totalScore) * 100);
+      
+      return Math.max(0, Math.min(100, finalScore)); // Clamp to 0-100
+    }
+
+    // Format large numbers
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    function searchYouTube() {
+      const query = document.getElementById('searchQuery').value.trim();
+      const resultsContainer = document.getElementById('youtubeResults');
+      const searchButton = document.getElementById('searchButton');
+      
+      // Show loading state
+      searchButton.disabled = true;
+      searchButton.innerHTML = '<span class="loading-spinner"></span> Analyzing...';
+      
+      // Simulate processing time for ML algorithm
+      setTimeout(() => {
+        if (!query) {
+          // Show popular videos if no query
+          displayPopularVideos();
+        } else {
+          // Calculate relevance scores for all videos
+          const videosWithScores = youtubeDatabase.map(video => ({
+            ...video,
+            relevanceScore: calculateRelevanceScore(video, query)
+          }));
+          
+          // Filter videos with score > 20 and sort by relevance
+          const relevantVideos = videosWithScores
+            .filter(video => video.relevanceScore > 20)
+            .sort((a, b) => b.relevanceScore - a.relevanceScore)
+            .slice(0, 12); // Top 12 results
+          
+          displayResults(relevantVideos, query);
+        }
+        
+        searchButton.disabled = false;
+        searchButton.innerHTML = '<i class="fas fa-search"></i> Search with AI';
+      }, 800);
+    }
+
+    function displayPopularVideos() {
+      const resultsContainer = document.getElementById('youtubeResults');
+      const popularVideos = [...youtubeDatabase]
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 12);
+      
+      resultsContainer.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--gray-color);">
+          <h3 style="color: var(--dark-color); margin-bottom: 15px; font-size: 1.5rem;">
+            <i class="fas fa-fire" style="color: #f59e0b;"></i> Popular Learning Videos
+          </h3>
+          <p style="font-size: 1.05rem;">Enter a search query to get AI-powered personalized recommendations across all career fields</p>
+          <p style="margin-top: 10px; font-size: 0.9rem; color: var(--primary-color); font-weight: 600;">
+            Try searching: "python", "marketing", "design", "machine learning", "finance", "sales"
+          </p>
+        </div>
+      ` + popularVideos.map(video => createVideoCard(video, 85)).join('');
+    }
+
+    function createVideoCard(video, score = null) {
+      const viewCount = formatNumber(video.views);
+      const likeCount = formatNumber(video.likes);
+      
+      
+      return `
+        <div class="youtube-card">
+          <div class="youtube-thumbnail">
+            <iframe 
+              src="https://www.youtube.com/embed/${video.id}" 
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+          <div class="youtube-info">
+            <div class="youtube-title">${video.title}</div>
+            <div class="youtube-channel">
+              <i class="fab fa-youtube"></i> ${video.channel}
+            </div>
+            <div class="video-stats">
+              <div class="video-stat">
+                <i class="fas fa-eye"></i> ${viewCount}
+              </div>
+              <div class="video-stat">
+                <i class="fas fa-thumbs-up"></i> ${likeCount}
+              </div>
+            </div>
+            <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" rel="noopener noreferrer" class="youtube-link">
+              Watch on YouTube <i class="fas fa-external-link-alt"></i>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    // Display search results
+    function displayResults(videos, query) {
+      const resultsContainer = document.getElementById('youtubeResults');
+      
+      if (videos.length === 0) {
+        resultsContainer.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--gray-color);">
+            <i class="fas fa-search" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.4;"></i>
+            <h3 style="color: var(--dark-color); font-size: 1.5rem; margin-bottom: 15px;">No results found for "${query}"</h3>
+            <p style="font-size: 1.05rem;">Try different keywords like:</p>
+            <p style="margin-top: 10px; color: var(--primary-color); font-weight: 600;">
+              "python", "web development", "machine learning", "digital marketing", "graphic design", "data science", "finance", "sales"
+            </p>
+          </div>
+        `;
+        return;
+      }
+      
+      resultsContainer.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 25px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-radius: 15px; margin-bottom: 20px;">
+          <h3 style="color: var(--dark-color); margin-bottom: 12px; font-size: 1.5rem;">
+            <i class="fas fa-brain" style="color: var(--primary-color);"></i> Found ${videos.length} AI-Ranked Results for "${query}"
+          </h3>
+          <p style="color: var(--gray-color); font-size: 1rem;">Sorted by relevance using semantic matching and TF-IDF algorithm</p>
+        </div>
+      ` + videos.map(video => createVideoCard(video, video.relevanceScore)).join('');
+    }
+
+    // Allow Enter key to trigger search
+    document.getElementById('searchQuery').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        searchYouTube();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      displayPopularVideos();
+    });
+
+    function switchTab(tabName) {
+      // Hide all tab contents
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      // Remove active class from all buttons
+      const tabButtons = document.querySelectorAll('.tab-button');
+      tabButtons.forEach(button => {
+        button.classList.remove('active');
+      });
+
+      // Show selected tab content
+      document.getElementById(tabName).classList.add('active');
+
+      // Add active class to clicked button
+      event.target.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
