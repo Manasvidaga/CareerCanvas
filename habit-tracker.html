@@ -958,6 +958,75 @@
             margin-top: 20px;
         }
 
+        /* Enhanced Heatmap Styling */
+        .heatmap-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+            gap: 5px;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        .heatmap-day {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            position: relative;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .heatmap-day:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .heatmap-day.empty {
+            background: transparent;
+            border: 1px dashed #e2e8f0;
+            color: #94a3b8;
+        }
+
+        .heatmap-day.level-0 { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+        .heatmap-day.level-1 { background: rgba(37, 99, 235, 0.2); color: #1e293b; border: 1px solid rgba(37, 99, 235, 0.3); }
+        .heatmap-day.level-2 { background: rgba(37, 99, 235, 0.4); color: #1e293b; border: 1px solid rgba(37, 99, 235, 0.5); }
+        .heatmap-day.level-3 { background: rgba(37, 99, 235, 0.6); color: white; border: 1px solid rgba(37, 99, 235, 0.7); }
+        .heatmap-day.level-4 { background: rgba(37, 99, 235, 0.8); color: white; border: 1px solid rgba(37, 99, 235, 0.9); }
+        .heatmap-day.level-5 { background: rgba(37, 99, 235, 1); color: white; border: 1px solid rgba(37, 99, 235, 1); }
+
+        .heatmap-legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .heatmap-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .heatmap-legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+
         /* Back Button */
         .back-button {
             position: absolute;
@@ -1250,7 +1319,35 @@
 
             <div class="chart-container">
                 <div class="chart-title">30-Day Habit Heatmap</div>
-                <div id="heatmapChart"></div>
+                <div class="heatmap-container">
+                    <div id="heatmapChart" class="heatmap"></div>
+                </div>
+                <div class="heatmap-legend">
+                    <div class="heatmap-legend-item">
+                        <div class="heatmap-legend-color" style="background: #f1f5f9;"></div>
+                        <span>None</span>
+                    </div>
+                    <div class="heatmap-legend-item">
+                        <div class="heatmap-legend-color" style="background: rgba(37, 99, 235, 0.2);"></div>
+                        <span>Low</span>
+                    </div>
+                    <div class="heatmap-legend-item">
+                        <div class="heatmap-legend-color" style="background: rgba(37, 99, 235, 0.4);"></div>
+                        <span>Medium</span>
+                    </div>
+                    <div class="heatmap-legend-item">
+                        <div class="heatmap-legend-color" style="background: rgba(37, 99, 235, 0.6);"></div>
+                        <span>High</span>
+                    </div>
+                    <div class="heatmap-legend-item">
+                        <div class="heatmap-legend-color" style="background: rgba(37, 99, 235, 0.8);"></div>
+                        <span>Very High</span>
+                    </div>
+                    <div class="heatmap-legend-item">
+                        <div class="heatmap-legend-color" style="background: rgba(37, 99, 235, 1);"></div>
+                        <span>Perfect</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1318,11 +1415,7 @@
         </div>
     </div>
 
-    <!-- JavaScript code remains the same as in the previous version -->
     <script>
-        // All the JavaScript code from the previous version remains unchanged
-        // Only the CSS has been modified for the light theme
-        
         // Helper to get today's date in YYYY-MM-DD format
         function getTodayDate() {
             const today = new Date();
@@ -2367,19 +2460,25 @@
             }
         }
 
-        // Placeholder for generating a simple heatmap (30 days)
+        // Enhanced Heatmap Chart
         function generateHeatmapChart() {
-            heatmapChartContainer.innerHTML = '<div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 10px;"></div>';
-            const chartGrid = heatmapChartContainer.querySelector('div');
-
+            heatmapChartContainer.innerHTML = '';
+            
             const today = new Date();
-            const daysToDisplay = 30; // Last 30 days
-
+            const daysToDisplay = 30;
+            
+            // Create a grid container for the heatmap
+            const heatmapGrid = document.createElement('div');
+            heatmapGrid.className = 'heatmap';
+            
+            // Calculate completion data for each day
+            const completionData = {};
+            
             for (let i = daysToDisplay - 1; i >= 0; i--) {
                 const d = new Date(today);
                 d.setDate(today.getDate() - i);
                 const dateString = d.toISOString().split('T')[0];
-
+                
                 let completedHabitsCount = 0;
                 if (dailyLog[dateString]) {
                     for (const habitId in dailyLog[dateString]) {
@@ -2388,36 +2487,44 @@
                         }
                     }
                 }
-
-                const totalHabits = habits.length;
-                const completionRatio = totalHabits > 0 ? completedHabitsCount / totalHabits : 0;
-
-                const cell = document.createElement('div');
-                cell.style.width = '30px';
-                cell.style.height = '30px';
-                cell.style.borderRadius = '4px';
-                cell.style.display = 'flex';
-                cell.style.alignItems = 'center';
-                cell.style.justifyContent = 'center';
-                cell.style.fontSize = '0.7rem';
-                cell.style.color = '#1e293b';
-                cell.style.fontWeight = 'bold';
-                cell.title = `${formatDate(dateString)}: ${completedHabitsCount}/${totalHabits} habits`;
-
-                let bgColor;
-                if (completionRatio === 1 && totalHabits > 0) {
-                    bgColor = '#10B981'; // Fully completed
-                } else if (completionRatio > 0) {
-                    bgColor = `rgba(37, 99, 235, ${0.2 + completionRatio * 0.6})`; // Primary color, varying opacity
-                } else {
-                    bgColor = '#f1f5f9'; // No completion
-                }
-                cell.style.backgroundColor = bgColor;
-                cell.style.border = `1px solid ${completionRatio === 1 ? '#10B981' : 'var(--card-border)'}`;
-                cell.textContent = d.getDate(); // Day of the month
-
-                chartGrid.appendChild(cell);
+                
+                completionData[dateString] = completedHabitsCount;
             }
+            
+            // Create heatmap cells for each day
+            for (let i = daysToDisplay - 1; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(today.getDate() - i);
+                const dateString = d.toISOString().split('T')[0];
+                const completedHabitsCount = completionData[dateString] || 0;
+                const totalHabits = habits.length;
+                
+                // Calculate completion ratio and determine heatmap level
+                let level = 0;
+                if (totalHabits > 0) {
+                    const completionRatio = completedHabitsCount / totalHabits;
+                    if (completionRatio === 1) {
+                        level = 5; // Perfect day
+                    } else if (completionRatio >= 0.8) {
+                        level = 4; // Very high
+                    } else if (completionRatio >= 0.6) {
+                        level = 3; // High
+                    } else if (completionRatio >= 0.4) {
+                        level = 2; // Medium
+                    } else if (completionRatio > 0) {
+                        level = 1; // Low
+                    }
+                }
+                
+                const dayCell = document.createElement('div');
+                dayCell.className = `heatmap-day level-${level}`;
+                dayCell.textContent = d.getDate();
+                dayCell.title = `${formatDate(dateString)}: ${completedHabitsCount}/${totalHabits} habits completed`;
+                
+                heatmapGrid.appendChild(dayCell);
+            }
+            
+            heatmapChartContainer.appendChild(heatmapGrid);
         }
 
         function updateCharts() {
