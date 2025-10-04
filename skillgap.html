@@ -1159,15 +1159,15 @@
         
         // Random size between 3px and 8px
         const size = Math.random() * 5 + 3;
-        particle.style.width = ${size}px;
-        particle.style.height = ${size}px;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
         
         // Random position
-        particle.style.left = ${Math.random() * 100}%;
-        particle.style.top = ${Math.random() * 100}%;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
         
         // Random animation delay
-        particle.style.animationDelay = ${Math.random() * 15}s;
+        particle.style.animationDelay = `${Math.random() * 15}s`;
         
         container.appendChild(particle);
       }
@@ -1704,7 +1704,7 @@
         if (relevantSkills.length > 0) {
             const legend = document.createElement('div');
             legend.style.cssText = 'width: 100%; margin-top: 15px; font-size: 0.9rem; color: var(--text-light); text-align: center; padding-bottom: 5px;';
-            legend.innerHTML = '⭐ Required Skills     💡 Optional Skills';
+            legend.innerHTML = '⭐ Required Skills     💡 Optional Skills';
             container.appendChild(legend);
         }
     }
@@ -1775,4 +1775,152 @@
         missingRequired.forEach(skill => priorityQueue.enqueue(skill, 3)); 
         missingOptional.forEach(skill => priorityQueue.enqueue(skill, 1)); 
         
-        const totalGoalSkills = roleSkills.required.length + roleSkills.optional.lengt
+        const totalGoalSkills = roleSkills.required.length + roleSkills.optional.length;
+        const knownRelevantSkillsCount = knownSkills.filter(skill => 
+            roleSkills.required.includes(skill) || roleSkills.optional.includes(skill)
+        ).length;
+        
+        const completionPercentage = totalGoalSkills > 0 ? Math.round((knownRelevantSkillsCount / totalGoalSkills) * 100) : 0;
+        
+        const allMissingSkills = [...missingRequired, ...missingOptional];
+        
+        // Use ML algorithms for enhanced analysis
+        const mlLearningPath = skillML.predictOptimalLearningPath(allMissingSkills, knownSkills, goal);
+        const marketTrends = skillML.analyzeMarketTrends(allMissingSkills);
+        const successProbability = skillML.predictSuccessProbability(mlLearningPath, knownSkills, goal);
+        const skillClusters = skillML.clusterSkills(allMissingSkills, goal);
+        
+        // Save analysis for ML learning
+        skillML.saveAnalysis({
+            goal,
+            knownSkills,
+            missingSkills: allMissingSkills,
+            completionPercentage,
+            learningPath: mlLearningPath
+        });
+
+        return {
+            goal,
+            knownSkills: knownSkills.filter(skill => 
+                roleSkills.required.includes(skill) || roleSkills.optional.includes(skill)
+            ).sort(),
+            missingRequired,
+            missingOptional,
+            prioritizedSkills: priorityQueue.toArray(),
+            completionPercentage,
+            learningPath: mlLearningPath,
+            marketTrends,
+            successProbability,
+            skillClusters
+        };
+    }
+
+    function displayResults(analysis) {
+        document.getElementById('progressSection').style.display = 'none';
+        const resultsSection = document.getElementById('resultsSection');
+        resultsSection.style.display = 'block';
+        const goalName = analysis.goal.charAt(0).toUpperCase() + analysis.goal.slice(1);
+        
+        // Format ML insights
+        const mlInsights = generateMLInsights(analysis);
+        const mlRecommendations = generateMLRecommendations(analysis);
+        
+        resultsSection.innerHTML = `
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span class="progress-title">Skill Completion for ${goalName}</span>
+                    <span class="progress-percentage">${analysis.completionPercentage}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${analysis.completionPercentage}%;"></div>
+                </div>
+            </div>
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3>✅ Skills You Have (${analysis.knownSkills.length})</h3>
+                    ${analysis.knownSkills.length > 0 ? `<ul class="skill-list">${analysis.knownSkills.map(skill => `<li>${skill}</li>`).join('')}</ul>` : '<p style="color: var(--text-light);">No relevant skills selected for this goal.</p>'}
+                </div>
+                <div class="result-card">
+                    <h3>📚 Skills to Learn (${analysis.missingRequired.length + analysis.missingOptional.length})</h3>
+                    ${(analysis.missingRequired.length + analysis.missingOptional.length) > 0 ? `<ul class="skill-list">${analysis.prioritizedSkills.map(item => `<li>${item.skill}<span class="skill-priority priority-${item.priority === 3 ? 'high' : 'low'}">${item.priority === 3 ? 'Required' : 'Optional'}</span></li>`).join('')}</ul>` : '<p style="color: var(--text-light);">You have all the skills for this goal!</p>'}
+                </div>
+            </div>
+            ${mlInsights}
+            ${mlRecommendations}
+            ${analysis.learningPath.length > 0 ? `
+            <div class="learning-path">
+                <h3>🗺 AI-Optimized Learning Path (Top 5)</h3>
+                <p style="opacity: 0.8; margin-bottom: 15px;">Success probability: <strong>${Math.round(analysis.successProbability * 100)}%</strong></p>
+                ${analysis.learningPath.slice(0, 5).map((skill, index) => {
+                    const marketTrend = analysis.marketTrends.find(t => t.skill === skill);
+                    const trendIcon = marketTrend && marketTrend.trend > 0.7 ? '📈' : marketTrend && marketTrend.trend > 0.5 ? '➡️' : '📉';
+                    return `
+                    <div class="path-step">
+                        <span class="step-number">${index + 1}</span>
+                        <div>
+                            <strong>${skill} ${trendIcon}</strong>
+                            <p style="font-size:0.9em; opacity: 0.8;">${getSkillDescription(skill, analysis)}</p>
+                        </div>
+                    </div>`;
+                }).join('')}
+                ${analysis.learningPath.length > 5 ? '<p style="text-align:center; margin-top:15px; font-size:0.9em; opacity:0.8;">...and more skills optimized by AI</p>' : ''}
+            </div>` : (analysis.missingRequired.length + analysis.missingOptional.length) > 0 ? `
+            <div class="learning-path"><h3>🗺 Recommended Learning Path</h3><p style="opacity: 0.8;">No specific prerequisite order found for the remaining skills. You can learn them in any preferred order or based on interest.</p></div>` : ''}
+        `;
+    }
+
+    function generateMLInsights(analysis) {
+        const quickWins = analysis.skillClusters[0] || [];
+        const strategicSkills = analysis.skillClusters[1] || [];
+        const longTermSkills = analysis.skillClusters[2] || [];
+        
+        return `
+            <div class="ml-insights">
+                <h3>🧠 AI Insights</h3>
+                <div class="insight-item">
+                    <strong>Quick Wins (${quickWins.length})</strong>: Focus on these high-impact, easier skills first
+                </div>
+                <div class="insight-item">
+                    <strong>Strategic Skills (${strategicSkills.length})</strong>: Balanced difficulty and importance
+                </div>
+                <div class="insight-item">
+                    <strong>Long-term Investments (${longTermSkills.length})</strong>: Advanced skills with high future value
+                </div>
+                <div class="insight-item">
+                    <strong>Market Alignment</strong>: Your path aligns ${Math.round(analysis.successProbability * 100)}% with current industry trends
+                </div>
+            </div>
+        `;
+    }
+
+    function generateMLRecommendations(analysis) {
+        const highDemandSkills = analysis.marketTrends.filter(t => t.trend > 0.7).slice(0, 3);
+        
+        if (highDemandSkills.length === 0) return '';
+        
+        return `
+            <div class="ml-recommendations">
+                <h3>🚀 High-Demand Skills</h3>
+                ${highDemandSkills.map(skill => `
+                    <div class="ml-suggestion-item">
+                        ${skill.skill} 
+                        <span class="ml-confidence confidence-${skill.trend > 0.8 ? 'high' : skill.trend > 0.6 ? 'medium' : 'low'}">
+                            ${Math.round(skill.trend * 100)}% demand
+                        </span>
+                        <p style="font-size:0.9em; opacity:0.8; margin-top:5px;">High market value with growing industry adoption</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function getSkillDescription(skill, analysis) {
+        const isRequired = analysis.missingRequired.includes(skill);
+        const marketTrend = analysis.marketTrends.find(t => t.skill === skill);
+        const trendText = marketTrend ? ` (${marketTrend.trend > 0.7 ? 'High' : marketTrend.trend > 0.5 ? 'Medium' : 'Low'} demand)` : '';
+        
+        return `Focus on mastering ${skill} as it's ${isRequired ? 'an essential required skill' : 'a valuable optional skill'} for your goal${trendText}.`;
+    }
+  </script>
+</body>
+</html>
