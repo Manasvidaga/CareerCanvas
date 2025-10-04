@@ -35,6 +35,24 @@
             --border-radius-sm: 12px;
         }
 
+        .dark-mode {
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #06b6d4;
+            --dark: #f8fafc;
+            --darker: #0f172a;
+            --light: #1e293b;
+            --gray: #cbd5e1;
+            --light-gray: #334155;
+            --card-bg: #1e293b;
+            --card-border: #475569;
+            --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%);
+            --gradient-secondary: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+            --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -49,6 +67,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            transition: var(--transition);
         }
 
         /* Typography Hierarchy */
@@ -111,6 +130,10 @@
             border-radius: 50%;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.03), rgba(14, 165, 233, 0.03));
             animation: float 25s infinite ease-in-out;
+        }
+
+        .dark-mode .background-shape {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(14, 165, 233, 0.05));
         }
 
         .background-shape:nth-child(1) {
@@ -188,6 +211,10 @@
             animation: particleFloat 20s infinite linear;
         }
 
+        .dark-mode .particle {
+            background: rgba(59, 130, 246, 0.08);
+        }
+
         .particle:nth-child(1) {
             width: 8px;
             height: 8px;
@@ -263,6 +290,12 @@
             z-index: 1000;
             padding: 1rem 0;
             border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            transition: var(--transition);
+        }
+
+        .dark-mode nav {
+            background-color: rgba(30, 41, 59, 0.95);
+            border-bottom: 1px solid rgba(71, 85, 105, 0.8);
         }
 
         .nav-container {
@@ -286,18 +319,9 @@
             transform: translateY(-2px);
         }
 
-        .logo-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 800;
-            font-size: 1.3rem;
-            box-shadow: var(--shadow-md);
+        .logo-img {
+            height: 50px;
+            width: 60px;
         }
 
         .logo-text {
@@ -312,6 +336,7 @@
         .nav-links {
             display: flex;
             gap: 2.5rem;
+            align-items: center;
         }
 
         .nav-link {
@@ -352,12 +377,75 @@
             width: 100%;
         }
 
+        /* Toggle Button */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--gradient-primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
         /* Enhanced Hero Section */
         .hero {
             padding: 4rem 0;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(14, 165, 233, 0.03) 50%, rgba(6, 182, 212, 0.03) 100%);
             position: relative;
             overflow: hidden;
+        }
+
+        .dark-mode .hero {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 50%, rgba(14, 165, 233, 0.05) 100%);
         }
 
         .container {
@@ -558,6 +646,10 @@
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .dark-mode input:focus, .dark-mode select:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
         select option {
@@ -862,6 +954,11 @@
             margin-bottom: 1.5rem;
         }
 
+        .dark-mode .loading-spinner {
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top-color: var(--primary);
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -1019,7 +1116,7 @@
             width: 44px;
             height: 44px;
             border-radius: 12px;
-            background: white;
+            background: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1142,7 +1239,7 @@
     <nav>
         <div class="nav-container">
             <a href="#" class="logo">
-                <div class="logo-icon">CC</div>
+                <img class="logo-img" src="logo3.png" alt="Career Canvas Logo">
                 <div class="logo-text">Career Canvas</div>
             </a>
             
@@ -1151,6 +1248,15 @@
                 <a href="#" class="nav-link active">Mentor Mapper</a>
                 <a href="#" class="nav-link">About Us</a>
                 <a href="#" class="nav-link">Contact</a>
+                
+                <!-- Toggle Button -->
+                <div class="toggle-container">
+                    <span class="toggle-label">Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
             </div>
         </div>
     </nav>
@@ -1705,7 +1811,7 @@
                         <strong class="detail-label">Skills:</strong>
                         <div class="mentor-skills">
                             ${mentor.skills.map(skill => 
-                                `<span class="mentor-skill ${mentor.matchedSkills.map(s => s.toLowerCase()).includes(skill.toLowerCase()) ? 'matched-skill' : ''}">${skill}</span>`
+                                <span class="mentor-skill ${mentor.matchedSkills.map(s => s.toLowerCase()).includes(skill.toLowerCase()) ? 'matched-skill' : ''}">${skill}</span>
                             ).join('')}
                         </div>
                     </div>
@@ -1725,6 +1831,30 @@
                 if (e.key === 'Enter') {
                     e.preventDefault(); 
                     addSkill();
+                }
+            });
+            
+            // Dark mode toggle functionality
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+
+            // Check for saved theme preference or respect OS preference
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            const currentTheme = localStorage.getItem('theme');
+            
+            if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+                body.classList.add('dark-mode');
+                darkModeToggle.checked = true;
+            }
+
+            // Toggle dark mode
+            darkModeToggle.addEventListener('change', () => {
+                if (darkModeToggle.checked) {
+                    body.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    body.classList.remove('dark-mode');
+                    localStorage.setItem('theme', 'light');
                 }
             });
         });
