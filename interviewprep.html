@@ -1,0 +1,2902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterviewPrep Pro - Ace Your Next Interview</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/universal-sentence-encoder@1.3.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #ffcc00;
+            --danger: #dc3545;
+            --gray: #6c757d;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3ab0d5;
+        }
+
+        /* Dashboard Section */
+        .dashboard {
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #f5f7fb 0%, #e3e8f5 100%);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-title h1 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-title p {
+            color: var(--gray);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-info h3 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-progress {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .stat-progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-card h2 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .performance-chart {
+            height: 200px;
+            margin-bottom: 1rem;
+        }
+
+        .skills-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-name {
+            font-weight: 500;
+            color: var(--dark);
+            width: 150px;
+        }
+
+        .skill-bar {
+            flex: 1;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 1rem;
+        }
+
+        .skill-current {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        .skill-target {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 5px;
+            margin-top: -10px;
+        }
+
+        .skill-value {
+            font-weight: 600;
+            color: var(--primary);
+            width: 40px;
+            text-align: right;
+        }
+
+        .interview-types {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .interview-type-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .type-info h4 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .type-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .type-score {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .dashboard-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .practice-history {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-info h4 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .history-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .history-date {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .recommendations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 0.8rem;
+            background: var(--light);
+            border-radius: 8px;
+        }
+
+        .recommendation-icon {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        .recommendation-text h4 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .recommendation-text p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .goals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .goal-item {
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+        }
+
+        .goal-item h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .goal-progress {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .goal-progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 1s ease-in-out;
+        }
+
+        .goal-item p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .stat-item {
+            margin-bottom: 1rem;
+        }
+
+        .stat-item h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-item p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .history-list {
+            margin-top: 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(rgba(67, 97, 238, 0.05), rgba(67, 97, 238, 0.05)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234361ee" opacity="0.05"/></svg>');
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #555;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+
+        .btn-large {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2d0a8a;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+        }
+
+        /* Interview Practice Section */
+        .practice {
+            padding: 4rem 0;
+            background: #f5f7fb;
+        }
+
+        .practice-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .practice-content h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .practice-content p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .practice-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .practice-features li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .practice-features i {
+            color: var(--success);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .practice-box {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .practice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .practice-header h3 {
+            color: var(--secondary);
+        }
+
+        .question-counter {
+            background: var(--light);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .question-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .answer-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .practice-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            color: var(--gray);
+        }
+
+        .timer i {
+            margin-right: 5px;
+            color: var(--danger);
+        }
+
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .voice-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .voice-btn:hover {
+            background: var(--secondary);
+        }
+
+        .voice-btn.recording {
+            background: var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* AI Feedback Section */
+        .feedback-section {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            display: none;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .feedback-score {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .feedback-details {
+            margin-top: 0.5rem;
+        }
+
+        .feedback-item {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .feedback-icon {
+            margin-right: 8px;
+            color: var(--success);
+        }
+
+        .feedback-improvement {
+            color: var(--warning);
+        }
+
+        /* Aptitude Section */
+        .aptitude {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .aptitude-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aptitude-tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .aptitude-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .aptitude-content {
+            display: none;
+        }
+
+        .aptitude-content.active {
+            display: block;
+        }
+
+        .aptitude-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .aptitude-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .aptitude-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .aptitude-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .aptitude-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .aptitude-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .aptitude-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Assessment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--secondary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .assessment-info {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .assessment-info ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .question {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            background: #f0f0f0;
+        }
+
+        .option.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .option input {
+            margin-right: 10px;
+        }
+
+        .assessment-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        /* Resources Section */
+        .resources {
+            padding: 4rem 0;
+            background: #f5f7fb;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .resource-card {
+            background: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resource-icon {
+            height: 120px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .resource-content {
+            padding: 1.5rem;
+        }
+
+        .resource-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .resource-content p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .resource-link i {
+            margin-left: 5px;
+            transition: transform 0.3s;
+        }
+
+        .resource-link:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Progress Section */
+        .progress-section {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .progress-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .progress-content h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-content p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .progress-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            height: 250px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #444;
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        /* Loading Indicator */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                margin: 15px 0;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .practice-container, .progress-container {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .aptitude-tabs {
+                flex-wrap: wrap;
+            }
+
+            .dashboard-main {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-user-tie"></i>
+                    InterviewPrep Pro
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#practice">Practice</a></li>
+                    <li><a href="#aptitude">Aptitude</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                    <li><a href="#progress">Progress</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline" id="loginBtn">Log In</button>
+                    <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h1>Your Interview Dashboard</h1>
+                    <p>Track your progress and get personalized recommendations</p>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">AJ</div>
+                    <div class="user-info">
+                        <h3>Alex Johnson</h3>
+                        <p>Software Engineer</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Profile Completeness</h3>
+                    <div class="stat-value">85%</div>
+                    <div class="stat-progress">
+                        <div class="stat-progress-fill" style="width: 85%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Interview Readiness</h3>
+                    <div class="stat-value">72%</div>
+                    <div class="stat-progress">
+                        <div class="stat-progress-fill" style="width: 72%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Skills Match</h3>
+                    <div class="stat-value">68%</div>
+                    <div class="stat-progress">
+                        <div class="stat-progress-fill" style="width: 68%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Performance Score</h3>
+                    <div class="stat-value">78%</div>
+                    <div class="stat-progress">
+                        <div class="stat-progress-fill" style="width: 78%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <div class="dashboard-main">
+                    <div class="dashboard-card">
+                        <h2>Performance Score</h2>
+                        <div class="performance-chart">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h2>Target Areas</h2>
+                        <div class="skills-comparison">
+                            <div class="skill-item">
+                                <div class="skill-name">Technical Knowledge</div>
+                                <div class="skill-bar">
+                                    <div class="skill-current" style="width: 85%"></div>
+                                    <div class="skill-target" style="width: 95%"></div>
+                                </div>
+                                <div class="skill-value">85%</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-name">Communication</div>
+                                <div class="skill-bar">
+                                    <div class="skill-current" style="width: 70%"></div>
+                                    <div class="skill-target" style="width: 90%"></div>
+                                </div>
+                                <div class="skill-value">70%</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-name">Problem Solving</div>
+                                <div class="skill-bar">
+                                    <div class="skill-current" style="width: 75%"></div>
+                                    <div class="skill-target" style="width: 95%"></div>
+                                </div>
+                                <div class="skill-value">75%</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-name">Time Management</div>
+                                <div class="skill-bar">
+                                    <div class="skill-current" style="width: 65%"></div>
+                                    <div class="skill-target" style="width: 85%"></div>
+                                </div>
+                                <div class="skill-value">65%</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-name">Confidence</div>
+                                <div class="skill-bar">
+                                    <div class="skill-current" style="width: 60%"></div>
+                                    <div class="skill-target" style="width: 90%"></div>
+                                </div>
+                                <div class="skill-value">60%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h2>Practice History</h2>
+                        <div class="history-stats">
+                            <div class="stat-item">
+                                <h3>12</h3>
+                                <p>interviews completed this month</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>8</h3>
+                                <p>hours of total practice time</p>
+                            </div>
+                        </div>
+                        <div class="history-list">
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <h4>Technical Interview</h4>
+                                    <p>Data Structures & Algorithms</p>
+                                </div>
+                                <div class="history-date">2 days ago</div>
+                            </div>
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <h4>Behavioral Interview</h4>
+                                    <p>Teamwork & Leadership</p>
+                                </div>
+                                <div class="history-date">5 days ago</div>
+                            </div>
+                            <div class="history-item">
+                                <div class="history-info">
+                                    <h4>Case Study</h4>
+                                    <p>Product Design Challenge</p>
+                                </div>
+                                <div class="history-date">1 week ago</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h2>Interview Types</h2>
+                        <div class="interview-types">
+                            <div class="interview-type-card">
+                                <div class="type-info">
+                                    <h4>Technical</h4>
+                                    <p>Last score: 78%</p>
+                                </div>
+                                <div class="type-score">78%</div>
+                            </div>
+                            <div class="interview-type-card">
+                                <div class="type-info">
+                                    <h4>Behavioral</h4>
+                                    <p>Last score: 82%</p>
+                                </div>
+                                <div class="type-score">82%</div>
+                            </div>
+                            <div class="interview-type-card">
+                                <div class="type-info">
+                                    <h4>Case Study</h4>
+                                    <p>Last score: 65%</p>
+                                </div>
+                                <div class="type-score">65%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-sidebar">
+                    <div class="dashboard-card">
+                        <h2>Recommendations</h2>
+                        <div class="recommendations-list">
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="recommendation-text">
+                                    <h4>Improve Problem Solving</h4>
+                                    <p>Practice with advanced algorithm challenges</p>
+                                </div>
+                            </div>
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="recommendation-text">
+                                    <h4>Communication Skills</h4>
+                                    <p>Focus on explaining your thought process</p>
+                                </div>
+                            </div>
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="recommendation-text">
+                                    <h4>Time Management</h4>
+                                    <p>Try timed mock interviews</p>
+                                </div>
+                            </div>
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="recommendation-text">
+                                    <h4>Track Progress</h4>
+                                    <p>Review your performance analytics weekly</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h2>Upcoming Goals</h2>
+                        <div class="goals-list">
+                            <div class="goal-item">
+                                <h4>Complete 5 Technical Interviews</h4>
+                                <div class="goal-progress">
+                                    <div class="goal-progress-fill" style="width: 60%"></div>
+                                </div>
+                                <p>3 of 5 completed</p>
+                            </div>
+                            <div class="goal-item">
+                                <h4>Improve Communication Score to 80%</h4>
+                                <div class="goal-progress">
+                                    <div class="goal-progress-fill" style="width: 70%"></div>
+                                </div>
+                                <p>Current: 70%</p>
+                            </div>
+                            <div class="goal-item">
+                                <h4>Practice 10 Hours This Month</h4>
+                                <div class="goal-progress">
+                                    <div class="goal-progress-fill" style="width: 80%"></div>
+                                </div>
+                                <p>8 of 10 hours completed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Ace Your Next Job Interview</h1>
+            <p>Practice with realistic interview questions, get instant AI feedback, and track your progress with our comprehensive interview preparation platform.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary btn-large" id="startPracticingBtn">Start Practicing Now</button>
+                <button class="btn btn-secondary btn-large" id="skillAssessmentBtn">Take a Skill Assessment</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Everything You Need to Succeed</h2>
+                <p>Our platform provides all the tools and resources to help you confidently approach any interview</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Mock Interviews</h3>
+                    <p>Practice with hundreds of realistic interview questions across different industries and roles.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI Feedback</h3>
+                    <p>Get instant feedback on your answers with our advanced AI analysis technology.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your improvement over time with detailed analytics and performance metrics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interview Practice Section -->
+    <section class="practice" id="practice">
+        <div class="container">
+            <div class="practice-container">
+                <div class="practice-content">
+                    <h2>Practice Makes Perfect</h2>
+                    <p>Our interactive practice sessions simulate real interview scenarios. Answer questions, record your responses, and get detailed AI feedback to improve.</p>
+                    <ul class="practice-features">
+                        <li><i class="fas fa-check-circle"></i> Questions tailored to your target role and industry</li>
+                        <li><i class="fas fa-check-circle"></i> Voice recording and transcription capabilities</li>
+                        <li><i class="fas fa-check-circle"></i> AI-powered analysis of your answers</li>
+                        <li><i class="fas fa-check-circle"></i> Suggested improvements and better answer formulations</li>
+                    </ul>
+                    <button class="btn btn-primary" id="exploreQuestionsBtn">Explore All Practice Questions</button>
+                </div>
+                <div class="practice-box">
+                    <div class="practice-header">
+                        <h3 id="questionCategory">Behavioral Questions</h3>
+                        <div class="question-counter" id="questionCounter">Question 1 of 4</div>
+                    </div>
+                    <div class="question-card">
+                        <div class="question-text" id="questionText">
+                            "Tell me about a time when you had to deal with a difficult coworker or team member. How did you handle the situation?"
+                        </div>
+                        <div class="voice-controls">
+                            <button class="voice-btn" id="recordBtn" title="Record Answer">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <span id="recordingStatus">Click to record your answer</span>
+                        </div>
+                        <textarea class="answer-input" id="answerInput" placeholder="Type your answer here or use voice recording..."></textarea>
+                        <div class="practice-actions">
+                            <div class="timer">
+                                <i class="fas fa-clock"></i>
+                                <span id="timer">02:45</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline" id="skipBtn">Skip</button>
+                                <button class="btn btn-primary" id="submitBtn">Submit Answer</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 25%; height: 6px; background: var(--primary); border-radius: 3px;"></div>
+                    </div>
+                    
+                    <!-- AI Feedback Section -->
+                    <div class="feedback-section" id="feedbackSection">
+                        <div class="feedback-header">
+                            <h4>AI Feedback</h4>
+                            <div class="feedback-score" id="feedbackScore">Score: 7.5/10</div>
+                        </div>
+                        <div class="feedback-details" id="feedbackDetails">
+                            <!-- Feedback will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aptitude Section -->
+    <section class="aptitude" id="aptitude">
+        <div class="container">
+            <div class="section-title">
+                <h2>Aptitude & Skill Assessments</h2>
+                <p>Test and improve your quantitative, logical, verbal, and technical skills with our comprehensive assessments</p>
+            </div>
+            
+            <div class="aptitude-tabs">
+                <button class="aptitude-tab active" data-tab="quantitative">Quantitative</button>
+                <button class="aptitude-tab" data-tab="logical">Logical Reasoning</button>
+                <button class="aptitude-tab" data-tab="verbal">Verbal Ability</button>
+                <button class="aptitude-tab" data-tab="technical">Technical</button>
+            </div>
+            
+            <div class="aptitude-content active" id="quantitative-content">
+                <div class="aptitude-grid">
+                    <div class="aptitude-card" data-category="quantitative" data-assessment="basic-math">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Basic Mathematics</h3>
+                        <p>Test your fundamental math skills including arithmetic, percentages, and ratios</p>
+                        <div class="aptitude-stats">
+                            <span>15 Questions</span>
+                            <span>20 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="quantitative" data-assessment="data-interpretation">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Data Interpretation</h3>
+                        <p>Analyze charts, graphs, and tables to answer questions</p>
+                        <div class="aptitude-stats">
+                            <span>12 Questions</span>
+                            <span>25 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="quantitative" data-assessment="algebra">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-square-root-alt"></i>
+                        </div>
+                        <h3>Algebra</h3>
+                        <p>Solve equations, inequalities, and algebraic expressions</p>
+                        <div class="aptitude-stats">
+                            <span>18 Questions</span>
+                            <span>30 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="quantitative" data-assessment="advanced-math">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <h3>Advanced Mathematics</h3>
+                        <p>Geometry, trigonometry, and advanced quantitative concepts</p>
+                        <div class="aptitude-stats">
+                            <span>20 Questions</span>
+                            <span>35 Minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="aptitude-content" id="logical-content">
+                <div class="aptitude-grid">
+                    <div class="aptitude-card" data-category="logical" data-assessment="deductive-reasoning">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h3>Deductive Reasoning</h3>
+                        <p>Draw logical conclusions from given statements and premises</p>
+                        <div class="aptitude-stats">
+                            <span>15 Questions</span>
+                            <span>20 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="logical" data-assessment="pattern-recognition">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-shapes"></i>
+                        </div>
+                        <h3>Pattern Recognition</h3>
+                        <p>Identify patterns and sequences in visual and numerical data</p>
+                        <div class="aptitude-stats">
+                            <span>12 Questions</span>
+                            <span>25 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="logical" data-assessment="logical-puzzles">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-puzzle-piece"></i>
+                        </div>
+                        <h3>Logical Puzzles</h3>
+                        <p>Solve puzzles that test your analytical and critical thinking</p>
+                        <div class="aptitude-stats">
+                            <span>10 Questions</span>
+                            <span>30 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="logical" data-assessment="critical-thinking">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Critical Thinking</h3>
+                        <p>Evaluate arguments, identify assumptions, and detect flaws</p>
+                        <div class="aptitude-stats">
+                            <span>15 Questions</span>
+                            <span>25 Minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="aptitude-content" id="verbal-content">
+                <div class="aptitude-grid">
+                    <div class="aptitude-card" data-category="verbal" data-assessment="vocabulary">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>Vocabulary</h3>
+                        <p>Test your knowledge of words, synonyms, and antonyms</p>
+                        <div class="aptitude-stats">
+                            <span>20 Questions</span>
+                            <span>15 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="verbal" data-assessment="reading-comprehension">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3>Reading Comprehension</h3>
+                        <p>Read passages and answer questions to test understanding</p>
+                        <div class="aptitude-stats">
+                            <span>15 Questions</span>
+                            <span>30 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="verbal" data-assessment="grammar">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-spell-check"></i>
+                        </div>
+                        <h3>Grammar & Usage</h3>
+                        <p>Identify grammatical errors and improve sentence structure</p>
+                        <div class="aptitude-stats">
+                            <span>25 Questions</span>
+                            <span>20 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="verbal" data-assessment="verbal-reasoning">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Verbal Reasoning</h3>
+                        <p>Analyze verbal logic, analogies, and word relationships</p>
+                        <div class="aptitude-stats">
+                            <span>18 Questions</span>
+                            <span>25 Minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="aptitude-content" id="technical-content">
+                <div class="aptitude-grid">
+                    <div class="aptitude-card" data-category="technical" data-assessment="programming-fundamentals">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Programming Fundamentals</h3>
+                        <p>Basic programming concepts, algorithms, and data structures</p>
+                        <div class="aptitude-stats">
+                            <span>20 Questions</span>
+                            <span>30 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="technical" data-assessment="web-development">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>Web Development</h3>
+                        <p>HTML, CSS, JavaScript, and web development concepts</p>
+                        <div class="aptitude-stats">
+                            <span>15 Questions</span>
+                            <span>25 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="technical" data-assessment="databases">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>Databases</h3>
+                        <p>SQL queries, database design, and normalization</p>
+                        <div class="aptitude-stats">
+                            <span>18 Questions</span>
+                            <span>25 Minutes</span>
+                        </div>
+                    </div>
+                    <div class="aptitude-card" data-category="technical" data-assessment="system-design">
+                        <div class="aptitude-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3>System Design</h3>
+                        <p>Architectural patterns, scalability, and system components</p>
+                        <div class="aptitude-stats">
+                            <span>10 Questions</span>
+                            <span>40 Minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Assessment Modal -->
+    <div class="modal" id="assessmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Quantitative Assessment</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="assessment-info">
+                    <h4>Assessment Instructions</h4>
+                    <ul>
+                        <li>This assessment contains <span id="questionCount">15</span> questions</li>
+                        <li>You have <span id="timeLimit">20</span> minutes to complete it</li>
+                        <li>Each question has only one correct answer</li>
+                        <li>You can navigate between questions using the Previous and Next buttons</li>
+                        <li>Your score will be displayed at the end of the assessment</li>
+                    </ul>
+                </div>
+                
+                <div class="question-container">
+                    <div class="question" id="assessmentQuestion">
+                        What is 25% of 200?
+                    </div>
+                    <div class="options" id="assessmentOptions">
+                        <label class="option">
+                            <input type="radio" name="answer" value="A">
+                            <span>A) 25</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="answer" value="B">
+                            <span>B) 50</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="answer" value="C">
+                            <span>C) 75</span>
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="answer" value="D">
+                            <span>D) 100</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="assessment-actions">
+                    <button class="btn btn-outline" id="prevQuestion">Previous</button>
+                    <div>
+                        <span id="currentQuestionIndicator">Question 1 of 15</span>
+                    </div>
+                    <button class="btn btn-primary" id="nextQuestion">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resources Section -->
+    <section class="resources" id="resources">
+        <div class="container">
+            <div class="section-title">
+                <h2>Learning Resources</h2>
+                <p>Boost your interview skills with our curated collection of articles, guides, and tips</p>
+            </div>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Answer Templates</h3>
+                        <p>Structured templates for common interview questions to help you formulate strong responses.</p>
+                        <a href="#" class="resource-link">Explore Templates <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Video Tutorials</h3>
+                        <p>Watch expert interviews and learn proper techniques for different types of interview questions.</p>
+                        <a href="#" class="resource-link">Watch Videos <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Industry Guides</h3>
+                        <p>Specific advice and common questions for interviews in tech, finance, healthcare, and more.</p>
+                        <a href="#" class="resource-link">Browse Guides <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Checklists</h3>
+                        <p>Pre-interview checklists to ensure you're fully prepared for the big day.</p>
+                        <a href="#" class="resource-link">Get Checklists <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section class="progress-section" id="progress">
+        <div class="container">
+            <div class="progress-container">
+                <div class="progress-content">
+                    <h2>Track Your Progress</h2>
+                    <p>Monitor your improvement with detailed analytics and personalized insights. See how you compare to other users and identify areas for improvement.</p>
+                    <div class="progress-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="questionsPracticed">0</div>
+                            <div class="stat-label">Questions Practiced</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="averageScore">0%</div>
+                            <div class="stat-label">Average Score</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="skillsImproved">0</div>
+                            <div class="stat-label">Skills Improved</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="mockInterviews">0</div>
+                            <div class="stat-label">Mock Interviews</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-chart">
+                    <h3>Your Progress Over Time</h3>
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>InterviewPrep Pro</h3>
+                    <p>Helping job seekers land their dream jobs through effective interview preparation.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#practice">Practice Interviews</a></li>
+                        <li><a href="#aptitude">Aptitude Tests</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Interview Tips</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> support@interviewpreppro.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Career St, Professional City</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 InterviewPrep Pro. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample interview questions data
+        const interviewQuestions = [
+            {
+                id: 1,
+                category: "Behavioral",
+                question: "Tell me about a time when you had to deal with a difficult coworker or team member. How did you handle the situation?",
+                idealAnswerKeywords: ["communication", "understanding", "conflict resolution", "professional", "positive outcome"],
+                tips: [
+                    "Focus on your actions and the positive outcome",
+                    "Show empathy and understanding",
+                    "Demonstrate conflict resolution skills"
+                ]
+            },
+            {
+                id: 2,
+                category: "Technical",
+                question: "Explain a complex technical concept to someone without a technical background.",
+                idealAnswerKeywords: ["simple analogy", "clear explanation", "step by step", "relatable example"],
+                tips: [
+                    "Use simple analogies",
+                    "Avoid jargon",
+                    "Check for understanding"
+                ]
+            },
+            {
+                id: 3,
+                category: "Situational",
+                question: "Describe a situation where you had to meet a tight deadline. How did you ensure you delivered on time?",
+                idealAnswerKeywords: ["time management", "prioritization", "teamwork", "problem solving", "meeting deadline"],
+                tips: [
+                    "Highlight your time management skills",
+                    "Mention prioritization techniques",
+                    "Discuss how you handled pressure"
+                ]
+            },
+            {
+                id: 4,
+                category: "Behavioral",
+                question: "Tell me about a time you failed and what you learned from the experience.",
+                idealAnswerKeywords: ["honesty", "learning", "improvement", "resilience", "growth"],
+                tips: [
+                    "Be honest about the failure",
+                    "Focus on the learning outcome",
+                    "Show how you applied the lesson"
+                ]
+            }
+        ];
+
+        // Aptitude assessment questions
+        const aptitudeAssessments = {
+            "basic-math": {
+                title: "Basic Mathematics Assessment",
+                questions: [
+                    {
+                        question: "What is 25% of 200?",
+                        options: ["25", "50", "75", "100"],
+                        correct: 1
+                    },
+                    {
+                        question: "If a shirt costs $40 and is on sale for 20% off, what is the sale price?",
+                        options: ["$32", "$30", "$28", "$25"],
+                        correct: 0
+                    },
+                    {
+                        question: "Solve for x: 3x + 7 = 22",
+                        options: ["x = 5", "x = 6", "x = 7", "x = 8"],
+                        correct: 0
+                    },
+                    {
+                        question: "What is the average of 15, 20, 25, and 30?",
+                        options: ["20", "22.5", "25", "27.5"],
+                        correct: 1
+                    }
+                ],
+                timeLimit: 20,
+                description: "Test your fundamental math skills including arithmetic, percentages, and ratios"
+            },
+            "data-interpretation": {
+                title: "Data Interpretation Assessment",
+                questions: [
+                    {
+                        question: "Based on the chart, which product had the highest sales in Q3?",
+                        options: ["Product A", "Product B", "Product C", "Product D"],
+                        correct: 2
+                    },
+                    {
+                        question: "If the trend continues, what would be the projected sales for Product A in Q4?",
+                        options: ["$120,000", "$130,000", "$140,000", "$150,000"],
+                        correct: 3
+                    }
+                ],
+                timeLimit: 25,
+                description: "Analyze charts, graphs, and tables to answer questions"
+            },
+            "deductive-reasoning": {
+                title: "Deductive Reasoning Assessment",
+                questions: [
+                    {
+                        question: "All managers are leaders. Some leaders are visionaries. Therefore:",
+                        options: [
+                            "All managers are visionaries",
+                            "Some managers are visionaries",
+                            "No managers are visionaries",
+                            "Some visionaries are managers"
+                        ],
+                        correct: 1
+                    },
+                    {
+                        question: "If all roses are flowers and some flowers fade quickly, then:",
+                        options: [
+                            "All roses fade quickly",
+                            "Some roses fade quickly",
+                            "No roses fade quickly",
+                            "Some flowers that fade quickly are roses"
+                        ],
+                        correct: 3
+                    }
+                ],
+                timeLimit: 20,
+                description: "Draw logical conclusions from given statements and premises"
+            },
+            "vocabulary": {
+                title: "Vocabulary Assessment",
+                questions: [
+                    {
+                        question: "What is the synonym of 'Benevolent'?",
+                        options: ["Kind", "Stingy", "Hostile", "Indifferent"],
+                        correct: 0
+                    },
+                    {
+                        question: "What is the antonym of 'Ephemeral'?",
+                        options: ["Temporary", "Permanent", "Fleeting", "Brief"],
+                        correct: 1
+                    }
+                ],
+                timeLimit: 15,
+                description: "Test your knowledge of words, synonyms, and antonyms"
+            },
+            "programming-fundamentals": {
+                title: "Programming Fundamentals Assessment",
+                questions: [
+                    {
+                        question: "What is the time complexity of binary search?",
+                        options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+                        correct: 1
+                    },
+                    {
+                        question: "Which data structure follows LIFO (Last In First Out) principle?",
+                        options: ["Queue", "Stack", "Array", "Linked List"],
+                        correct: 1
+                    }
+                ],
+                timeLimit: 30,
+                description: "Basic programming concepts, algorithms, and data structures"
+            }
+        };
+
+        // Application state
+        let appState = {
+            currentQuestionIndex: 0,
+            userProgress: {
+                questionsPracticed: 0,
+                averageScore: 0,
+                skillsImproved: 0,
+                mockInterviews: 0,
+                scores: [],
+                aptitudeScores: {}
+            },
+            isRecording: false,
+            recognition: null,
+            currentAssessment: null,
+            currentAssessmentIndex: 0,
+            assessmentAnswers: []
+        };
+
+        // Timer variables
+        let timerInterval;
+        let seconds = 165; // 2:45 in seconds
+
+        // Function to format time as MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Function to update the timer display
+        function updateTimer() {
+            const timerElement = document.getElementById('timer');
+            if (timerElement) {
+                timerElement.textContent = formatTime(seconds);
+            }
+        }
+
+        // Function to start the timer
+        function startTimer() {
+            clearInterval(timerInterval);
+            seconds = 165;
+            updateTimer();
+            
+            timerInterval = setInterval(() => {
+                seconds--;
+                updateTimer();
+                
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                    // Auto-submit when time is up
+                    submitAnswer();
+                }
+            }, 1000);
+        }
+
+        // Function to load a question
+        function loadQuestion(index) {
+            const question = interviewQuestions[index];
+            if (!question) return;
+            
+            // Update question text
+            const questionTextElement = document.getElementById('questionText');
+            if (questionTextElement) {
+                questionTextElement.textContent = question.question;
+            }
+            
+            // Update question category
+            const questionCategoryElement = document.getElementById('questionCategory');
+            if (questionCategoryElement) {
+                questionCategoryElement.textContent = question.category + " Questions";
+            }
+            
+            // Update question counter
+            const questionCounterElement = document.getElementById('questionCounter');
+            if (questionCounterElement) {
+                questionCounterElement.textContent = `Question ${index + 1} of ${interviewQuestions.length}`;
+            }
+            
+            // Update progress bar
+            const progressFillElement = document.getElementById('progressFill');
+            if (progressFillElement) {
+                const progressPercentage = ((index + 1) / interviewQuestions.length) * 100;
+                progressFillElement.style.width = `${progressPercentage}%`;
+            }
+            
+            // Clear the answer textarea
+            const answerInputElement = document.getElementById('answerInput');
+            if (answerInputElement) {
+                answerInputElement.value = '';
+            }
+            
+            // Hide feedback section
+            const feedbackSection = document.getElementById('feedbackSection');
+            if (feedbackSection) {
+                feedbackSection.style.display = 'none';
+            }
+            
+            // Restart the timer
+            startTimer();
+        }
+
+        // Function to analyze answer using TensorFlow.js
+        async function analyzeAnswer(answer, question) {
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.innerHTML = '<div class="loading"></div> Analyzing...';
+            submitBtn.disabled = true;
+            
+            try {
+                // In a real application, this would use more sophisticated NLP
+                // For this demo, we'll use a simplified approach
+                
+                // Calculate score based on keyword matching
+                let score = 0;
+                const keywords = question.idealAnswerKeywords || [];
+                const answerLower = answer.toLowerCase();
+                
+                // Check for presence of keywords
+                let matchedKeywords = 0;
+                keywords.forEach(keyword => {
+                    if (answerLower.includes(keyword.toLowerCase())) {
+                        matchedKeywords++;
+                    }
+                });
+                
+                // Base score on keyword matches
+                score = (matchedKeywords / keywords.length) * 10;
+                
+                // Add some randomness to simulate AI analysis
+                score += Math.random() * 2 - 1; // Add random value between -1 and 1
+                
+                // Ensure score is between 0 and 10
+                score = Math.max(0, Math.min(10, score));
+                
+                // Generate feedback based on score and content
+                const feedback = generateFeedback(score, answer, question);
+                
+                // Update user progress
+                updateUserProgress(score);
+                
+                return {
+                    score: score.toFixed(1),
+                    feedback: feedback
+                };
+            } catch (error) {
+                console.error('Error analyzing answer:', error);
+                return {
+                    score: "N/A",
+                    feedback: ["Unable to analyze answer at this time. Please try again."]
+                };
+            } finally {
+                // Restore button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Function to generate feedback based on score and answer content
+        function generateFeedback(score, answer, question) {
+            const feedback = [];
+            
+            // Score-based feedback
+            if (score >= 8) {
+                feedback.push({
+                    type: 'positive',
+                    text: 'Excellent answer! You addressed the question directly and provided specific examples.'
+                });
+            } else if (score >= 6) {
+                feedback.push({
+                    type: 'positive',
+                    text: 'Good answer overall. You covered the main points but could provide more specific details.'
+                });
+            } else {
+                feedback.push({
+                    type: 'improvement',
+                    text: 'Your answer could be more comprehensive. Try to provide specific examples and details.'
+                });
+            }
+            
+            // Length-based feedback
+            const wordCount = answer.split(/\s+/).length;
+            if (wordCount < 50) {
+                feedback.push({
+                    type: 'improvement',
+                    text: 'Your answer is quite brief. Try to expand with more details and examples.'
+                });
+            } else if (wordCount > 300) {
+                feedback.push({
+                    type: 'improvement',
+                    text: 'Your answer might be too long. Try to be more concise while still covering key points.'
+                });
+            }
+            
+            // Structure feedback
+            if (!answer.includes('.')) {
+                feedback.push({
+                    type: 'improvement',
+                    text: 'Consider breaking your answer into clear sentences for better structure.'
+                });
+            }
+            
+            // Question-specific feedback
+            if (question.category === 'Behavioral' && !answer.toLowerCase().includes('i ')) {
+                feedback.push({
+                    type: 'improvement',
+                    text: 'For behavioral questions, use "I" statements to clearly describe your personal actions and experiences.'
+                });
+            }
+            
+            // Add tips from the question
+            if (question.tips && question.tips.length > 0) {
+                feedback.push({
+                    type: 'tip',
+                    text: 'Remember: ' + question.tips[Math.floor(Math.random() * question.tips.length)]
+                });
+            }
+            
+            return feedback;
+        }
+
+        // Function to display feedback
+        function displayFeedback(analysis) {
+            const feedbackSection = document.getElementById('feedbackSection');
+            const feedbackScore = document.getElementById('feedbackScore');
+            const feedbackDetails = document.getElementById('feedbackDetails');
+            
+            if (!feedbackSection || !feedbackScore || !feedbackDetails) return;
+            
+            // Update score
+            feedbackScore.textContent = `Score: ${analysis.score}/10`;
+            
+            // Update feedback details
+            feedbackDetails.innerHTML = '';
+            
+            analysis.feedback.forEach(item => {
+                const feedbackItem = document.createElement('div');
+                feedbackItem.className = 'feedback-item';
+                
+                const icon = document.createElement('i');
+                if (item.type === 'positive') {
+                    icon.className = 'fas fa-check-circle feedback-icon';
+                } else if (item.type === 'improvement') {
+                    icon.className = 'fas fa-exclamation-circle feedback-icon feedback-improvement';
+                } else {
+                    icon.className = 'fas fa-lightbulb feedback-icon';
+                }
+                
+                const text = document.createElement('span');
+                text.textContent = item.text;
+                
+                feedbackItem.appendChild(icon);
+                feedbackItem.appendChild(text);
+                feedbackDetails.appendChild(feedbackItem);
+            });
+            
+            // Show feedback section
+            feedbackSection.style.display = 'block';
+            
+            // Scroll to feedback
+            feedbackSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Function to update user progress
+        function updateUserProgress(score) {
+            // Update questions practiced
+            appState.userProgress.questionsPracticed++;
+            
+            // Update average score
+            appState.userProgress.scores.push(score);
+            const totalScore = appState.userProgress.scores.reduce((sum, s) => sum + s, 0);
+            appState.userProgress.averageScore = totalScore / appState.userProgress.scores.length;
+            
+            // Update skills improved (simplified logic)
+            if (score > 7) {
+                appState.userProgress.skillsImproved++;
+            }
+            
+            // Update mock interviews (every 4 questions counts as one mock interview)
+            if (appState.userProgress.questionsPracticed % 4 === 0) {
+                appState.userProgress.mockInterviews++;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('interviewPrepProProgress', JSON.stringify(appState.userProgress));
+            
+            // Update UI
+            updateProgressUI();
+        }
+
+        // Function to update progress UI
+        function updateProgressUI() {
+            document.getElementById('questionsPracticed').textContent = appState.userProgress.questionsPracticed;
+            document.getElementById('averageScore').textContent = `${appState.userProgress.averageScore.toFixed(1)}/10`;
+            document.getElementById('skillsImproved').textContent = appState.userProgress.skillsImproved;
+            document.getElementById('mockInterviews').textContent = appState.userProgress.mockInterviews;
+            
+            // Update progress chart
+            updateProgressChart();
+        }
+
+        // Function to update progress chart
+        function updateProgressChart() {
+            const canvas = document.getElementById('progressChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw a simple line chart
+            const scores = appState.userProgress.scores;
+            if (scores.length === 0) return;
+            
+            const padding = 40;
+            const chartWidth = canvas.width - padding * 2;
+            const chartHeight = canvas.height - padding * 2;
+            
+            // Draw axes
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.strokeStyle = '#ddd';
+            ctx.stroke();
+            
+            // Draw score line
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding - (scores[0] / 10 * chartHeight));
+            
+            for (let i = 1; i < scores.length; i++) {
+                const x = padding + (i / (scores.length - 1)) * chartWidth;
+                const y = canvas.height - padding - (scores[i] / 10 * chartHeight);
+                ctx.lineTo(x, y);
+            }
+            
+            ctx.strokeStyle = '#4361ee';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Draw data points
+            for (let i = 0; i < scores.length; i++) {
+                const x = padding + (i / (scores.length - 1)) * chartWidth;
+                const y = canvas.height - padding - (scores[i] / 10 * chartHeight);
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#4361ee';
+                ctx.fill();
+            }
+            
+            // Draw labels
+            ctx.fillStyle = '#6c757d';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            
+            // X-axis labels (question numbers)
+            for (let i = 0; i < scores.length; i++) {
+                const x = padding + (i / (scores.length - 1)) * chartWidth;
+                ctx.fillText(`Q${i+1}`, x, canvas.height - padding + 20);
+            }
+            
+            // Y-axis labels (scores)
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 10; i += 2) {
+                const y = canvas.height - padding - (i / 10 * chartHeight);
+                ctx.fillText(i.toString(), padding - 10, y + 4);
+            }
+        }
+
+        // Function to initialize speech recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                appState.recognition = new SpeechRecognition();
+                
+                appState.recognition.continuous = false;
+                appState.recognition.interimResults = true;
+                appState.recognition.lang = 'en-US';
+                
+                appState.recognition.onstart = function() {
+                    appState.isRecording = true;
+                    document.getElementById('recordBtn').classList.add('recording');
+                    document.getElementById('recordingStatus').textContent = 'Recording...';
+                };
+                
+                appState.recognition.onresult = function(event) {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            transcript += event.results[i][0].transcript;
+                        } else {
+                            transcript += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    const answerInput = document.getElementById('answerInput');
+                    if (answerInput) {
+                        answerInput.value = transcript;
+                    }
+                };
+                
+                appState.recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    document.getElementById('recordingStatus').textContent = 'Error: ' + event.error;
+                    stopRecording();
+                };
+                
+                appState.recognition.onend = function() {
+                    stopRecording();
+                };
+            } else {
+                console.warn('Speech recognition not supported in this browser');
+                document.getElementById('recordBtn').style.display = 'none';
+                document.getElementById('recordingStatus').textContent = 'Voice recording not supported';
+            }
+        }
+
+        // Function to start recording
+        function startRecording() {
+            if (appState.recognition && !appState.isRecording) {
+                appState.recognition.start();
+            }
+        }
+
+        // Function to stop recording
+        function stopRecording() {
+            if (appState.recognition && appState.isRecording) {
+                appState.recognition.stop();
+                appState.isRecording = false;
+                document.getElementById('recordBtn').classList.remove('recording');
+                document.getElementById('recordingStatus').textContent = 'Click to record again';
+            }
+        }
+
+        // Function to submit answer
+        async function submitAnswer() {
+            const answerInput = document.getElementById('answerInput');
+            const answer = answerInput.value.trim();
+            
+            if (!answer) {
+                alert('Please provide an answer before submitting.');
+                return;
+            }
+            
+            // Stop timer
+            clearInterval(timerInterval);
+            
+            // Stop recording if active
+            if (appState.isRecording) {
+                stopRecording();
+            }
+            
+            // Analyze answer
+            const currentQuestion = interviewQuestions[appState.currentQuestionIndex];
+            const analysis = await analyzeAnswer(answer, currentQuestion);
+            
+            // Display feedback
+            displayFeedback(analysis);
+        }
+
+        // Function to go to next question
+        function nextQuestion() {
+            if (appState.currentQuestionIndex < interviewQuestions.length - 1) {
+                appState.currentQuestionIndex++;
+                loadQuestion(appState.currentQuestionIndex);
+            } else {
+                // All questions completed
+                alert('Congratulations! You have completed all practice questions.');
+                
+                // Reset to first question
+                appState.currentQuestionIndex = 0;
+                loadQuestion(appState.currentQuestionIndex);
+            }
+        }
+
+        // Function to go to previous question
+        function previousQuestion() {
+            if (appState.currentQuestionIndex > 0) {
+                appState.currentQuestionIndex--;
+                loadQuestion(appState.currentQuestionIndex);
+            }
+        }
+
+        // Function to start an aptitude assessment
+        function startAssessment(assessmentId) {
+            const assessment = aptitudeAssessments[assessmentId];
+            if (!assessment) return;
+            
+            appState.currentAssessment = assessmentId;
+            appState.currentAssessmentIndex = 0;
+            appState.assessmentAnswers = new Array(assessment.questions.length).fill(null);
+            
+            // Update modal content
+            document.getElementById('modalTitle').textContent = assessment.title;
+            document.getElementById('questionCount').textContent = assessment.questions.length;
+            document.getElementById('timeLimit').textContent = assessment.timeLimit;
+            
+            // Load first question
+            loadAssessmentQuestion(0);
+            
+            // Show modal
+            document.getElementById('assessmentModal').classList.add('active');
+        }
+
+        // Function to load an assessment question
+        function loadAssessmentQuestion(index) {
+            const assessment = aptitudeAssessments[appState.currentAssessment];
+            if (!assessment || index >= assessment.questions.length) return;
+            
+            const question = assessment.questions[index];
+            
+            // Update question
+            document.getElementById('assessmentQuestion').textContent = question.question;
+            
+            // Update options
+            const optionsContainer = document.getElementById('assessmentOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, i) => {
+                const optionElement = document.createElement('label');
+                optionElement.className = 'option';
+                if (appState.assessmentAnswers[index] === i) {
+                    optionElement.classList.add('selected');
+                }
+                
+                optionElement.innerHTML = `
+                    <input type="radio" name="answer" value="${i}" ${appState.assessmentAnswers[index] === i ? 'checked' : ''}>
+                    <span>${String.fromCharCode(65 + i)}) ${option}</span>
+                `;
+                
+                optionElement.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store answer
+                    appState.assessmentAnswers[index] = i;
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update question indicator
+            document.getElementById('currentQuestionIndicator').textContent = 
+                `Question ${index + 1} of ${assessment.questions.length}`;
+            
+            // Update navigation buttons
+            document.getElementById('prevQuestion').disabled = index === 0;
+            document.getElementById('nextQuestion').textContent = 
+                index === assessment.questions.length - 1 ? 'Finish' : 'Next';
+        }
+
+        // Function to submit assessment
+        function submitAssessment() {
+            const assessment = aptitudeAssessments[appState.currentAssessment];
+            if (!assessment) return;
+            
+            // Calculate score
+            let correctAnswers = 0;
+            appState.assessmentAnswers.forEach((answer, index) => {
+                if (answer === assessment.questions[index].correct) {
+                    correctAnswers++;
+                }
+            });
+            
+            const score = (correctAnswers / assessment.questions.length) * 100;
+            
+            // Store score
+            if (!appState.userProgress.aptitudeScores) {
+                appState.userProgress.aptitudeScores = {};
+            }
+            appState.userProgress.aptitudeScores[appState.currentAssessment] = score;
+            
+            // Save progress
+            localStorage.setItem('interviewPrepProProgress', JSON.stringify(appState.userProgress));
+            
+            // Show results
+            alert(`Assessment completed! Your score: ${score.toFixed(1)}%`);
+            
+            // Close modal
+            document.getElementById('assessmentModal').classList.remove('active');
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user progress from localStorage
+            const savedProgress = localStorage.getItem('interviewPrepProProgress');
+            if (savedProgress) {
+                appState.userProgress = JSON.parse(savedProgress);
+            }
+            
+            // Update progress UI
+            updateProgressUI();
+            
+            // Load the first question
+            loadQuestion(appState.currentQuestionIndex);
+            
+            // Initialize speech recognition
+            initSpeechRecognition();
+            
+            // Set up dashboard charts
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            const performanceChart = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Performance Score',
+                        data: [65, 70, 68, 75, 72, 78],
+                        borderColor: '#4361ee',
+                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Set up goal progress bars
+            document.querySelectorAll('.goal-progress-fill').forEach(fill => {
+                const width = fill.style.width;
+                fill.style.width = '0%';
+                setTimeout(() => {
+                    fill.style.width = width;
+                }, 500);
+            });
+
+            // Set up skill progress bars animation
+            document.querySelectorAll('.skill-current').forEach(skill => {
+                const width = skill.style.width;
+                skill.style.width = '0%';
+                setTimeout(() => {
+                    skill.style.width = width;
+                }, 800);
+            });
+
+            // Set up event listeners for interview practice
+            document.getElementById('recordBtn').addEventListener('click', function() {
+                if (appState.isRecording) {
+                    stopRecording();
+                } else {
+                    startRecording();
+                }
+            });
+            
+            document.getElementById('skipBtn').addEventListener('click', nextQuestion);
+            
+            document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+            
+            document.getElementById('startPracticingBtn').addEventListener('click', function() {
+                document.querySelector('.practice').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            document.getElementById('skillAssessmentBtn').addEventListener('click', function() {
+                document.querySelector('.aptitude').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            document.getElementById('exploreQuestionsBtn').addEventListener('click', function() {
+                document.querySelector('.practice').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                alert('Login functionality would be implemented here!');
+            });
+            
+            document.getElementById('signupBtn').addEventListener('click', function() {
+                alert('Sign up functionality would be implemented here!');
+            });
+            
+            // Set up aptitude tab navigation
+            document.querySelectorAll('.aptitude-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and contents
+                    document.querySelectorAll('.aptitude-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.aptitude-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-content`).classList.add('active');
+                });
+            });
+            
+            // Set up aptitude card clicks
+            document.querySelectorAll('.aptitude-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const assessmentId = this.getAttribute('data-assessment');
+                    startAssessment(assessmentId);
+                });
+            });
+            
+            // Set up assessment modal navigation
+            document.getElementById('prevQuestion').addEventListener('click', function() {
+                if (appState.currentAssessmentIndex > 0) {
+                    appState.currentAssessmentIndex--;
+                    loadAssessmentQuestion(appState.currentAssessmentIndex);
+                }
+            });
+            
+            document.getElementById('nextQuestion').addEventListener('click', function() {
+                const assessment = aptitudeAssessments[appState.currentAssessment];
+                if (!assessment) return;
+                
+                if (appState.currentAssessmentIndex < assessment.questions.length - 1) {
+                    appState.currentAssessmentIndex++;
+                    loadAssessmentQuestion(appState.currentAssessmentIndex);
+                } else {
+                    submitAssessment();
+                }
+            });
+            
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('assessmentModal').classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            document.getElementById('assessmentModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            // Set up keyboard shortcuts
+            document.addEventListener('keydown', function(event) {
+                // Ctrl+Enter to submit answer
+                if (event.ctrlKey && event.key === 'Enter') {
+                    event.preventDefault();
+                    submitAnswer();
+                }
+                
+                // Ctrl+Right to skip question
+                if (event.ctrlKey && event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    nextQuestion();
+                }
+                
+                if (event.ctrlKey && event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    previousQuestion();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
