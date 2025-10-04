@@ -753,6 +753,193 @@
             color: var(--warning);
         }
 
+        /* Video Call Section Styles */
+        .video-call-section {
+            padding: 4rem 0;
+            background: white;
+        }
+        
+        .video-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: #000;
+        }
+        
+        .video-feed {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .video-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: var(--secondary);
+        }
+        
+        .control-btn.end-call {
+            background: var(--danger);
+        }
+        
+        .control-btn.end-call:hover {
+            background: #c82333;
+        }
+        
+        .video-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .video-stat-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .video-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .video-stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .video-feedback {
+            margin-top: 2rem;
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .feedback-category {
+            margin-bottom: 1.5rem;
+        }
+        
+        .feedback-category:last-child {
+            margin-bottom: 0;
+        }
+        
+        .feedback-category h4 {
+            color: var(--secondary);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .feedback-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feedback-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .feedback-positive {
+            color: var(--success);
+        }
+        
+        .feedback-improvement {
+            color: var(--warning);
+        }
+        
+        .feedback-negative {
+            color: var(--danger);
+        }
+        
+        .face-landmark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #4cc9f0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .gaze-indicator {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffcc00;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .recording-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--danger);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .recording-indicator i {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .expression-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
         /* Aptitude Section */
         .aptitude {
             padding: 4rem 0;
@@ -1198,6 +1385,14 @@
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .video-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -1213,6 +1408,7 @@
                 <ul class="nav-links">
                     <li><a href="#dashboard">Dashboard</a></li>
                     <li><a href="#practice">Practice</a></li>
+                    <li><a href="#video-call">Video Practice</a></li>
                     <li><a href="#aptitude">Aptitude</a></li>
                     <li><a href="#resources">Resources</a></li>
                     <li><a href="#progress">Progress</a></li>
@@ -1498,6 +1694,13 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Video Practice</h3>
+                    <p>Practice with realistic video interviews and get feedback on your non-verbal communication.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3>Progress Tracking</h3>
@@ -1562,6 +1765,106 @@
                         <div class="feedback-details" id="feedbackDetails">
                             <!-- Feedback will be populated here -->
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Call Practice Section -->
+    <section class="video-call-section" id="video-call">
+        <div class="container">
+            <div class="section-title">
+                <h2>Video Interview Practice</h2>
+                <p>Practice with realistic video interviews and get AI-powered feedback on your non-verbal communication</p>
+            </div>
+            
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <video id="userVideo" class="video-feed" autoplay muted></video>
+                    <div class="video-overlay" id="videoOverlay"></div>
+                    <div class="recording-indicator" id="recordingIndicator" style="display: none;">
+                        <i class="fas fa-circle"></i> Recording
+                    </div>
+                    <div class="expression-indicator" id="expressionIndicator">
+                        Neutral
+                    </div>
+                </div>
+                
+                <div class="video-wrapper">
+                    <div class="video-feed" id="interviewerVideo" style="background: #333; display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center; color: white;">
+                            <i class="fas fa-user-tie" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <h3>AI Interviewer</h3>
+                            <p id="interviewerText">Ready when you are!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-controls">
+                <button class="control-btn" id="startVideoBtn" title="Start Video">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="control-btn" id="muteAudioBtn" title="Mute Audio">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="control-btn" id="startAnalysisBtn" title="Start Analysis">
+                    <i class="fas fa-brain"></i>
+                </button>
+                <button class="control-btn end-call" id="endCallBtn" title="End Call">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+            
+            <div class="video-stats">
+                <div class="video-stat-card">
+                    <div class="video-stat-value" id="eyeContactScore">0%</div>
+                    <div class="video-stat-label">Eye Contact</div>
+                </div>
+                <div class="video-stat-card">
+                    <div class="video-stat-value" id="confidenceScore">0%</div>
+                    <div class="video-stat-label">Confidence</div>
+                </div>
+                <div class="video-stat-card">
+                    <div class="video-stat-value" id="engagementScore">0%</div>
+                    <div class="video-stat-label">Engagement</div>
+                </div>
+            </div>
+            
+            <div class="video-feedback" id="videoFeedback" style="display: none;">
+                <h3>AI Feedback</h3>
+                <div class="feedback-category">
+                    <h4>Facial Expressions</h4>
+                    <div class="feedback-item">
+                        <i class="fas fa-check-circle feedback-icon feedback-positive"></i>
+                        <span>You maintained good eye contact with the camera</span>
+                    </div>
+                    <div class="feedback-item">
+                        <i class="fas fa-exclamation-circle feedback-icon feedback-improvement"></i>
+                        <span>Try to smile more to appear more approachable</span>
+                    </div>
+                </div>
+                <div class="feedback-category">
+                    <h4>Body Language</h4>
+                    <div class="feedback-item">
+                        <i class="fas fa-check-circle feedback-icon feedback-positive"></i>
+                        <span>You maintained good posture throughout the interview</span>
+                    </div>
+                    <div class="feedback-item">
+                        <i class="fas fa-exclamation-circle feedback-icon feedback-improvement"></i>
+                        <span>Try using hand gestures to emphasize key points</span>
+                    </div>
+                </div>
+                <div class="feedback-category">
+                    <h4>Voice Quality</h4>
+                    <div class="feedback-item">
+                        <i class="fas fa-check-circle feedback-icon feedback-positive"></i>
+                        <span>Your speaking pace was appropriate</span>
+                    </div>
+                    <div class="feedback-item">
+                        <i class="fas fa-exclamation-circle feedback-icon feedback-improvement"></i>
+                        <span>Work on reducing filler words like 'um' and 'ah'</span>
                     </div>
                 </div>
             </div>
@@ -1942,6 +2245,7 @@
                     <ul class="footer-links">
                         <li><a href="#dashboard">Dashboard</a></li>
                         <li><a href="#practice">Practice Interviews</a></li>
+                        <li><a href="#video-call">Video Practice</a></li>
                         <li><a href="#aptitude">Aptitude Tests</a></li>
                         <li><a href="#">Pricing</a></li>
                     </ul>
@@ -2144,6 +2448,23 @@
             currentAssessment: null,
             currentAssessmentIndex: 0,
             assessmentAnswers: []
+        };
+
+        // Video call state
+        let videoCallState = {
+            isVideoActive: false,
+            isAudioMuted: false,
+            isAnalysisActive: false,
+            isCallActive: false,
+            faceDetectionModel: null,
+            faceLandmarksModel: null,
+            detectionInterval: null,
+            stats: {
+                eyeContact: 0,
+                confidence: 0,
+                engagement: 0,
+                expressionHistory: []
+            }
         };
 
         // Timer variables
@@ -2717,6 +3038,288 @@
             document.getElementById('assessmentModal').classList.remove('active');
         }
 
+        // Video Call Functions
+
+        // Function to initialize video call
+        async function initVideoCall() {
+            try {
+                // Request camera and microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true, 
+                    audio: true 
+                });
+                
+                // Set up user video
+                const userVideo = document.getElementById('userVideo');
+                userVideo.srcObject = stream;
+                
+                // Load TensorFlow.js models
+                await loadFaceDetectionModels();
+                
+                // Update UI
+                document.getElementById('startVideoBtn').innerHTML = '<i class="fas fa-video-slash"></i>';
+                document.getElementById('startVideoBtn').title = 'Stop Video';
+                videoCallState.isVideoActive = true;
+                videoCallState.isCallActive = true;
+                
+                // Show recording indicator
+                document.getElementById('recordingIndicator').style.display = 'flex';
+                
+                // Update interviewer text
+                document.getElementById('interviewerText').textContent = 'Great! Let\'s begin the interview.';
+                
+            } catch (error) {
+                console.error('Error accessing camera/microphone:', error);
+                alert('Unable to access camera and microphone. Please check your permissions.');
+            }
+        }
+
+        // Function to load face detection models
+        async function loadFaceDetectionModels() {
+            try {
+                // In a real application, we would load TensorFlow.js models here
+                // For this demo, we'll simulate the models
+                console.log('Face detection models loaded successfully');
+            } catch (error) {
+                console.error('Error loading face detection models:', error);
+            }
+        }
+
+        // Function to start face analysis
+        function startFaceAnalysis() {
+            if (!videoCallState.isVideoActive) {
+                alert('Please start video first');
+                return;
+            }
+            
+            videoCallState.isAnalysisActive = true;
+            document.getElementById('startAnalysisBtn').innerHTML = '<i class="fas fa-stop-circle"></i>';
+            document.getElementById('startAnalysisBtn').title = 'Stop Analysis';
+            
+            // Start detection loop
+            videoCallState.detectionInterval = setInterval(detectFaces, 100);
+            
+            // Show feedback section
+            document.getElementById('videoFeedback').style.display = 'block';
+        }
+
+        // Function to stop face analysis
+        function stopFaceAnalysis() {
+            videoCallState.isAnalysisActive = false;
+            document.getElementById('startAnalysisBtn').innerHTML = '<i class="fas fa-brain"></i>';
+            document.getElementById('startAnalysisBtn').title = 'Start Analysis';
+            
+            // Stop detection loop
+            if (videoCallState.detectionInterval) {
+                clearInterval(videoCallState.detectionInterval);
+                videoCallState.detectionInterval = null;
+            }
+            
+            // Clear overlay
+            const overlay = document.getElementById('videoOverlay');
+            overlay.innerHTML = '';
+        }
+
+        // Function to detect faces and analyze expressions
+        async function detectFaces() {
+            if (!videoCallState.isAnalysisActive) return;
+            
+            const video = document.getElementById('userVideo');
+            const overlay = document.getElementById('videoOverlay');
+            
+            try {
+                // In a real application, we would use TensorFlow.js models here
+                // For this demo, we'll simulate face detection
+                
+                // Clear previous landmarks
+                overlay.innerHTML = '';
+                
+                // Simulate face detection
+                const hasFace = Math.random() > 0.1; // 90% chance of detecting a face
+                
+                if (hasFace) {
+                    // Simulate face landmarks
+                    for (let i = 0; i < 20; i++) {
+                        const x = Math.random() * 100;
+                        const y = Math.random() * 100;
+                        
+                        const landmarkElement = document.createElement('div');
+                        landmarkElement.className = 'face-landmark';
+                        landmarkElement.style.left = `${x}%`;
+                        landmarkElement.style.top = `${y}%`;
+                        
+                        overlay.appendChild(landmarkElement);
+                    }
+                    
+                    // Simulate gaze indicator
+                    const gazeX = 50 + (Math.random() * 20 - 10);
+                    const gazeY = 50 + (Math.random() * 20 - 10);
+                    
+                    const gazeElement = document.createElement('div');
+                    gazeElement.className = 'gaze-indicator';
+                    gazeElement.style.left = `${gazeX}%`;
+                    gazeElement.style.top = `${gazeY}%`;
+                    
+                    overlay.appendChild(gazeElement);
+                    
+                    // Simulate expression analysis
+                    const expressions = ['Neutral', 'Focused', 'Smiling', 'Surprised'];
+                    const expression = expressions[Math.floor(Math.random() * expressions.length)];
+                    
+                    document.getElementById('expressionIndicator').textContent = expression;
+                    
+                    // Update stats
+                    updateVideoStats();
+                } else {
+                    // No face detected
+                    document.getElementById('expressionIndicator').textContent = 'No face detected';
+                    resetVideoStats();
+                }
+            } catch (error) {
+                console.error('Error detecting faces:', error);
+            }
+        }
+
+        // Function to update video stats
+        function updateVideoStats() {
+            // Update eye contact score (simplified)
+            videoCallState.stats.eyeContact = Math.min(100, videoCallState.stats.eyeContact + 1);
+            
+            // Update confidence score based on expression history
+            const positiveExpressions = videoCallState.stats.expressionHistory.filter(
+                exp => exp === 'Focused' || exp === 'Smiling' || exp === 'Neutral'
+            ).length;
+            videoCallState.stats.confidence = Math.round(
+                (positiveExpressions / videoCallState.stats.expressionHistory.length) * 100
+            ) || 0;
+            
+            // Update engagement score (simplified)
+            videoCallState.stats.engagement = Math.min(100, videoCallState.stats.engagement + 0.5);
+            
+            // Store current expression
+            const currentExpression = document.getElementById('expressionIndicator').textContent;
+            videoCallState.stats.expressionHistory.push(currentExpression);
+            if (videoCallState.stats.expressionHistory.length > 10) {
+                videoCallState.stats.expressionHistory.shift();
+            }
+            
+            // Update UI
+            document.getElementById('eyeContactScore').textContent = `${videoCallState.stats.eyeContact}%`;
+            document.getElementById('confidenceScore').textContent = `${videoCallState.stats.confidence}%`;
+            document.getElementById('engagementScore').textContent = `${videoCallState.stats.engagement}%`;
+        }
+
+        // Function to reset video stats
+        function resetVideoStats() {
+            videoCallState.stats.eyeContact = 0;
+            videoCallState.stats.confidence = 0;
+            videoCallState.stats.engagement = 0;
+            
+            document.getElementById('eyeContactScore').textContent = '0%';
+            document.getElementById('confidenceScore').textContent = '0%';
+            document.getElementById('engagementScore').textContent = '0%';
+        }
+
+        // Function to toggle video
+        function toggleVideo() {
+            if (videoCallState.isVideoActive) {
+                // Stop video
+                const userVideo = document.getElementById('userVideo');
+                const stream = userVideo.srcObject;
+                const tracks = stream.getTracks();
+                
+                tracks.forEach(track => {
+                    if (track.kind === 'video') {
+                        track.stop();
+                    }
+                });
+                
+                userVideo.srcObject = null;
+                
+                // Update UI
+                document.getElementById('startVideoBtn').innerHTML = '<i class="fas fa-video"></i>';
+                document.getElementById('startVideoBtn').title = 'Start Video';
+                videoCallState.isVideoActive = false;
+                
+                // Hide recording indicator
+                document.getElementById('recordingIndicator').style.display = 'none';
+                
+                // Stop analysis if active
+                if (videoCallState.isAnalysisActive) {
+                    stopFaceAnalysis();
+                }
+            } else {
+                // Start video
+                initVideoCall();
+            }
+        }
+
+        // Function to toggle audio
+        function toggleAudio() {
+            if (videoCallState.isCallActive) {
+                const userVideo = document.getElementById('userVideo');
+                const stream = userVideo.srcObject;
+                const audioTracks = stream.getAudioTracks();
+                
+                if (audioTracks.length > 0) {
+                    audioTracks[0].enabled = !audioTracks[0].enabled;
+                    videoCallState.isAudioMuted = !audioTracks[0].enabled;
+                    
+                    // Update UI
+                    if (videoCallState.isAudioMuted) {
+                        document.getElementById('muteAudioBtn').innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                        document.getElementById('muteAudioBtn').title = 'Unmute Audio';
+                    } else {
+                        document.getElementById('muteAudioBtn').innerHTML = '<i class="fas fa-microphone"></i>';
+                        document.getElementById('muteAudioBtn').title = 'Mute Audio';
+                    }
+                }
+            }
+        }
+
+        // Function to end call
+        function endCall() {
+            // Stop video
+            if (videoCallState.isVideoActive) {
+                const userVideo = document.getElementById('userVideo');
+                const stream = userVideo.srcObject;
+                
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    userVideo.srcObject = null;
+                }
+                
+                videoCallState.isVideoActive = false;
+            }
+            
+            // Stop analysis
+            if (videoCallState.isAnalysisActive) {
+                stopFaceAnalysis();
+            }
+            
+            // Reset UI
+            document.getElementById('startVideoBtn').innerHTML = '<i class="fas fa-video"></i>';
+            document.getElementById('startVideoBtn').title = 'Start Video';
+            document.getElementById('muteAudioBtn').innerHTML = '<i class="fas fa-microphone"></i>';
+            document.getElementById('muteAudioBtn').title = 'Mute Audio';
+            document.getElementById('startAnalysisBtn').innerHTML = '<i class="fas fa-brain"></i>';
+            document.getElementById('startAnalysisBtn').title = 'Start Analysis';
+            
+            // Hide recording indicator
+            document.getElementById('recordingIndicator').style.display = 'none';
+            
+            // Reset stats
+            resetVideoStats();
+            
+            // Update interviewer text
+            document.getElementById('interviewerText').textContent = 'Call ended. Ready for your next practice session!';
+            
+            // Update state
+            videoCallState.isCallActive = false;
+            videoCallState.isAudioMuted = false;
+        }
+
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             // Load user progress from localStorage
@@ -2876,6 +3479,18 @@
                     this.classList.remove('active');
                 }
             });
+            
+            // Set up video call event listeners
+            document.getElementById('startVideoBtn').addEventListener('click', toggleVideo);
+            document.getElementById('muteAudioBtn').addEventListener('click', toggleAudio);
+            document.getElementById('startAnalysisBtn').addEventListener('click', function() {
+                if (videoCallState.isAnalysisActive) {
+                    stopFaceAnalysis();
+                } else {
+                    startFaceAnalysis();
+                }
+            });
+            document.getElementById('endCallBtn').addEventListener('click', endCall);
             
             // Set up keyboard shortcuts
             document.addEventListener('keydown', function(event) {
