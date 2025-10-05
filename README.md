@@ -73,3 +73,7 @@ Anyone feeling lost in their professional journey
 To bridge the gap between talent and opportunity, making career guidance accessible, personalized, and effective for everyone.
 
 Career Canvas: Your trusted companion from career confusion to professional confidence!
+
+
+## Demo video Link:
+https://drive.google.com/file/d/1qw7J8sppT6Abj55mtrJXYM7hOGw5TvHn/view?usp=drive_link
