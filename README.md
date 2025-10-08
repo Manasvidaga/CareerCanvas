@@ -65,7 +65,7 @@ Career Canvas revolutionizes career guidance through technology, offering:
 
 - **Grow** - Maintain healthy habits for long-term success
 
-## Future Implementations
+## ⚡Future Implementations
 - **Digital Portfolio Builder** - Builds simple, professional portfolio website
 - **Real-time Skill Demand Heatmap** - Interactive map showing in-demand skills in different locations
 - **Peer Learning Circles** - Connects small groups of users with similar career goals
